@@ -9,12 +9,11 @@ using System.Security.Policy;
 
 namespace Capstone.DAO
 {
-    public class TagSQLDAO : ITagDao
+    public class TagSqlDao : ITagDao
     {
         private string connectionString;
-        public Tag createTag(int petId)
+        public Tag CreateTag(Tag newTag)
         {
-            Tag newTag = null;
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -30,7 +29,7 @@ namespace Capstone.DAO
                     cmd.Parameters.AddWithValue("@cute", newTag.IsCute);
                     cmd.Parameters.AddWithValue("@affectionate", newTag.IsAffectionate);
                     cmd.Parameters.AddWithValue("@large", newTag.IsLarge);
-                    cmd.Parameters.AddWithValue("@intellegent", newTag.IsIntelligent);
+                    cmd.Parameters.AddWithValue("@intelligent", newTag.IsIntelligent);
                     cmd.Parameters.AddWithValue("@short_haired", newTag.IsShortHaired);
                     cmd.Parameters.AddWithValue("@shedder", newTag.IsShedder);
                     cmd.Parameters.AddWithValue("@shy", newTag.IsShy);
@@ -48,7 +47,7 @@ namespace Capstone.DAO
 
         }
 
-        public Tag getTag(int petId)
+        public Tag GetTag(int tagId)
         {
             Tag output = null;
 
@@ -58,10 +57,10 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("SELECT * from tags join tags.tagId = pets.petId where pets.petId = @petId", conn);
+                    SqlCommand cmd = new SqlCommand("SELECT * from tags where tag_id = @tag_id", conn);
                     SqlDataReader reader = cmd.ExecuteReader();
 
-                    cmd.Parameters.AddWithValue("@petId", petId);
+                    cmd.Parameters.AddWithValue("@tag_id", tagId);
                     if (reader.Read())
                     {
                         output = GetTagsFromReader(reader);
@@ -75,7 +74,7 @@ namespace Capstone.DAO
             return output;
         }
 
-        public Tag updateTag(int pet_id, Tag updatedTags)
+        public Tag UpdateTag(Tag updatedTags)
         {
             try
             {
@@ -90,7 +89,7 @@ namespace Capstone.DAO
                     cmd.Parameters.AddWithValue("@cute", updatedTags.IsCute);
                     cmd.Parameters.AddWithValue("@affectionate", updatedTags.IsAffectionate);
                     cmd.Parameters.AddWithValue("@large", updatedTags.IsLarge);
-                    cmd.Parameters.AddWithValue("@intellegent", updatedTags.IsIntelligent);
+                    cmd.Parameters.AddWithValue("@intelligent", updatedTags.IsIntelligent);
                     cmd.Parameters.AddWithValue("@short_haired", updatedTags.IsShortHaired);
                     cmd.Parameters.AddWithValue("@shedder", updatedTags.IsShedder);
                     cmd.Parameters.AddWithValue("@shy", updatedTags.IsShy);

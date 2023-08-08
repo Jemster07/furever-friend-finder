@@ -4,7 +4,8 @@ namespace Capstone.DAO
 {
     public interface ITagDao
     {
-        //Get tags
-        //Update tags
+        Tag GetTag(int tagId);
+        Tag CreateTag(Tag newTag);
+        Tag UpdateTag(Tag updatedTags);
     }
 }
