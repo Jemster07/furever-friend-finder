@@ -5,7 +5,7 @@ namespace Capstone.DAO
     public interface IUserDao
     {
         User GetUser(string username);
-        User AddUser(string username, string password, string role);
+        User AddUser(string username, string password, string role, string email, Address address);
 
         //Delete User -> admin only
         //Update User

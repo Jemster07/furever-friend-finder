@@ -25,7 +25,9 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("SELECT user_id, username, password_hash, salt, user_role FROM users WHERE username = @username", conn);
+                    SqlCommand cmd = new SqlCommand("SELECT user_id, username, password_hash, salt," +
+                        " user_role, app_status, is_not_active, address_id, email, is_adopter" +
+                        " FROM users WHERE username = @username", conn);
                     cmd.Parameters.AddWithValue("@username", username);
                     SqlDataReader reader = cmd.ExecuteReader();
 
@@ -43,7 +45,7 @@ namespace Capstone.DAO
             return returnUser;
         }
 
-        public User AddUser(string username, string password, string role)
+        public User AddUser(string username, string password, string role, string email, Address address)
         {
             IPasswordHasher passwordHasher = new PasswordHasher();
             PasswordHash hash = passwordHasher.ComputeHash(password);
@@ -54,12 +56,25 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("INSERT INTO users (username, password_hash, salt, user_role) VALUES (@username, @password_hash, @salt, @user_role)", conn);
-                    cmd.Parameters.AddWithValue("@username", username);
-                    cmd.Parameters.AddWithValue("@password_hash", hash.Password);
-                    cmd.Parameters.AddWithValue("@salt", hash.Salt);
-                    cmd.Parameters.AddWithValue("@user_role", role);
-                    cmd.ExecuteNonQuery();
+                    SqlCommand addressCMD = new SqlCommand("INSERT INTO addresses (street, city, state_abr," +
+                        " zip) OUTPUT INSERTED.address_id VALUES (@street, @city, @state_abr, @zip);", conn);
+                    addressCMD.Parameters.AddWithValue("@street", address.Street);
+                    addressCMD.Parameters.AddWithValue("@city", address.City);
+                    addressCMD.Parameters.AddWithValue("@state_abr", address.State);
+                    addressCMD.Parameters.AddWithValue("@zip", address.Zip);
+                    addressCMD.ExecuteNonQuery();
+                    address.AddressId = Convert.ToInt32(addressCMD.ExecuteScalar());
+
+                    SqlCommand userCMD = new SqlCommand("INSERT INTO users (username, password_hash, salt," +
+                        " user_role, address_id, email) VALUES (@username, @password_hash, @salt, @user_role," +
+                        " @address_id, @email)", conn);
+                    userCMD.Parameters.AddWithValue("@username", username);
+                    userCMD.Parameters.AddWithValue("@password_hash", hash.Password);
+                    userCMD.Parameters.AddWithValue("@salt", hash.Salt);
+                    userCMD.Parameters.AddWithValue("@user_role", role);
+                    userCMD.Parameters.AddWithValue("@address_id", address.AddressId);
+                    userCMD.Parameters.AddWithValue("@email", email);
+                    userCMD.ExecuteNonQuery();
                 }
             }
             catch (SqlException)
@@ -72,14 +87,26 @@ namespace Capstone.DAO
 
         private User GetUserFromReader(SqlDataReader reader)
         {
-            User u = new User()
-            {
-                UserId = Convert.ToInt32(reader["user_id"]),
-                Username = Convert.ToString(reader["username"]),
-                PasswordHash = Convert.ToString(reader["password_hash"]),
-                Salt = Convert.ToString(reader["salt"]),
-                Role = Convert.ToString(reader["user_role"]),
-            };
+            User u = new User();
+
+            u.UserId = Convert.ToInt32(reader["user_id"]);
+            u.Username = Convert.ToString(reader["username"]);
+            u.PasswordHash = Convert.ToString(reader["password_hash"]);
+            u.Salt = Convert.ToString(reader["salt"]);
+            u.Role = Convert.ToString(reader["user_role"]);
+
+            Address tempA = new Address();
+            tempA.AddressId = Convert.ToInt32(reader["address_id"]);
+            tempA.Street = Convert.ToString(reader["street"]);
+            tempA.City = Convert.ToString(reader["city"]);
+            tempA.State = Convert.ToString(reader["state_abr"]);
+            tempA.Zip = Convert.ToInt32(reader["zip"]);
+            u.Address = tempA;
+
+            u.ApplicationStatus = Convert.ToString(reader["app_status"]);
+            u.IsActive = Convert.ToBoolean(reader["is_not_active"]);
+            u.Email = Convert.ToString(reader["email"]);
+            u.IsAdopter = Convert.ToBoolean(reader["is_adopter"]);
 
             return u;
         }
