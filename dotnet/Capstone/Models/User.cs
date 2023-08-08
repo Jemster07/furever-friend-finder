@@ -12,7 +12,7 @@ namespace Capstone.Models
         [JsonIgnore]
         public string Salt { get; set; }
         public string Role { get; set; }
-        public string Location { get; set; }
+        public Address Address { get; set; }
         public string ApplicationStatus { get; set; }
     }
 
@@ -56,6 +56,6 @@ namespace Capstone.Models
         [Compare("Password")]
         public string ConfirmPassword { get; set; }
         public string Role { get; set; }
-        public string Location { get; set; }
+        public Address Address { get; set; }
     }
 }

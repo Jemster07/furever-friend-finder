@@ -18,5 +18,6 @@ namespace Capstone.Models
         public bool IsShy { get; set; }
         public bool IsFaithful { get; set; }
         public bool IsLeashTrained { get; set; }
+        public bool IsHypoallergenic { get; set; }
     }
 }

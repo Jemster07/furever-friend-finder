@@ -15,8 +15,10 @@ namespace Capstone.Models
         public Tag Tags { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public int LocationZip { get; set; }
+        public Address Address { get; set; }
         public int UserId { get; set; }
         public int PhotoId { get; set; }
+        public int AdopterId { get; set; }
+        public bool IsAdopted { get; set; }
     }
 }
