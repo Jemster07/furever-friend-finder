@@ -1,13 +1,30 @@
 <template>
-  <div id="register" class="text-center">
+  <div id="register" class="has-text-centered">
+        <div class="has-text-right py-4 px-4">
+      <router-link :to="{name: 'home'}" class="button is-light">
+        Home
+      </router-link>
+    </div>
     <form @submit.prevent="register">
-      <h1>Create Account</h1>
-      <div role="alert" v-if="registrationErrors">
+      <h1 class="is-size-1 my-6">Create Account</h1>
+      <div class="my-6" role="alert" v-if="registrationErrors">
         {{ registrationErrorMsg }}
       </div>
+  <div class="columns">
+    <div class="column has-text-right">
       <div class="form-input-group">
         <label for="username">Username</label>
-        <input type="text" id="username" v-model="user.username" required autofocus />
+        <input
+          type="text"
+          id="username"
+          v-model="user.username"
+          required
+          autofocus
+        />
+      </div>
+      <div class="form-input-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" v-model="user.email" required />
       </div>
       <div class="form-input-group">
         <label for="password">Password</label>
@@ -15,44 +32,87 @@
       </div>
       <div class="form-input-group">
         <label for="confirmPassword">Confirm Password</label>
-        <input type="password" id="confirmPassword" v-model="user.confirmPassword" required />
+        <input
+          type="password"
+          id="confirmPassword"
+          v-model="user.confirmPassword"
+          required
+        />
       </div>
-      <button type="submit">Create Account</button>
-      <p><router-link :to="{ name: 'login' }">Already have an account? Log in.</router-link></p>
+    </div>
+      <div class="column has-text-left"> 
+          <div class="form-input-group">
+            <label for="street">Street Address</label>
+            <input type="text" id="street" v-model="user.address.street" required />
+          </div>
+          <div class="form-input-group">
+            <label for="state">State</label>
+            <input type="text" id="state" v-model="user.address.state" required />
+          </div>
+          <div class="form-input-group">
+            <label for="city">City</label>
+            <input type="text" id="city" v-model="user.address.city" required />
+          </div>
+          <div class="form-input-group">
+            <label for="zip">Zip Code</label>
+            <input type="number max-99999" id="zip" v-model="user.address.zip" required /> 
+          </div>
+      </div>
+    </div>
+      <button
+        class="button is-success my-4"
+        type="submit"
+        v-on:click="register()"
+      >
+        Create Account
+      </button>
+      <p>
+        <router-link :to="{ name: 'login' }"
+          >Already have an account? Log in.</router-link
+        >
+      </p>
     </form>
   </div>
 </template>
 
 <script>
-import authService from '../services/AuthService';
+import authService from "../services/AuthService";
 
 export default {
-  name: 'register',
+  name: "register",
   data() {
     return {
       user: {
         username: '',
+        email: '',
         password: '',
         confirmPassword: '',
-        role: 'user',
+        role: "user",
+        address: {
+          addressid: 0,
+          street: '',
+          city: '',
+          state: '',
+          zip: '',
+        },
       },
       registrationErrors: false,
-      registrationErrorMsg: 'There were problems registering this user.',
+      registrationErrorMsg: "There were problems registering this user.",
     };
   },
   methods: {
     register() {
       if (this.user.password != this.user.confirmPassword) {
         this.registrationErrors = true;
-        this.registrationErrorMsg = 'Password & Confirm Password do not match.';
+        this.registrationErrorMsg = "Password & Confirm Password do not match.";
       } else {
         authService
           .register(this.user)
           .then((response) => {
             if (response.status == 201) {
               this.$router.push({
-                path: '/login',
-                query: { registration: 'success' },
+                path: "/login",
+                query: { registration: "success" },
               });
             }
           })
@@ -60,14 +120,14 @@ export default {
             const response = error.response;
             this.registrationErrors = true;
             if (response.status === 400) {
-              this.registrationErrorMsg = 'Bad Request: Validation Errors';
+              this.registrationErrorMsg = "Bad Request: Validation Errors";
             }
           });
       }
     },
     clearErrors() {
       this.registrationErrors = false;
-      this.registrationErrorMsg = 'There were problems registering this user.';
+      this.registrationErrorMsg = "There were problems registering this user.";
     },
   },
 };
