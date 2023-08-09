@@ -60,8 +60,8 @@ namespace Capstone.DAO
                     conn.Open();
 
                     SqlCommand userCMD = new SqlCommand("INSERT INTO users (username, password_hash, salt," +
-                        " user_role, address_id, email, is_not_active) VALUES (@username, @password_hash, @salt, @user_role," +
-                        " @address_id, @email, @is_not_active)", conn);
+                        " user_role, address_id, email, is_not_active, app_status) VALUES (@username, @password_hash, @salt, @user_role," +
+                        " @address_id, @email, @is_not_active, @app_status)", conn);
                     userCMD.Parameters.AddWithValue("@username", registerUser.Username);
                     userCMD.Parameters.AddWithValue("@password_hash", hash.Password);
                     userCMD.Parameters.AddWithValue("@salt", hash.Salt);
@@ -69,6 +69,7 @@ namespace Capstone.DAO
                     userCMD.Parameters.AddWithValue("@address_id", registeredAddress.AddressId);
                     userCMD.Parameters.AddWithValue("@email", registerUser.Email);
                     userCMD.Parameters.AddWithValue("@is_not_active", false);
+                    userCMD.Parameters.AddWithValue("@app_status", "pending");
                     userCMD.ExecuteNonQuery();
                 }
             }

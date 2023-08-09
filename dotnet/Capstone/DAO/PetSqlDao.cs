@@ -7,49 +7,49 @@ using System.Xml.Linq;
 
 namespace Capstone.DAO
 {
-    public class PetSqlDao : IPetDao
+    public class PetSqlDao //: IPetDao
     {
         private string connectionString;
 
-        public Pet CreateNewPet(Pet newPet, Attribute Atributes, Environ environment, Tag tags, Address address)
-        {
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
+        //public Pet CreateNewPet(Pet newPet, Attribute attributes, Environ environment, Tag tags, Address address)
+        //{
+        //    try
+        //    {
+        //        using (SqlConnection conn = new SqlConnection(connectionString))
+        //        {
+        //            conn.Open();
 
-                    SqlCommand atcmd = new SqlCommand("INSERT INTO Attributes (spayed_neutered, house_trained, declawed, special_needs, shots_current " +
-                        "VALUES (@spayed_Neutered, @house_trained, @declawed, @special_needs, @shots_current)", conn);
+        //            SqlCommand atcmd = new SqlCommand("INSERT INTO Attributes (spayed_neutered, house_trained, declawed, special_needs, shots_current " +
+        //                "VALUES (@spayed_Neutered, @house_trained, @declawed, @special_needs, @shots_current)", conn);
 
-                    atcmd.Parameters.AddWithValue("@spayed_neutered", attributes.IsSpayedNeutered);
-                    atcmd.Parameters.AddWithValue("@house_trained", attributes.IsHouseTrained);
-                    atcmd.Parameters.AddWithValue("@declawed", attributes.IsDeclawed);
-                    atcmd.Parameters.AddWithValue("@special_needs", attributes.IsSpecialNeeds);
-                    atcmd.Parameters.AddWithValue("@shots_current", attributes.IsShotsCurrent);
-                    atcmd.ExecuteNonQuery();
-                    Attribute.AttributeId = Convert.ToInt32(atcmd.ExecuteScalar());
+        //            atcmd.Parameters.AddWithValue("@spayed_neutered", attributes.IsSpayedNeutered);
+        //            atcmd.Parameters.AddWithValue("@house_trained", attributes.IsHouseTrained);
+        //            atcmd.Parameters.AddWithValue("@declawed", attributes.IsDeclawed);
+        //            atcmd.Parameters.AddWithValue("@special_needs", attributes.IsSpecialNeeds);
+        //            atcmd.Parameters.AddWithValue("@shots_current", attributes.IsShotsCurrent);
+        //            atcmd.ExecuteNonQuery();
+        //            Attribute.AttributeId = Convert.ToInt32(atcmd.ExecuteScalar());
 
-                    SqlCommand envcmd = new SqlCommand("INSERT INTO Environments (dogs, cats")
+        //            SqlCommand envcmd = new SqlCommand("INSERT INTO Environments (dogs, cats");
 
-                    SqlCommand cmd = new SqlCommand("INSERT INTO Pets (type, species, color, age, name, description " +
-                        "VALUES (@type, @species, @color, @age, @name, @description)", conn);
-                    cmd.Parameters.AddWithValue("@type", newPet.Type);
-                    cmd.Parameters.AddWithValue("@species", newPet.Species);
-                    cmd.Parameters.AddWithValue("@color", newPet.Color);
-                    cmd.Parameters.AddWithValue("@age", newPet.Age);
-                    cmd.Parameters.AddWithValue("@name", newPet.Name);
-                    cmd.Parameters.AddWithValue("@description", newPet.Description);
-                    cmd.ExecuteNonQuery();
-                }
-                return newPet;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+        //            SqlCommand cmd = new SqlCommand("INSERT INTO Pets (type, species, color, age, name, description " +
+        //                "VALUES (@type, @species, @color, @age, @name, @description)", conn);
+        //            cmd.Parameters.AddWithValue("@type", newPet.Type);
+        //            cmd.Parameters.AddWithValue("@species", newPet.Species);
+        //            cmd.Parameters.AddWithValue("@color", newPet.Color);
+        //            cmd.Parameters.AddWithValue("@age", newPet.Age);
+        //            cmd.Parameters.AddWithValue("@name", newPet.Name);
+        //            cmd.Parameters.AddWithValue("@description", newPet.Description);
+        //            cmd.ExecuteNonQuery();
+        //        }
+        //        return newPet;
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
 
-        }
+        //}
 
         public List<Pet> GetListOfPets(int petId)
         {
@@ -82,10 +82,10 @@ namespace Capstone.DAO
             return output;
         }
 
-        public Pet GetPetByAttribute(Attribute attributes)
-        {
-            throw new System.NotImplementedException();
-        }
+        //public Pet GetPetByAttribute(Attribute attributes)
+        //{
+        //    throw new System.NotImplementedException();
+        //}
 
         public Pet GetPetByEnvironment(Environ environment)
         {
@@ -122,15 +122,15 @@ namespace Capstone.DAO
             p.AdopterId = Convert.ToInt32(reader["adopter_id"]);
             p.IsAdopted = Convert.ToBoolean(reader["is_adopted"]);
 
-            Attribute tempAt = new Attribute();
+            //Attribute tempAt = new Attribute();
 
-            tempAt.AttributeId = Convert.ToInt32(reader["attribute_id"]);
-            tempAt.IsSpayedNeutered = Convert.ToBoolean(reader["spayed_neutered"]);
-            tempAt.IsHouseTrained = Convert.ToBoolean(reader["house_trained"]);
-            tempAt.IsDeclawed = Convert.ToBoolean(reader["declawed"]);
-            tempAt.IsSpecialNeeds = Convert.ToBoolean(reader["special_needs"]);
-            tempAt.IsShotsCurrent = Convert.ToBoolean(reader["shots_current"]);
-            p.Attributes = tempAt;
+            //tempAt.AttributeId = Convert.ToInt32(reader["attribute_id"]);
+            //tempAt.IsSpayedNeutered = Convert.ToBoolean(reader["spayed_neutered"]);
+            //tempAt.IsHouseTrained = Convert.ToBoolean(reader["house_trained"]);
+            //tempAt.IsDeclawed = Convert.ToBoolean(reader["declawed"]);
+            //tempAt.IsSpecialNeeds = Convert.ToBoolean(reader["special_needs"]);
+            //tempAt.IsShotsCurrent = Convert.ToBoolean(reader["shots_current"]);
+            //p.Attributes = tempAt;
 
             Environ tempE = new Environ();
 
@@ -166,7 +166,7 @@ namespace Capstone.DAO
             tempAd.Street = Convert.ToString(reader["street"]);
             tempAd.City = Convert.ToString(reader["city"]);
             tempAd.State = Convert.ToString(reader["state_abr"]);
-            tempAd.Zip = Convert.ToInt32(reader["zip"]);
+            tempAd.Zip = Convert.ToString(reader["zip"]);
             p.Address= tempAd;
 
             return p;

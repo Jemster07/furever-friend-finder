@@ -30,7 +30,8 @@ namespace Capstone.Controllers
             User user = userDao.GetUser(userParam.Username);
 
             // If we found a user and the password hash matches
-            if (user != null && passwordHasher.VerifyHashMatch(user.PasswordHash, userParam.Password, user.Salt))
+            if (user != null && passwordHasher.VerifyHashMatch(user.PasswordHash, userParam.Password, user.Salt)
+                && user.ApplicationStatus != "Rejected" && user.ApplicationStatus != "Pending")
             {
                 // Create an authentication token
                 string token = tokenGenerator.GenerateToken(user.UserId, user.Username, user.Role);
