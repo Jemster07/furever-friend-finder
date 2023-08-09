@@ -17,7 +17,8 @@ namespace Capstone.DAO
 
         public User GetUser(string username)
         {
-            User returnUser = null;
+            //TODO: Let Keith that new objects must NOT be null
+            User returnUser = new User();
 
             try
             {
@@ -69,15 +70,18 @@ namespace Capstone.DAO
                     addressCMD.Parameters.AddWithValue("@zip", userZip);
                     int newAddressID = Convert.ToInt32(addressCMD.ExecuteScalar());
 
+                    //TODO: Write an exception error message that triggers when the input username
+                    //is identical to one of the other entered fields
                     SqlCommand userCMD = new SqlCommand("INSERT INTO users (username, password_hash, salt," +
-                        " user_role, address_id, email) VALUES (@username, @password_hash, @salt, @user_role," +
-                        " @address_id, @email)", conn);
+                        " user_role, address_id, email, is_not_active) VALUES (@username, @password_hash, @salt, @user_role," +
+                        " @address_id, @email, @is_not_active)", conn);
                     userCMD.Parameters.AddWithValue("@username", registerUser.Username);
                     userCMD.Parameters.AddWithValue("@password_hash", hash.Password);
                     userCMD.Parameters.AddWithValue("@salt", hash.Salt);
                     userCMD.Parameters.AddWithValue("@user_role", registerUser.Role);
                     userCMD.Parameters.AddWithValue("@address_id", newAddressID);
                     userCMD.Parameters.AddWithValue("@email", registerUser.Email);
+                    userCMD.Parameters.AddWithValue("@is_not_active", false);
                     userCMD.ExecuteNonQuery();
                 }
             }
