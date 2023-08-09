@@ -17,7 +17,6 @@ namespace Capstone.DAO
 
         public User GetUser(string username)
         {
-            //TODO: Let Keith that new objects must NOT be null
             User returnUser = new User();
 
             try
@@ -93,7 +92,6 @@ namespace Capstone.DAO
             u.ApplicationStatus = Convert.ToString(reader["app_status"]);
             u.IsActive = Convert.ToBoolean(reader["is_not_active"]);
             u.Email = Convert.ToString(reader["email"]);
-            //u.IsAdopter = Convert.ToBoolean(reader["is_adopter"]);
 
             return u;
         }
