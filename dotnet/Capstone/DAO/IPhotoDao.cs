@@ -2,6 +2,7 @@
 
 namespace Capstone.DAO
 {
+    //TODO Photo DAO
     public interface IPhotoDao
     {
         //Get one photo by photo id

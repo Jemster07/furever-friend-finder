@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace Capstone.Models
@@ -53,13 +54,17 @@ namespace Capstone.Models
     /// </summary>
     public class RegisterUser
     {
+        [Required(ErrorMessage = "Username is required")]
         public string Username { get; set; }
+        [Required(ErrorMessage = "A valid email address is required")]
         public string Email { get; set; }
+        [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; }
         // a little data validation
         [Compare("Password")]
         public string ConfirmPassword { get; set; }
         public string Role { get; set; }
-        public Address Address { get; set; }
+        [Required(ErrorMessage = "An address is required")]
+        public CreateAddress Address { get; set; }
     }
 }

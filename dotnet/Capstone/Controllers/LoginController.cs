@@ -52,12 +52,12 @@ namespace Capstone.Controllers
             IActionResult result;
 
             User existingUser = userDao.GetUser(userParam.Username);
-            if (existingUser != null)
+            if (existingUser.Username != null)
             {
                 return Conflict(new { message = "Username already taken. Please choose a different username." });
             }
 
-            User user = userDao.AddUser(userParam.Username, userParam.Password, userParam.Role, userParam.Email, userParam.Address);
+            User user = userDao.AddUser(userParam);
             if (user != null)
             {
                 result = Created(user.Username, null); //values aren't read on client
