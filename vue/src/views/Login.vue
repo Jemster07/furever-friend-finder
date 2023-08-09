@@ -1,7 +1,7 @@
 <template>
-  <div id="login">
+  <div id="login" class="has-text-centered">
     <form @submit.prevent="login">
-      <h1 >Please Sign In</h1>
+      <h1 class="is-size-1 py-6">Please Sign In</h1>
       <div role="alert" v-if="invalidCredentials">
         Invalid username and password!
       </div>
@@ -16,7 +16,7 @@
         <label for="password">Password</label>
         <input type="password" id="password" v-model="user.password" required />
       </div>
-      <button type="submit">Sign in</button>
+      <button type="submit" class="button is-success my-4">Sign in</button>
       <p>
       <router-link :to="{ name: 'register' }">Need an account? Sign up.</router-link></p>
     </form>
@@ -62,10 +62,15 @@ export default {
 </script>
 
 <style scoped>
+#login {
+  display: flexbox;
+  justify-content: center;
+}
 .form-input-group {
   margin-bottom: 1rem;
 }
 label {
   margin-right: 0.5rem;
 }
+
 </style>
