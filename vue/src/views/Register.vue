@@ -1,10 +1,17 @@
-<template class="has-background-success">
-  <div id="register" class="section is-small has-text-centered">
+<template>
+  <div id="register" class="has-text-centered">
+        <div class="has-text-right py-4 px-4">
+      <router-link :to="{name: 'home'}" class="button is-light">
+        Home
+      </router-link>
+    </div>
     <form @submit.prevent="register">
-      <h1 class="is-size-1 py-5">Create Account</h1>
+      <h1 class="is-size-1 my-6">Create Account</h1>
       <div class="my-6" role="alert" v-if="registrationErrors">
         {{ registrationErrorMsg }}
       </div>
+  <div class="columns">
+    <div class="column has-text-right">
       <div class="form-input-group">
         <label for="username">Username</label>
         <input
@@ -32,24 +39,26 @@
           required
         />
       </div>
-      <div class="level"> 
-          <div>
+    </div>
+      <div class="column has-text-left"> 
+          <div class="form-input-group">
             <label for="street">Street Address</label>
             <input type="text" id="street" v-model="user.address.street" required />
           </div>
-          <div>
+          <div class="form-input-group">
             <label for="state">State</label>
             <input type="text" id="state" v-model="user.address.state" required />
           </div>
-          <div>
+          <div class="form-input-group">
             <label for="city">City</label>
             <input type="text" id="city" v-model="user.address.city" required />
           </div>
-          <div>
+          <div class="form-input-group">
             <label for="zip">Zip Code</label>
             <input type="number max-99999" id="zip" v-model="user.address.zip" required /> 
           </div>
       </div>
+    </div>
       <button
         class="button is-success my-4"
         type="submit"
@@ -74,16 +83,16 @@ export default {
   data() {
     return {
       user: {
-        username: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
+        username: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
         role: "user",
         address: {
-          street: "",
-          city: "",
-          state: "",
-          zip: 0,
+          street: '',
+          city: '',
+          state: '',
+          zip: '',
         },
       },
       registrationErrors: false,

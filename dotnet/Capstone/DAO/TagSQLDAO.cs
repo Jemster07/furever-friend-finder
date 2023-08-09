@@ -41,8 +41,8 @@ namespace Capstone.DAO
                 return newTag;
             }
             catch (Exception)
-            {          
-                throw new System.NotImplementedException();
+            {
+                throw;
             }
 
         }
@@ -57,10 +57,10 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("SELECT * from tags where tag_id = @tag_id", conn);
+                    SqlCommand cmd = new SqlCommand("SELECT * from tags where tag_Id = @tag_Id", conn);
                     SqlDataReader reader = cmd.ExecuteReader();
 
-                    cmd.Parameters.AddWithValue("@tag_id", tagId);
+                    cmd.Parameters.AddWithValue("@tag_Id", tagId);
                     if (reader.Read())
                     {
                         output = GetTagsFromReader(reader);
@@ -69,7 +69,7 @@ namespace Capstone.DAO
             }
             catch (Exception)
             {
-                 throw new System.NotImplementedException();
+                throw;
             }
             return output;
         }
@@ -83,7 +83,8 @@ namespace Capstone.DAO
                     conn.Open();
                     SqlCommand cmd = new SqlCommand("Update tags (playful, needs_exercise, cute, affectionate, large, intelligent, happy, short_haired, " +
                         "shedder, shy, faithful, leash_trained, hypoallergenic) VALUES (@playful, @needs_exercise, @cute, " +
-                        "@affectionate, @large, @intelligent, @happy, @short_haired, @shedder, @shy, @faithful, @leash_trained, @hypoallergenic)", conn);
+                        "@affectionate, @large, @intelligent, @happy, @short_haired, @shedder, @shy, @faithful, @leash_trained, @hypoallergenic) where tagId = @tagId", conn);
+                    cmd.Parameters.AddWithValue("@tagId", updatedTags.TagId);                   
                     cmd.Parameters.AddWithValue("@playful", updatedTags.IsPlayful);
                     cmd.Parameters.AddWithValue("@needs_exercise", updatedTags.IsNeedsExercise);
                     cmd.Parameters.AddWithValue("@cute", updatedTags.IsCute);
@@ -107,7 +108,7 @@ namespace Capstone.DAO
             }
             catch (Exception)
             {
-                throw new System.NotImplementedException();
+                throw;
             }
             return updatedTags;
         }

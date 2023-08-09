@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Capstone.Models
 {
-    public class Environment
+    public class Environ
     {
         public int EnvironmentId { get; set; }
         public bool IsChildSafe { get; set; }
