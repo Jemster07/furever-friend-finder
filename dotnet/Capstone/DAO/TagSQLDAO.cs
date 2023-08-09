@@ -9,12 +9,11 @@ using System.Security.Policy;
 
 namespace Capstone.DAO
 {
-    public class TagSQLDAO : ITagDao
+    public class TagSqlDao : ITagDao
     {
         private string connectionString;
-        public Tag createTag(int petId)
+        public Tag CreateTag(Tag newTag)
         {
-            Tag newTag = null;
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -30,7 +29,7 @@ namespace Capstone.DAO
                     cmd.Parameters.AddWithValue("@cute", newTag.IsCute);
                     cmd.Parameters.AddWithValue("@affectionate", newTag.IsAffectionate);
                     cmd.Parameters.AddWithValue("@large", newTag.IsLarge);
-                    cmd.Parameters.AddWithValue("@intellegent", newTag.IsIntelligent);
+                    cmd.Parameters.AddWithValue("@intelligent", newTag.IsIntelligent);
                     cmd.Parameters.AddWithValue("@short_haired", newTag.IsShortHaired);
                     cmd.Parameters.AddWithValue("@shedder", newTag.IsShedder);
                     cmd.Parameters.AddWithValue("@shy", newTag.IsShy);
@@ -42,13 +41,13 @@ namespace Capstone.DAO
                 return newTag;
             }
             catch (Exception)
-            {          
-                throw new System.NotImplementedException();
+            {
+                throw;
             }
 
         }
 
-        public Tag getTag(int petId)
+        public Tag GetTag(int tagId)
         {
             Tag output = null;
 
@@ -58,10 +57,10 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("SELECT * from tags join tags.tagId = pets.petId where pets.petId = @petId", conn);
+                    SqlCommand cmd = new SqlCommand("SELECT * from tags where tag_Id = @tag_Id", conn);
                     SqlDataReader reader = cmd.ExecuteReader();
 
-                    cmd.Parameters.AddWithValue("@petId", petId);
+                    cmd.Parameters.AddWithValue("@tag_Id", tagId);
                     if (reader.Read())
                     {
                         output = GetTagsFromReader(reader);
@@ -70,12 +69,12 @@ namespace Capstone.DAO
             }
             catch (Exception)
             {
-                 throw new System.NotImplementedException();
+                throw;
             }
             return output;
         }
 
-        public Tag updateTag(int pet_id, Tag updatedTags)
+        public Tag UpdateTag(Tag updatedTags)
         {
             try
             {
@@ -84,13 +83,14 @@ namespace Capstone.DAO
                     conn.Open();
                     SqlCommand cmd = new SqlCommand("Update tags (playful, needs_exercise, cute, affectionate, large, intelligent, happy, short_haired, " +
                         "shedder, shy, faithful, leash_trained, hypoallergenic) VALUES (@playful, @needs_exercise, @cute, " +
-                        "@affectionate, @large, @intelligent, @happy, @short_haired, @shedder, @shy, @faithful, @leash_trained, @hypoallergenic)", conn);
+                        "@affectionate, @large, @intelligent, @happy, @short_haired, @shedder, @shy, @faithful, @leash_trained, @hypoallergenic) where tagId = @tagId", conn);
+                    cmd.Parameters.AddWithValue("@tagId", updatedTags.TagId);                   
                     cmd.Parameters.AddWithValue("@playful", updatedTags.IsPlayful);
                     cmd.Parameters.AddWithValue("@needs_exercise", updatedTags.IsNeedsExercise);
                     cmd.Parameters.AddWithValue("@cute", updatedTags.IsCute);
                     cmd.Parameters.AddWithValue("@affectionate", updatedTags.IsAffectionate);
                     cmd.Parameters.AddWithValue("@large", updatedTags.IsLarge);
-                    cmd.Parameters.AddWithValue("@intellegent", updatedTags.IsIntelligent);
+                    cmd.Parameters.AddWithValue("@intelligent", updatedTags.IsIntelligent);
                     cmd.Parameters.AddWithValue("@short_haired", updatedTags.IsShortHaired);
                     cmd.Parameters.AddWithValue("@shedder", updatedTags.IsShedder);
                     cmd.Parameters.AddWithValue("@shy", updatedTags.IsShy);
@@ -108,7 +108,7 @@ namespace Capstone.DAO
             }
             catch (Exception)
             {
-                throw new System.NotImplementedException();
+                throw;
             }
             return updatedTags;
         }
