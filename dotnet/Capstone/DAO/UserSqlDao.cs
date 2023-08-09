@@ -48,13 +48,11 @@ namespace Capstone.DAO
 
         public User AddUser(RegisterUser registerUser)
         {
+            IAddressDao createAddress = new AddressSqlDao(connectionString);                  
+            Address registeredAddress = createAddress.CreateAddress(registerUser.Address);
+
             IPasswordHasher passwordHasher = new PasswordHasher();
             PasswordHash hash = passwordHasher.ComputeHash(registerUser.Password);
-
-            string userStreet = registerUser.Address.Street;
-            string userCity = registerUser.Address.City;
-            string userState = registerUser.Address.State;
-            string userZip = registerUser.Address.Zip;
 
             try
             {
@@ -62,16 +60,6 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand addressCMD = new SqlCommand("INSERT INTO addresses (street, city, state_abr," +
-                        " zip) OUTPUT INSERTED.address_id VALUES (@street, @city, @state_abr, @zip);", conn);
-                    addressCMD.Parameters.AddWithValue("@street", userStreet);
-                    addressCMD.Parameters.AddWithValue("@city", userCity);
-                    addressCMD.Parameters.AddWithValue("@state_abr", userState);
-                    addressCMD.Parameters.AddWithValue("@zip", userZip);
-                    int newAddressID = Convert.ToInt32(addressCMD.ExecuteScalar());
-
-                    //TODO: Write an exception error message that triggers when the input username
-                    //is identical to one of the other entered fields
                     SqlCommand userCMD = new SqlCommand("INSERT INTO users (username, password_hash, salt," +
                         " user_role, address_id, email, is_not_active) VALUES (@username, @password_hash, @salt, @user_role," +
                         " @address_id, @email, @is_not_active)", conn);
@@ -79,7 +67,7 @@ namespace Capstone.DAO
                     userCMD.Parameters.AddWithValue("@password_hash", hash.Password);
                     userCMD.Parameters.AddWithValue("@salt", hash.Salt);
                     userCMD.Parameters.AddWithValue("@user_role", registerUser.Role);
-                    userCMD.Parameters.AddWithValue("@address_id", newAddressID);
+                    userCMD.Parameters.AddWithValue("@address_id", registeredAddress.AddressId);
                     userCMD.Parameters.AddWithValue("@email", registerUser.Email);
                     userCMD.Parameters.AddWithValue("@is_not_active", false);
                     userCMD.ExecuteNonQuery();
@@ -102,19 +90,10 @@ namespace Capstone.DAO
             u.PasswordHash = Convert.ToString(reader["password_hash"]);
             u.Salt = Convert.ToString(reader["salt"]);
             u.Role = Convert.ToString(reader["user_role"]);
-
-            Address tempA = new Address();
-            tempA.AddressId = Convert.ToInt32(reader["address_id"]);
-            tempA.Street = Convert.ToString(reader["street"]);
-            tempA.City = Convert.ToString(reader["city"]);
-            tempA.State = Convert.ToString(reader["state_abr"]);
-            tempA.Zip = Convert.ToString(reader["zip"]);
-            u.Address = tempA;
-
             u.ApplicationStatus = Convert.ToString(reader["app_status"]);
             u.IsActive = Convert.ToBoolean(reader["is_not_active"]);
             u.Email = Convert.ToString(reader["email"]);
-            u.IsAdopter = Convert.ToBoolean(reader["is_adopter"]);
+            //u.IsAdopter = Convert.ToBoolean(reader["is_adopter"]);
 
             return u;
         }

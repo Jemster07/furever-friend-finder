@@ -9,11 +9,16 @@ namespace Capstone.DAO
 {
     public class AddressSqlDao : IAddressDao
     {
-        private string connectionString;
+        private readonly string connectionString;
+
+        public AddressSqlDao(string dbConnectionString)
+        {
+            connectionString = dbConnectionString;
+        }
 
         public Address GetAddress(int addressId)
         {
-            Address address = null;
+            Address address = new Address();
             string sql = "SELECT address_id, street, city, state_abr, zip FROM addresses " +
                 "WHERE address_id = @address_id;";
 
@@ -24,9 +29,9 @@ namespace Capstone.DAO
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    SqlDataReader reader = cmd.ExecuteReader();
-
                     cmd.Parameters.AddWithValue("@address_id", addressId);
+                    
+                    SqlDataReader reader = cmd.ExecuteReader();
 
                     if (reader.Read())
                     {
