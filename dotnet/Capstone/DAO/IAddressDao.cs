@@ -5,7 +5,7 @@ namespace Capstone.DAO
     public interface IAddressDao
     {
         Address GetAddress(int addressId);
-        Address CreateAddress(Address newAddress);
+        Address CreateAddress(CreateAddress newAddress);
         Address UpdateAddress(Address updatedAddress);
     }
 }

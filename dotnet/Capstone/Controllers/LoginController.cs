@@ -52,7 +52,7 @@ namespace Capstone.Controllers
             IActionResult result;
 
             User existingUser = userDao.GetUser(userParam.Username);
-            if (existingUser != null)
+            if (existingUser.Username != null)
             {
                 return Conflict(new { message = "Username already taken. Please choose a different username." });
             }

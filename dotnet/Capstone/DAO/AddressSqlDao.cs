@@ -42,8 +42,10 @@ namespace Capstone.DAO
             return address;
         }
 
-        public Address CreateAddress(Address newAddress)
+        public Address CreateAddress(CreateAddress newAddress)
         {
+            int addressId = 0;
+
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -56,8 +58,7 @@ namespace Capstone.DAO
                     cmd.Parameters.AddWithValue("@city", newAddress.City);
                     cmd.Parameters.AddWithValue("@state_abr", newAddress.State);
                     cmd.Parameters.AddWithValue("@zip", newAddress.Zip);
-                    cmd.ExecuteNonQuery();
-                    newAddress.AddressId = Convert.ToInt32(cmd.ExecuteScalar());
+                    addressId = Convert.ToInt32(cmd.ExecuteScalar());
                 }
             }
             catch (SqlException)
@@ -65,7 +66,7 @@ namespace Capstone.DAO
                 throw;
             }
 
-            return newAddress;
+            return GetAddress(addressId);
         }
 
         public Address UpdateAddress(Address updatedAddress)
