@@ -108,7 +108,7 @@ namespace Capstone.DAO
             a.Street = Convert.ToString(reader["street"]);
             a.City = Convert.ToString(reader["city"]);
             a.State = Convert.ToString(reader["state_abr"]);
-            a.Zip = Convert.ToInt32(reader["zip"]);
+            a.Zip = Convert.ToString(reader["zip"]);
 
             return a;
         }

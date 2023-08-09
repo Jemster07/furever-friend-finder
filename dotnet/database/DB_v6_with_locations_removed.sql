@@ -87,7 +87,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[addresses](
-	[address_id] [int] NOT NULL,
+	[address_id] [int] IDENTITY(1,1) NOT NULL,
 	[street] [varchar](50) NOT NULL,
 	[city] [varchar](50) NOT NULL,
 	[state_abr] [varchar](2) NOT NULL,

@@ -60,6 +60,6 @@ namespace Capstone.Models
         [Compare("Password")]
         public string ConfirmPassword { get; set; }
         public string Role { get; set; }
-        public Address Address { get; set; }
+        public CreateAddress Address { get; set; }
     }
 }
