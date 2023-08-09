@@ -11,7 +11,7 @@ namespace Capstone.Models
         public string Color { get; set; }
         public int Age { get; set; }
         public Attribute Attributes { get; set; }
-        public Environment Environments { get; set; }
+        public Environ Environment { get; set; }
         public Tag Tags { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
