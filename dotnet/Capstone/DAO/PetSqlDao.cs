@@ -41,18 +41,7 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand atcmd = new SqlCommand("INSERT INTO Attributes (spayed_neutered, house_trained, declawed, special_needs, shots_current " +
-                        "VALUES (@spayed_Neutered, @house_trained, @declawed, @special_needs, @shots_current)", conn);
-
-                    atcmd.Parameters.AddWithValue("@spayed_neutered", attributes.IsSpayedNeutered);
-                    atcmd.Parameters.AddWithValue("@house_trained", attributes.IsHouseTrained);
-                    atcmd.Parameters.AddWithValue("@declawed", attributes.IsDeclawed);
-                    atcmd.Parameters.AddWithValue("@special_needs", attributes.IsSpecialNeeds);
-                    atcmd.Parameters.AddWithValue("@shots_current", attributes.IsShotsCurrent);
-                    atcmd.ExecuteNonQuery();
-                    Attribute.AttributeId = Convert.ToInt32(atcmd.ExecuteScalar());
-
-                    SqlCommand envcmd = new SqlCommand("INSERT INTO Environments (dogs, cats");
+                    
 
                     SqlCommand cmd = new SqlCommand("INSERT INTO Pets (type, species, color, age, name, description " +
                         "VALUES (@type, @species, @color, @age, @name, @description)", conn);
