@@ -9,4 +9,10 @@ namespace Capstone.Models
         public string PhotoUrl { get; set; }
         public int PetId { get; set; }
     }
+
+    public class NewPhoto
+    {
+        public string PhotoUrl { get; set; }
+        public int PetId { get; set; }
+    }
 }

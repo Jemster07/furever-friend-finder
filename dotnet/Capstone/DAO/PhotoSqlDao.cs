@@ -45,6 +45,16 @@ namespace Capstone.DAO
             return requestedPhoto;
         }
 
+        public Photo AddPhoto(NewPhoto newPhoto)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Photo UpdatePhoto(Photo photoToUpdate)
+        {
+            throw new NotImplementedException();
+        }
+
         public List<Photo> ListPhotosByPet(int petId)
         {
             List<Photo> photoList = new List<Photo>();
