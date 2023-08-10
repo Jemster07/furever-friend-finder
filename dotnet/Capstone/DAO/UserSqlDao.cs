@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Security.Cryptography.Xml;
 using Capstone.Models;
 using Capstone.Security;
 using Capstone.Security.Models;
@@ -38,9 +40,9 @@ namespace Capstone.DAO
                     }
                 }
             }
-            catch (SqlException)
+            catch (SqlException e)
             {
-                throw;
+                throw e;
             }
 
             return returnUser;
@@ -74,12 +76,102 @@ namespace Capstone.DAO
                     userCMD.ExecuteNonQuery();
                 }
             }
-            catch (SqlException)
+            catch (SqlException e)
             {
-                throw;
+                throw e;
             }
 
             return GetUser(registerUser.Username);
+        }
+
+        public User ChangeAppStatus(string userToUpdate, string newStatus)
+        {
+            string sql = "UPDATE users SET app_status = @newStatus where username = @userToUpdate;";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@newStatus", newStatus);
+                    cmd.Parameters.AddWithValue("@userToUpdate", userToUpdate);
+                    int rowsReturned = cmd.ExecuteNonQuery();
+
+                    if (rowsReturned != 1)
+                    {
+                        throw new Exception("Error updating application status");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return GetUser(userToUpdate);
+        }
+
+        public List<User> ListAllUsers()
+        {
+            List<User> output = new List<User>();
+            string sql = "SELECT user_id, username, password_hash, salt, user_role, app_status, " +
+                "is_not_active, users.address_id, email, is_adopter, addresses.address_id, " +
+                "street, city, state_abr, zip FROM users JOIN addresses " +
+                "ON users.address_id = addresses.address_id;";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    
+                    SqlCommand sqlCommand = new SqlCommand(sql, conn);
+                    SqlDataReader reader = sqlCommand.ExecuteReader();
+                    
+                    while (reader.Read())
+                    {
+                        User returnUser = GetUserFromReader(reader);
+                        output.Add(returnUser);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            
+            return output;
+        }
+
+        public List<User> ListPendingUsers()
+        {
+            List<User> output = new List<User>();
+            string sql = "SELECT user_id, username, password_hash, salt, user_role, app_status, " +
+                "is_not_active, users.address_id, email, is_adopter, addresses.address_id, street, " +
+                "city, state_abr, zip FROM users JOIN addresses ON users.address_id = " +
+                "addresses.address_id WHERE user_role = 'friend' AND app_status = 'pending';";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand sqlCommand = new SqlCommand(sql, conn);
+                    SqlDataReader reader = sqlCommand.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        User returnUser = GetUserFromReader(reader);
+                        output.Add(returnUser);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return output;
         }
 
         private User GetUserFromReader(SqlDataReader reader)
