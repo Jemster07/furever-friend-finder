@@ -11,7 +11,13 @@ namespace Capstone.DAO
 {
     public class TagSqlDao : ITagDao
     {
-        private string connectionString;
+        private readonly string connectionString;
+
+        public TagSqlDao(string dbConnectionString)
+        {
+            connectionString = dbConnectionString;
+        }
+
         public Tag CreateTag(Tag newTag)
         {
             try
@@ -49,7 +55,7 @@ namespace Capstone.DAO
 
         public Tag GetTag(int tagId)
         {
-            Tag output = null;
+            Tag output = new Tag();
 
             try
             {
@@ -81,10 +87,11 @@ namespace Capstone.DAO
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    SqlCommand cmd = new SqlCommand("Update tags (playful, needs_exercise, cute, affectionate, large, intelligent, happy, short_haired, " +
-                        "shedder, shy, faithful, leash_trained, hypoallergenic) VALUES (@playful, @needs_exercise, @cute, " +
-                        "@affectionate, @large, @intelligent, @happy, @short_haired, @shedder, @shy, @faithful, @leash_trained, @hypoallergenic) where tagId = @tagId", conn);
-                    cmd.Parameters.AddWithValue("@tagId", updatedTags.TagId);                   
+                    //SqlCommand cmd = new SqlCommand("Update tags (playful, needs_exercise, cute, affectionate, large, intelligent, happy, short_haired, " +
+                    //    "shedder, shy, faithful, leash_trained, hypoallergenic) VALUES (@playful, @needs_exercise, @cute, " +
+                    //    "@affectionate, @large, @intelligent, @happy, @short_haired, @shedder, @shy, @faithful, @leash_trained, @hypoallergenic) where tag_Id = @tag_Id", conn);
+                    SqlCommand cmd = new SqlCommand("Update tags set playful=@playful, needs_exercise=@needs_exercise, cute=@cute, affectionate=@affectionate, large=@large, intellegent=@intellegent, short_haired=@short_haired, shedder=@shedder, shy=@shy, faithful=@faithful, leash_trained=@leash_trained, hypoallergenic=@hypoallergenic where tag_id-@tag_id", conn);
+                    cmd.Parameters.AddWithValue("@tag_Id", updatedTags.TagId);                   
                     cmd.Parameters.AddWithValue("@playful", updatedTags.IsPlayful);
                     cmd.Parameters.AddWithValue("@needs_exercise", updatedTags.IsNeedsExercise);
                     cmd.Parameters.AddWithValue("@cute", updatedTags.IsCute);
@@ -115,7 +122,7 @@ namespace Capstone.DAO
         private Tag GetTagsFromReader(SqlDataReader reader)
         {
             Tag u = new Tag();
-            u.TagId = Convert.ToInt32(reader["tagId"]);
+            u.TagId = Convert.ToInt32(reader["tag_Id"]);
             u.IsPlayful = Convert.ToBoolean(reader["playful"]);
             u.IsNeedsExercise = Convert.ToBoolean(reader["needs_exercise"]);
             u.IsCute = Convert.ToBoolean(reader["cute"]);
