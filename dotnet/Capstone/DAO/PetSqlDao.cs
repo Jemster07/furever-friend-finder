@@ -96,9 +96,9 @@ namespace Capstone.DAO
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand("SELECT * where pet_id = @pet_id", conn);
-                    SqlDataReader reader = cmd.ExecuteReader();
-
                     cmd.Parameters.AddWithValue("@pet_id", petId);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    
                     if (reader.Read())
                     {
                         output = GetPetFromReader(reader);
@@ -141,7 +141,7 @@ namespace Capstone.DAO
             return output;
         }
 
-        public List<Pet> GetListbyZip(Address zipaddress)
+        public List<Pet> GetListByZip(Address zipAddress)
         {
             List<Pet> output = new List<Pet>();
             try
@@ -149,8 +149,9 @@ namespace Capstone.DAO
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    SqlCommand sqlCommand = new SqlCommand("Select * join Address on address_id = Pet.address_id where zip = @zip", conn);
-                    sqlCommand.Parameters.AddWithValue("@zip", zipaddress);
+                    SqlCommand sqlCommand = new SqlCommand("Select * join addresses on " +
+                        "address_id = pet.address_id where zip = @zip", conn);
+                    sqlCommand.Parameters.AddWithValue("@zip", zipAddress);
                     SqlDataReader reader = sqlCommand.ExecuteReader();
                     while (reader.Read())
                     {
@@ -169,6 +170,7 @@ namespace Capstone.DAO
         public Pet GetPetByEnvironment(Environ environment)
         {
             Pet output = new Pet();
+
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -178,6 +180,9 @@ namespace Capstone.DAO
                     SqlCommand cmd = new SqlCommand("SELECT * environments " +
                         "where children=@children and dogs=@dogs and cats=@cats " +
                         "and other_animals=@other_animals and indoor_only=@indoor_only", conn);
+                    
+
+                    
                     SqlDataReader reader = cmd.ExecuteReader();
               
                     if (reader.Read())
@@ -202,12 +207,16 @@ namespace Capstone.DAO
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    SqlCommand cmd = new SqlCommand("SELECT * tags where playful=@playful and needs_exercise=@needs_exercise " +
-                        "cute=@cute and affectionate=@affectionate and large=@large and intellegent=@intellegent and " +
-                        "happy=@happy and short_haired=@short_haired and shedder=@shedder and shy=@shy and faithful=@faithful " +
-                        "and leash_trained=@leash_trained and hypoallergenic=@hypoallergenic", conn);
-                    SqlDataReader reader = cmd.ExecuteReader();
+                    SqlCommand cmd = new SqlCommand("SELECT * tags where playful = @playful and " +
+                        "needs_exercise = @needs_exercise and cute = @cute and affectionate = @affectionate " +
+                        "and large = @large and intelligent = @intelligent and happy = @happy and " +
+                        "short_haired = @short_haired and shedder = @shedder and shy = @shy and " +
+                        "faithful = @faithful and leash_trained = @leash_trained and " +
+                        "hypoallergenic = @hypoallergenic", conn);
 
+
+
+                    SqlDataReader reader = cmd.ExecuteReader();
  
                     if (reader.Read())
                     {
@@ -231,9 +240,10 @@ namespace Capstone.DAO
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    SqlCommand sqlCommand = new SqlCommand("Select * where adopter_id= @adopter_id", conn);
-                    sqlCommand.Parameters.AddWithValue("@adoptpter_id", adopterId);
+                    SqlCommand sqlCommand = new SqlCommand("Select * where adopter_id = @adopter_id", conn);
+                    sqlCommand.Parameters.AddWithValue("@adopter_id", adopterId);
                     SqlDataReader reader = sqlCommand.ExecuteReader();
+                    
                     while (reader.Read())
                     {
                         Pet temp = GetPetFromReader(reader);
@@ -263,13 +273,13 @@ namespace Capstone.DAO
             IAttributesDao updateAttribute = new AttributesSqlDao(connectionString);
             Attributes newAttribute = updateAttribute.UpdateAttribute(updatedAttributes);
 
-
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    SqlCommand cmd = new SqlCommand("Update pets set type=@type, species=@species, color=@color, age=@age, name=@name, description=@description " +
+                    SqlCommand cmd = new SqlCommand("Update pets set type = @type, species = @species, " +
+                        "color = @color, age = @age, name = @name, description = @description, " +
                         "pet_id = @pet_id", conn);
                     cmd.Parameters.AddWithValue("@pet_id", updatedPet.PetId);
                     cmd.Parameters.AddWithValue("@type", updatedPet.Type);

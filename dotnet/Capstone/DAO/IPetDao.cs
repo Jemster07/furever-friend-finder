@@ -12,7 +12,7 @@ namespace Capstone.DAO
         List<Pet> GetListOfPets(int petId);
 
         //Get list of pets by zip code
-        List<Pet> GetListbyZip(Address zipaddress);
+        List<Pet> GetListByZip(Address zipAddress);
 
         //Get list of pets by adopter id
         List<Pet> GetPetsByAdopter(int adopterId);
@@ -24,6 +24,5 @@ namespace Capstone.DAO
         Pet GetPetByAttribute(Attributes attributes);
         Pet GetPetByEnvironment(Environ environment);
         Pet GetPetByTags(Tag tags);
-
     }
 }
