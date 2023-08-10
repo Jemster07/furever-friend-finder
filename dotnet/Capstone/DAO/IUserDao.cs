@@ -12,14 +12,15 @@ namespace Capstone.DAO
         //and the user to be changed, to confirm the admin's role before execution
         User ChangeAppStatus(string userToUpdate, string newStatus);
 
-        //List users by user_id for directory
-        List<User> ListAllUsers();
+        //List active users for directory
+        List<User> ListActiveUsers();
 
-        //List users by user_id where role is friend AND app_status is pending
+        //List users where role is friend AND app_status is pending
         //for admin application approval page
         //UserController class should pass in the admin user to confirm permission
         //to view the page is granted
         List<User> ListPendingUsers();
+        List<User> ListAllUsers();
 
         //These are optional "nice to have" methods we can add later if we have time:
 

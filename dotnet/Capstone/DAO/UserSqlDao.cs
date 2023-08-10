@@ -112,22 +112,23 @@ namespace Capstone.DAO
             return GetUser(userToUpdate);
         }
 
-        public List<User> ListAllUsers()
+        public List<User> ListActiveUsers()
         {
             List<User> output = new List<User>();
             string sql = "SELECT user_id, username, password_hash, salt, user_role, app_status, " +
                 "is_not_active, users.address_id, email, is_adopter, addresses.address_id, " +
                 "street, city, state_abr, zip FROM users JOIN addresses " +
-                "ON users.address_id = addresses.address_id;";
+                "ON users.address_id = addresses.address_id " +
+                "WHERE (user_role = 'friend' OR user_role = 'admin') AND app_status = 'approved';";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    
+
                     SqlCommand sqlCommand = new SqlCommand(sql, conn);
                     SqlDataReader reader = sqlCommand.ExecuteReader();
-                    
+
                     while (reader.Read())
                     {
                         User returnUser = GetUserFromReader(reader);
@@ -139,7 +140,7 @@ namespace Capstone.DAO
             {
                 throw e;
             }
-            
+
             return output;
         }
 
@@ -171,6 +172,37 @@ namespace Capstone.DAO
                 throw e;
             }
 
+            return output;
+        }
+
+        public List<User> ListAllUsers()
+        {
+            List<User> output = new List<User>();
+            string sql = "SELECT user_id, username, password_hash, salt, user_role, app_status, " +
+                "is_not_active, users.address_id, email, is_adopter, addresses.address_id, " +
+                "street, city, state_abr, zip FROM users JOIN addresses " +
+                "ON users.address_id = addresses.address_id;";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    
+                    SqlCommand sqlCommand = new SqlCommand(sql, conn);
+                    SqlDataReader reader = sqlCommand.ExecuteReader();
+                    
+                    while (reader.Read())
+                    {
+                        User returnUser = GetUserFromReader(reader);
+                        output.Add(returnUser);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            
             return output;
         }
 
