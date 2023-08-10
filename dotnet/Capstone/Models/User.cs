@@ -15,21 +15,10 @@ namespace Capstone.Models
         public string Role { get; set; }
         public Address Address { get; set; }
         public string ApplicationStatus { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsInactive { get; set; }
         public string Email { get; set; }
         public bool IsAdopter { get; set; }
     }
-
-    /// <summary>
-    /// Model of user data to return upon successful login
-    /// Tom took this out in preference for the JsonIgnore
-    /// </summary>
-    //public class ReturnUser
-    //{
-    //    public int UserId { get; set; }
-    //    public string Username { get; set; }
-    //    public string Role { get; set; }
-    //}
 
     /// <summary>
     /// Model to return upon successful login (user data + token)

@@ -25,9 +25,10 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("SELECT user_id, username, password_hash, salt," +
-                        " user_role, app_status, is_not_active, address_id, email, is_adopter" +
-                        " FROM users WHERE username = @username", conn);
+                    SqlCommand cmd = new SqlCommand("SELECT user_id, username, password_hash, salt, " +
+                        "user_role, app_status, is_not_active, users.address_id, email, is_adopter, " +
+                        "addresses.address_id, street, city, state_abr, zip FROM users JOIN addresses " +
+                        "ON users.address_id = addresses.address_id WHERE username = @username;", conn);
                     cmd.Parameters.AddWithValue("@username", username);
                     SqlDataReader reader = cmd.ExecuteReader();
 
@@ -84,15 +85,22 @@ namespace Capstone.DAO
         private User GetUserFromReader(SqlDataReader reader)
         {
             User u = new User();
-
             u.UserId = Convert.ToInt32(reader["user_id"]);
             u.Username = Convert.ToString(reader["username"]);
             u.PasswordHash = Convert.ToString(reader["password_hash"]);
             u.Salt = Convert.ToString(reader["salt"]);
             u.Role = Convert.ToString(reader["user_role"]);
             u.ApplicationStatus = Convert.ToString(reader["app_status"]);
-            u.IsActive = Convert.ToBoolean(reader["is_not_active"]);
+            u.IsInactive = Convert.ToBoolean(reader["is_not_active"]);
             u.Email = Convert.ToString(reader["email"]);
+
+            Address a = new Address();
+            a.AddressId = Convert.ToInt32(reader["address_id"]);
+            a.Street = Convert.ToString(reader["street"]);
+            a.City = Convert.ToString(reader["city"]);
+            a.State = Convert.ToString(reader["state_abr"]);
+            a.Zip = Convert.ToString(reader["zip"]);
+            u.Address = a;
 
             return u;
         }

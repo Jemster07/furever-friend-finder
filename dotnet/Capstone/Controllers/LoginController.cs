@@ -31,7 +31,7 @@ namespace Capstone.Controllers
 
             // If we found a user and the password hash matches
             if (user != null && passwordHasher.VerifyHashMatch(user.PasswordHash, userParam.Password, user.Salt)
-                && user.ApplicationStatus != "Rejected" && user.ApplicationStatus != "Pending")
+                && user.ApplicationStatus != "rejected" && user.ApplicationStatus != "pending")
             {
                 // Create an authentication token
                 string token = tokenGenerator.GenerateToken(user.UserId, user.Username, user.Role);
@@ -42,6 +42,17 @@ namespace Capstone.Controllers
 
                 // Switch to 200 OK
                 result = Ok(retUser);
+            }
+
+            if (user != null && passwordHasher.VerifyHashMatch(user.PasswordHash, userParam.Password, user.Salt)
+                && user.ApplicationStatus == "pending")
+            {
+                result = Unauthorized(new { message = "Application is currently pending" });
+            }
+            else if (user != null && passwordHasher.VerifyHashMatch(user.PasswordHash, userParam.Password, user.Salt)
+                && user.ApplicationStatus == "rejected")
+            {
+                result = Unauthorized(new { message = "Application has been rejected" });
             }
 
             return result;
