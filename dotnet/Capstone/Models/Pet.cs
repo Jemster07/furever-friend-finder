@@ -10,7 +10,7 @@ namespace Capstone.Models
         public string Species { get; set; }
         public string Color { get; set; }
         public int Age { get; set; }
-        public Attribute Attributes { get; set; }
+        public Attributes Attributes { get; set; }
         public Environ Environment { get; set; }
         public Tag Tags { get; set; }
         public string Name { get; set; }
