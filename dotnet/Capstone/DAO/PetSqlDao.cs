@@ -11,7 +11,7 @@ namespace Capstone.DAO
     {
         private string connectionString;
 
-        public Pet CreateNewPet(Pet newPet, Attribute Atributes, Environ environment, Tag tags, Address address)
+        public Pet CreateNewPet(Pet newPet, Attribute attributes, Environ environment, Tag tags, Address address)
         {
             try
             {
@@ -30,7 +30,7 @@ namespace Capstone.DAO
                     atcmd.ExecuteNonQuery();
                     Attribute.AttributeId = Convert.ToInt32(atcmd.ExecuteScalar());
 
-                    SqlCommand envcmd = new SqlCommand("INSERT INTO Environments (dogs, cats")
+                    SqlCommand envcmd = new SqlCommand("INSERT INTO Environments (dogs, cats");
 
                     SqlCommand cmd = new SqlCommand("INSERT INTO Pets (type, species, color, age, name, description " +
                         "VALUES (@type, @species, @color, @age, @name, @description)", conn);
@@ -166,7 +166,7 @@ namespace Capstone.DAO
             tempAd.Street = Convert.ToString(reader["street"]);
             tempAd.City = Convert.ToString(reader["city"]);
             tempAd.State = Convert.ToString(reader["state_abr"]);
-            tempAd.Zip = Convert.ToInt32(reader["zip"]);
+            tempAd.Zip = Convert.ToString(reader["zip"]);
             p.Address= tempAd;
 
             return p;
