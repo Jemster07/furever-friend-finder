@@ -65,6 +65,7 @@ namespace Capstone
             services.AddSingleton<ITokenGenerator>(tk => new JwtGenerator(Configuration["JwtSecret"]));
             services.AddSingleton<IPasswordHasher>(ph => new PasswordHasher());
             services.AddTransient<IUserDao>(m => new UserSqlDao(connectionString));
+            //TODO: Configure for other DAO objects
 
             services.AddSwaggerGen(s => {
                 s.SwaggerDoc("v1", new OpenApiInfo
