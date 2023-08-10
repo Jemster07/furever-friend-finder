@@ -22,7 +22,7 @@ namespace Capstone.DAO
 
                     SqlCommand cmd = new SqlCommand("INSERT INTO attributes (spayed_neutered, house_trained, declawed, special_needs, shots_current " +
                         "VALUES (@spayed_neutered, @house_trained, @declawed, @special_needs, @shots_current) where attribute_id = @attribute_id", conn);
-                    cmd.Parameters.AddWithValue("@attributet_id", newAttribute.AttributeId);
+                    cmd.Parameters.AddWithValue("@attribute_id", newAttribute.AttributeId);
                     cmd.Parameters.AddWithValue("@spayed_neutered", newAttribute.IsSpayedNeutered);
                     cmd.Parameters.AddWithValue("@house_trained", newAttribute.IsHouseTrained);
                     cmd.Parameters.AddWithValue("@declawed", newAttribute.IsDeclawed);
