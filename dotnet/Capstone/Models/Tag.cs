@@ -7,7 +7,7 @@ namespace Capstone.Models
     {
         public int TagId { get; set; }
         public bool IsPlayful { get; set; }
-        public bool IsNeedsExercise { get; set; }
+        public bool NeedsExercise { get; set; }
         public bool IsCute { get; set; }
         public bool IsAffectionate { get; set; }
         public bool IsLarge { get; set; }

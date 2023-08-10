@@ -31,7 +31,7 @@ namespace Capstone.DAO
                         "VALUES (@playful, @needs_exercise, @cute, @affectionate, @large, @intelligent, @happy, " +
                         "@short_haired, @shedder, @shy, @faithful, @leash_trained, @hypoallergenic)", conn);
                     cmd.Parameters.AddWithValue("@playful", newTag.IsPlayful);
-                    cmd.Parameters.AddWithValue("@needs_exercise", newTag.IsNeedsExercise);
+                    cmd.Parameters.AddWithValue("@needs_exercise", newTag.NeedsExercise);
                     cmd.Parameters.AddWithValue("@cute", newTag.IsCute);
                     cmd.Parameters.AddWithValue("@affectionate", newTag.IsAffectionate);
                     cmd.Parameters.AddWithValue("@large", newTag.IsLarge);
@@ -95,7 +95,7 @@ namespace Capstone.DAO
                         "leash_trained = @leash_trained, hypoallergenic = @hypoallergenic where tag_id = @tag_id", conn);
                     cmd.Parameters.AddWithValue("@tag_Id", updatedTags.TagId);                   
                     cmd.Parameters.AddWithValue("@playful", updatedTags.IsPlayful);
-                    cmd.Parameters.AddWithValue("@needs_exercise", updatedTags.IsNeedsExercise);
+                    cmd.Parameters.AddWithValue("@needs_exercise", updatedTags.NeedsExercise);
                     cmd.Parameters.AddWithValue("@cute", updatedTags.IsCute);
                     cmd.Parameters.AddWithValue("@affectionate", updatedTags.IsAffectionate);
                     cmd.Parameters.AddWithValue("@large", updatedTags.IsLarge);
@@ -127,7 +127,7 @@ namespace Capstone.DAO
             Tag u = new Tag();
             u.TagId = Convert.ToInt32(reader["tag_Id"]);
             u.IsPlayful = Convert.ToBoolean(reader["playful"]);
-            u.IsNeedsExercise = Convert.ToBoolean(reader["needs_exercise"]);
+            u.NeedsExercise = Convert.ToBoolean(reader["needs_exercise"]);
             u.IsCute = Convert.ToBoolean(reader["cute"]);
             u.IsAffectionate = Convert.ToBoolean(reader["affectionate"]);
             u.IsLarge = Convert.ToBoolean(reader["large"]);

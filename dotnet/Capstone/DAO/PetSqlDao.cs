@@ -13,28 +13,28 @@ namespace Capstone.DAO
     public class PetSqlDao : IPetDao
     {
         private readonly string connectionString;
-        private readonly IAddressDao createAddress;
-        private readonly ITagDao createTag;
-        private readonly IEnvironDao createEnvironment;
-        private readonly IAttributesDao createAttribute;
+        private readonly IAddressDao addressDao;
+        private readonly ITagDao tagDao;
+        private readonly IEnvironDao environDao;
+        private readonly IAttributesDao attributeDao;
 
-        public PetSqlDao(string dbConnectionString, IAddressDao createAddress, ITagDao createTag,
-            IEnvironDao createEnvironment, IAttributesDao createAttribute)
+        public PetSqlDao(string dbConnectionString, IAddressDao addressDao, ITagDao tagDao,
+            IEnvironDao environDao, IAttributesDao attributeDao)
         {
             connectionString = dbConnectionString;
-            this.createAddress = createAddress;
-            this.createTag = createTag;
-            this.createEnvironment = createEnvironment;
-            this.createAttribute = createAttribute;
+            this.addressDao = addressDao;
+            this.tagDao = tagDao;
+            this.environDao = environDao;
+            this.attributeDao = attributeDao;
         }
 
         public Pet CreatePet(Pet pet, Attributes attributes, Environ environment, Tag tags,
             CreateAddress address)
         {
-            Address newAddress = createAddress.CreateAddress(address);
-            Tag newTag = createTag.CreateTag(tags);
-            Environ newEnviron = createEnvironment.CreateEnvironment(environment);
-            Attributes newAttributes = createAttribute.CreateAttribute(attributes);
+            Address newAddress = addressDao.CreateAddress(address);
+            Tag newTag = tagDao.CreateTag(tags);
+            Environ newEnviron = environDao.CreateEnvironment(environment);
+            Attributes newAttributes = attributeDao.CreateAttribute(attributes);
 
             try
             {
@@ -119,9 +119,15 @@ namespace Capstone.DAO
             return output;
         }
 
-        public Pet GetPetByAttributes(Attributes attributes)
-        {
-            Pet output = new Pet();
+        public List<Pet> ListPetsByAttributes(Attributes attributes)
+        {            
+            List<Pet> outputList = new List<Pet>();
+
+            string sql = "SELECT * FROM pets JOIN attributes ON pets.attribute_id = attributes.attribute_id " +
+                "JOIN environments ON pets.environment_id = environments.environment_id " +
+                "JOIN tags ON pets.tag_id = tags.tag_id JOIN addresses ON pets.address_id = addresses.address_id " +
+                "WHERE spayed_neutered = @spayed_neutered AND house_trained = @house_trained AND " +
+                "declawed = @declawed AND special_needs = @special_needs AND shots_current = @shots_current;";
 
             try
             {
@@ -129,25 +135,18 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("SELECT pet_id, type, species, color, age, " +
-                        "pets.attribute_id, environment_id, tag_id, name, description, user_id, " +
-                        "photo_id, is_adopted, adopter_id, address_id FROM pets JOIN attributes " +
-                        "ON pets.attribute_id = attributes.attribute_id " +
-                        "WHERE spayed_neutered = @spayed_neutered AND " +
-                        "house_trained = @house_trained AND declawed = @declawed AND " +
-                        "special_needs = @special_needs AND shots_current = @shots_current;", conn);
-
+                    SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@spayed_neutered", attributes.IsSpayedNeutered);
                     cmd.Parameters.AddWithValue("@house_trained", attributes.IsHouseTrained);
                     cmd.Parameters.AddWithValue("@declawed", attributes.IsDeclawed);
                     cmd.Parameters.AddWithValue("@special_needs", attributes.IsSpecialNeeds);
                     cmd.Parameters.AddWithValue("@shots_current", attributes.IsShotsCurrent);
-
                     SqlDataReader reader = cmd.ExecuteReader();
 
-                    if (reader.Read())
+                    while (reader.Read())
                     {
-                        output = GetPetFromReader(reader);
+                        Pet fetchedPet = GetPetFromReader(reader);
+                        outputList.Add(fetchedPet);
                     }
                 }
             }
@@ -156,7 +155,7 @@ namespace Capstone.DAO
                 throw e;
             }
 
-            return output;
+            return outputList;
         }
 
         public List<Pet> ListPetsByZip(Address zipAddress)
@@ -185,9 +184,15 @@ namespace Capstone.DAO
 
             return output;
         }
-        public Pet GetPetByEnvironments(Environ environment)
+        public List<Pet> ListPetsByEnvironments(Environ environment)
         {
-            Pet output = new Pet();
+            List<Pet> outputList = new List<Pet>();
+
+            string sql = "SELECT * FROM pets JOIN attributes ON pets.attribute_id = attributes.attribute_id " +
+                "JOIN environments ON pets.environment_id = environments.environment_id " +
+                "JOIN tags ON pets.tag_id = tags.tag_id JOIN addresses ON pets.address_id = addresses.address_id " +
+                "WHERE children = @children AND dogs = @dogs AND cats = @cats AND other_animals = @other_animals " +
+                "AND indoor_only = @indoor_only;";
 
             try
             {
@@ -195,17 +200,18 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("SELECT * FROM environments " +
-                        "WHERE children = @children and dogs = @dogs and cats = @cats " +
-                        "and other_animals = @other_animals and indoor_only = @indoor_only", conn);
-
-
-
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@children", environment.IsChildSafe);
+                    cmd.Parameters.AddWithValue("@dogs", environment.IsDogSafe);
+                    cmd.Parameters.AddWithValue("@cats", environment.IsCatSafe);
+                    cmd.Parameters.AddWithValue("@other_animals", environment.IsOtherAnimalSafe);
+                    cmd.Parameters.AddWithValue("@indoor_only", environment.IsIndoorOnly);
                     SqlDataReader reader = cmd.ExecuteReader();
 
-                    if (reader.Read())
+                    while (reader.Read())
                     {
-                        output = GetPetFromReader(reader);
+                        Pet fetchedPet = GetPetFromReader(reader);
+                        outputList.Add(fetchedPet);
                     }
                 }
             }
@@ -214,30 +220,48 @@ namespace Capstone.DAO
                 throw e;
             }
 
-            return output;
+            return outputList;
         }
 
-        public Pet GetPetByTags(Tag tags)
+        public List<Pet> ListPetsByTags(Tag tags)
         {
-            Pet output = new Pet();
+            List<Pet> outputList = new List<Pet>();
+
+            string sql = "SELECT * FROM pets JOIN attributes ON pets.attribute_id = attributes.attribute_id " +
+                "JOIN environments ON pets.environment_id = environments.environment_id " +
+                "JOIN tags ON pets.tag_id = tags.tag_id " +
+                "JOIN addresses ON pets.address_id = addresses.address_id " +
+                "WHERE playful = @playful AND needs_exercise = @needs_exercise AND cute = @cute " +
+                "AND affectionate = @affectionate AND large = @large AND intelligent = @intelligent " +
+                "AND happy = @happy AND short_haired = @short_haired AND shedder = @shedder AND shy = @shy " +
+                "AND faithful = @faithful AND leash_trained = @leash_trained AND hypoallergenic = @hypoallergenic;";
+
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    SqlCommand cmd = new SqlCommand("SELECT * FROM tags WHERE playful = @playful and " +
-                        "needs_exercise = @needs_exercise and cute = @cute and affectionate = @affectionate " +
-                        "and large = @large and intelligent = @intelligent and happy = @happy and " +
-                        "short_haired = @short_haired and shedder = @shedder and shy = @shy and " +
-                        "faithful = @faithful and leash_trained = @leash_trained and " +
-                        "hypoallergenic = @hypoallergenic", conn);
 
-
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@playful", tags.IsPlayful);
+                    cmd.Parameters.AddWithValue("@needs_exercise", tags.NeedsExercise);
+                    cmd.Parameters.AddWithValue("@cute", tags.IsCute);
+                    cmd.Parameters.AddWithValue("@affectionate", tags.IsAffectionate);
+                    cmd.Parameters.AddWithValue("@large", tags.IsLarge);
+                    cmd.Parameters.AddWithValue("@intelligent", tags.IsIntelligent);
+                    cmd.Parameters.AddWithValue("@happy", tags.IsHappy);
+                    cmd.Parameters.AddWithValue("@short_haired", tags.IsShortHaired);
+                    cmd.Parameters.AddWithValue("@shedder", tags.IsShedder);
+                    cmd.Parameters.AddWithValue("@shy", tags.IsShy);
+                    cmd.Parameters.AddWithValue("@faithful", tags.IsFaithful);
+                    cmd.Parameters.AddWithValue("@leash_trained", tags.IsLeashTrained);
+                    cmd.Parameters.AddWithValue("@hypoallergenic", tags.IsHypoallergenic);
                     SqlDataReader reader = cmd.ExecuteReader();
 
-                    if (reader.Read())
+                    while (reader.Read())
                     {
-                        output = GetPetFromReader(reader);
+                        Pet fetchedPet = GetPetFromReader(reader);
+                        outputList.Add(fetchedPet);
                     }
                 }
             }
@@ -246,12 +270,13 @@ namespace Capstone.DAO
                 throw e;
             }
 
-            return output;
+            return outputList;
         }
 
         public List<Pet> ListPetsByAdopter(int adopterId)
         {
             List<Pet> output = new List<Pet>();
+
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -278,10 +303,10 @@ namespace Capstone.DAO
 
         public Pet UpdatePet(Pet updatedPet, Attributes updatedAttributes, Environ updatedEnvironment, Tag updatedTags, Address updatedAddress)
         {
-            Address newAddress = createAddress.UpdateAddress(updatedAddress);
-            Tag newTag = createTag.UpdateTag(updatedTags);
-            Environ newEnviron = createEnvironment.UpdateEnvironment(updatedEnvironment);
-            Attributes newAttributes = createAttribute.UpdateAttribute(updatedAttributes);
+            Address newAddress = addressDao.UpdateAddress(updatedAddress);
+            Tag newTag = tagDao.UpdateTag(updatedTags);
+            Environ newEnviron = environDao.UpdateEnvironment(updatedEnvironment);
+            Attributes newAttributes = attributeDao.UpdateAttribute(updatedAttributes);
 
             try
             {
@@ -351,7 +376,7 @@ namespace Capstone.DAO
             Tag tempTag = new Tag();
             tempTag.TagId = Convert.ToInt32(reader["tag_id"]);
             tempTag.IsPlayful = Convert.ToBoolean(reader["playful"]);
-            tempTag.IsNeedsExercise = Convert.ToBoolean(reader["needs_exercise"]);
+            tempTag.NeedsExercise = Convert.ToBoolean(reader["needs_exercise"]);
             tempTag.IsCute = Convert.ToBoolean(reader["cute"]);
             tempTag.IsAffectionate = Convert.ToBoolean(reader["affectionate"]);
             tempTag.IsLarge = Convert.ToBoolean(reader["large"]);
