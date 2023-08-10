@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Capstone.Models
 {
-    public class Attribute
+    public class Attributes
     {
         public int AttributeId { get; set; }
         public bool IsSpayedNeutered { get; set; }
