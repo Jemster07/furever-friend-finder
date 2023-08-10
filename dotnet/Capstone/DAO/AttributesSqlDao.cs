@@ -20,8 +20,9 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("INSERT INTO attributes (spayed_neutered, house_trained, declawed, special_needs, shots_current " +
-                        "VALUES (@spayed_neutered, @house_trained, @declawed, @special_needs, @shots_current) where attribute_id = @attribute_id", conn);
+                    SqlCommand cmd = new SqlCommand("INSERT INTO attributes (spayed_neutered, house_trained, declawed, " +
+                        "special_needs, shots_current VALUES (@spayed_neutered, @house_trained, @declawed, @special_needs, " +
+                        "@shots_current) where attribute_id = @attribute_id", conn);
                     cmd.Parameters.AddWithValue("@attribute_id", newAttribute.AttributeId);
                     cmd.Parameters.AddWithValue("@spayed_neutered", newAttribute.IsSpayedNeutered);
                     cmd.Parameters.AddWithValue("@house_trained", newAttribute.IsHouseTrained);
@@ -30,15 +31,14 @@ namespace Capstone.DAO
                     cmd.Parameters.AddWithValue("@shots_current", newAttribute.IsShotsCurrent);
                     cmd.ExecuteNonQuery();
                 }
-                return newAttribute;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                throw e;
             }
 
+            return newAttribute;
         }
-
 
         public Attributes GetAttribute(int attribute_id)
         {
@@ -60,12 +60,12 @@ namespace Capstone.DAO
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                throw e;
             }
-            return output;
 
+            return output;
         }
 
 
@@ -76,7 +76,9 @@ namespace Capstone.DAO
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    SqlCommand cmd = new SqlCommand("Update attributes set spayed_neutered=@spayed_neutered, house_trained=@house_trained, declawed=@declawed, special_needs=@special_needs, shots_current=@shots_current where attribute_id=@attribute_id", conn);
+                    SqlCommand cmd = new SqlCommand("Update attributes set spayed_neutered = @spayed_neutered, " +
+                        "house_trained = @house_trained, declawed = @declawed, special_needs = @special_needs, " +
+                        "shots_current = @shots_current where attribute_id = @attribute_id", conn);
                     cmd.Parameters.AddWithValue("@attribute_id", updatedAttributes.AttributeId);
                     cmd.Parameters.AddWithValue("@spayed_neutered", updatedAttributes.IsSpayedNeutered);
                     cmd.Parameters.AddWithValue("@house_trained", updatedAttributes.IsHouseTrained);
@@ -91,10 +93,11 @@ namespace Capstone.DAO
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                throw e;
             }
+
             return updatedAttributes;
         }
 
@@ -110,6 +113,5 @@ namespace Capstone.DAO
 
             return att;
         }
-
     }
 }

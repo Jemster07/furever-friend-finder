@@ -19,8 +19,8 @@ namespace Capstone.DAO
             connectionString = dbConnectionString;
         }
 
-
-        public Pet CreateNewPet(Pet newPet, Attributes newAttributes, Environ newEnvironment, Tag newTag, CreateAddress newAddress)
+        public Pet CreateNewPet(Pet newPet, Attributes newAttributes, Environ newEnvironment, Tag newTag, 
+            CreateAddress newAddress)
         {
             //TODO These need help
             IAddressDao createAddress = new AddressSqlDao(connectionString);
@@ -51,13 +51,13 @@ namespace Capstone.DAO
                     cmd.Parameters.AddWithValue("@description", newPet.Description);
                     cmd.ExecuteNonQuery();
                 }
-                return newPet;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                throw e;
             }
 
+            return newPet;
         }
 
         public List<Pet> GetListOfPets(int petId)
@@ -78,12 +78,12 @@ namespace Capstone.DAO
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                throw e;
             }
+            
             return output;
-
         }
 
         public Pet GetPet(int petId)
@@ -105,10 +105,11 @@ namespace Capstone.DAO
                     }
                 }
             }
-            catch
+            catch (Exception e)
             {
-                throw;
+                throw e;
             }
+            
             return output;
         }
 
@@ -132,12 +133,12 @@ namespace Capstone.DAO
                     }
                 }
             }
-            catch
+            catch (Exception e)
             {
-                throw;
+                throw e;
             }
+            
             return output;
-
         }
 
         public List<Pet> GetListbyZip(Address zipaddress)
@@ -158,10 +159,11 @@ namespace Capstone.DAO
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                throw e;
             }
+            
             return output;
         }
         public Pet GetPetByEnvironment(Environ environment)
@@ -184,10 +186,11 @@ namespace Capstone.DAO
                     }
                 }
             }
-            catch
+            catch (Exception e)
             {
-                throw;
+                throw e;
             }
+            
             return output;
         }
 
@@ -212,10 +215,11 @@ namespace Capstone.DAO
                     }
                 }
             }
-            catch
+            catch (Exception e)
             {
-                throw;
+                throw e;
             }
+            
             return output;
         }
 
@@ -237,12 +241,12 @@ namespace Capstone.DAO
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                throw e;
             }
+            
             return output;
-
         }
 
         public Pet UpdatePetById(Pet updatedPet, Attributes updatedAttributes, Environ updatedEnvironment, Tag updatedTags, Address updatedAddress)
@@ -283,12 +287,12 @@ namespace Capstone.DAO
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                throw e;
             }
+            
             return updatedPet;
-
         }
 
         private Pet GetPetFromReader(SqlDataReader reader)

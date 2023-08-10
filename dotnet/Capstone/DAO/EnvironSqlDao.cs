@@ -21,8 +21,9 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("INSERT INTO Environments (children, dogs, cats, other_animals, indoor_only " +
-                        "VALUES (@children, @dog, @cat, @other_animals, @indoor_only) where environment_id = @environment_id", conn);
+                    SqlCommand cmd = new SqlCommand("INSERT INTO environments (children, dogs, cats, other_animals, " +
+                        "indoor_only) VALUES (@children, @dog, @cat, @other_animals, @indoor_only) " +
+                        "where environment_id = @environment_id", conn);
                     cmd.Parameters.AddWithValue("@environment_id", newEnvironment.EnvironmentId);
                     cmd.Parameters.AddWithValue("@children", newEnvironment.IsChildSafe);
                     cmd.Parameters.AddWithValue("@dog", newEnvironment.IsDogSafe);
@@ -31,13 +32,13 @@ namespace Capstone.DAO
                     cmd.Parameters.AddWithValue("@indoor_only", newEnvironment.IsIndoorOnly);
                     cmd.ExecuteNonQuery();
                 }
-                return newEnvironment;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                throw e;
             }
-
+            
+            return newEnvironment;
         }
 
         public Environ GetEnvironment(int environmentId)
@@ -60,12 +61,12 @@ namespace Capstone.DAO
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                throw e;
             }
+            
             return output;
-
         }
 
         public Environ UpdateEnvironment(Environ updatedEnvironment)
@@ -75,7 +76,9 @@ namespace Capstone.DAO
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    SqlCommand cmd = new SqlCommand("Update environments set children=@children, dog=@dog, cat=@cat, other_animals=@other_animals, indoor_only=@indoor_only where environment_id = @environment_id", conn);
+                    SqlCommand cmd = new SqlCommand("Update environments set children = @children, dog = @dog, " +
+                        "cat = @cat, other_animals = @other_animals, indoor_only = @indoor_only " +
+                        "where environment_id = @environment_id", conn);
                     cmd.Parameters.AddWithValue("@children", updatedEnvironment.IsChildSafe);
                     cmd.Parameters.AddWithValue("@dog", updatedEnvironment.IsDogSafe);
                     cmd.Parameters.AddWithValue("@cat", updatedEnvironment.IsCatSafe);
@@ -89,10 +92,11 @@ namespace Capstone.DAO
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                throw e;
             }
+
             return updatedEnvironment;
         }
         private Environ GetEnvironmentFromReader(SqlDataReader reader)
@@ -107,6 +111,5 @@ namespace Capstone.DAO
 
             return u;
         }
-
     }
 }
