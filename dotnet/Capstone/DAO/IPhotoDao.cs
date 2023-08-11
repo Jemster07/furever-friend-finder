@@ -1,12 +1,13 @@
 ﻿using Capstone.Models;
+using System.Collections.Generic;
 
 namespace Capstone.DAO
 {
-    //TODO Photo DAO
     public interface IPhotoDao
     {
-        //Get one photo by photo id
-
-        //Get list of photos by pet id
+        Photo GetPhoto(int photoId);
+        List<Photo> ListPhotosByPet(int petId);
+        Photo AddPhoto(NewPhoto newPhoto);
+        Photo UpdatePhoto(Photo photoToUpdate);
     }
 }

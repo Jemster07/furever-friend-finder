@@ -2,35 +2,46 @@
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Data.SqlClient;
+using System.Net;
+using System.Security.Cryptography.Xml;
 using System.Xml.Linq;
 
 namespace Capstone.DAO
 {
     public class PetSqlDao : IPetDao
     {
-        private string connectionString;
+        private readonly string connectionString;
 
-        public Pet CreateNewPet(Pet newPet, Attribute Atributes, Environ environment, Tag tags, Address address)
+        public PetSqlDao(string dbConnectionString)
         {
+            connectionString = dbConnectionString;
+        }
+
+        public Pet CreateNewPet(Pet newPet, Attributes newAttributes, Environ newEnvironment, Tag newTag, 
+            CreateAddress newAddress)
+        {
+            //TODO These need help
+            IAddressDao createAddress = new AddressSqlDao(connectionString);
+            Address registeredAddress = createAddress.CreateAddress(newAddress);
+
+            ITagDao createTag = new TagSqlDao(connectionString);
+            Tag tempTag = createTag.CreateTag(newTag);
+
+            IEnvironDao createEnvironment = new EnvironSqlDao(connectionString);
+            Environ newEnviron = createEnvironment.CreateEnvironment(newEnvironment);
+
+            IAttributesDao createAttribute = new AttributesSqlDao(connectionString);
+            Attributes tempAttribute = createAttribute.CreateAttribute(newAttributes);
+
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
 
-                    SqlCommand atcmd = new SqlCommand("INSERT INTO Attributes (spayed_neutered, house_trained, declawed, special_needs, shots_current " +
-                        "VALUES (@spayed_Neutered, @house_trained, @declawed, @special_needs, @shots_current)", conn);
-
-                    atcmd.Parameters.AddWithValue("@spayed_neutered", attributes.IsSpayedNeutered);
-                    atcmd.Parameters.AddWithValue("@house_trained", attributes.IsHouseTrained);
-                    atcmd.Parameters.AddWithValue("@declawed", attributes.IsDeclawed);
-                    atcmd.Parameters.AddWithValue("@special_needs", attributes.IsSpecialNeeds);
-                    atcmd.Parameters.AddWithValue("@shots_current", attributes.IsShotsCurrent);
-                    atcmd.ExecuteNonQuery();
-                    Attribute.AttributeId = Convert.ToInt32(atcmd.ExecuteScalar());
-
-                    SqlCommand envcmd = new SqlCommand("INSERT INTO Environments (dogs, cats")
+                    
 
                     SqlCommand cmd = new SqlCommand("INSERT INTO Pets (type, species, color, age, name, description " +
                         "VALUES (@type, @species, @color, @age, @name, @description)", conn);
@@ -42,23 +53,44 @@ namespace Capstone.DAO
                     cmd.Parameters.AddWithValue("@description", newPet.Description);
                     cmd.ExecuteNonQuery();
                 }
-                return newPet;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                throw e;
             }
 
+            return newPet;
         }
 
         public List<Pet> GetListOfPets(int petId)
         {
-            throw new System.NotImplementedException();
+            List<Pet> output = new List<Pet>();
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    SqlCommand sqlCommand = new SqlCommand("Select * where pet_id = @pet_id", conn);
+                    sqlCommand.Parameters.AddWithValue("@pet_Id", petId);
+                    SqlDataReader reader = sqlCommand.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Pet temp = GetPetFromReader(reader);
+                        output.Add(temp);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            
+            return output;
         }
 
         public Pet GetPet(int petId)
         {
-            Pet output = null;
+            Pet output = new Pet();
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -66,45 +98,213 @@ namespace Capstone.DAO
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand("SELECT * where pet_id = @pet_id", conn);
-                    SqlDataReader reader = cmd.ExecuteReader();
-
                     cmd.Parameters.AddWithValue("@pet_id", petId);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    
                     if (reader.Read())
                     {
                         output = GetPetFromReader(reader);
                     }
                 }
             }
-            catch
+            catch (Exception e)
             {
-                throw;
+                throw e;
             }
+            
             return output;
         }
 
-        public Pet GetPetByAttribute(Attribute attributes)
+        public Pet GetPetByAttribute(Attributes attributes)
         {
-            throw new System.NotImplementedException();
+            Pet output = new Pet();
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+         
+                    SqlCommand cmd = new SqlCommand("SELECT * attribute where spayed_neutered=@spayed_neutered " +
+                        "and house_trained=@house_trained and declawed=@declawed and special_needs=@special_needs " +
+                        "and shots_current=@shots_current", conn);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                 
+                    if (reader.Read())
+                    {
+                        output = GetPetFromReader(reader);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            
+            return output;
         }
 
+        public List<Pet> GetListByZip(Address zipAddress)
+        {
+            List<Pet> output = new List<Pet>();
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    SqlCommand sqlCommand = new SqlCommand("Select * join addresses on " +
+                        "address_id = pet.address_id where zip = @zip", conn);
+                    sqlCommand.Parameters.AddWithValue("@zip", zipAddress);
+                    SqlDataReader reader = sqlCommand.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Pet temp = GetPetFromReader(reader);
+                        output.Add(temp);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            
+            return output;
+        }
         public Pet GetPetByEnvironment(Environ environment)
         {
-            throw new System.NotImplementedException();
+            Pet output = new Pet();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+  
+                    SqlCommand cmd = new SqlCommand("SELECT * environments " +
+                        "where children=@children and dogs=@dogs and cats=@cats " +
+                        "and other_animals=@other_animals and indoor_only=@indoor_only", conn);
+                    
+
+                    
+                    SqlDataReader reader = cmd.ExecuteReader();
+              
+                    if (reader.Read())
+                    {
+                        output = GetPetFromReader(reader);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            
+            return output;
         }
 
         public Pet GetPetByTags(Tag tags)
         {
-            throw new System.NotImplementedException();
+            Pet output = new Pet();
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand("SELECT * tags where playful = @playful and " +
+                        "needs_exercise = @needs_exercise and cute = @cute and affectionate = @affectionate " +
+                        "and large = @large and intelligent = @intelligent and happy = @happy and " +
+                        "short_haired = @short_haired and shedder = @shedder and shy = @shy and " +
+                        "faithful = @faithful and leash_trained = @leash_trained and " +
+                        "hypoallergenic = @hypoallergenic", conn);
+
+
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+ 
+                    if (reader.Read())
+                    {
+                        output = GetPetFromReader(reader);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            
+            return output;
         }
 
         public List<Pet> GetPetsByAdopter(int adopterId)
         {
-            throw new System.NotImplementedException();
+            List<Pet> output = new List<Pet>();
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    SqlCommand sqlCommand = new SqlCommand("Select * where adopter_id = @adopter_id", conn);
+                    sqlCommand.Parameters.AddWithValue("@adopter_id", adopterId);
+                    SqlDataReader reader = sqlCommand.ExecuteReader();
+                    
+                    while (reader.Read())
+                    {
+                        Pet temp = GetPetFromReader(reader);
+                        output.Add(temp);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            
+            return output;
         }
 
-        public Pet UpdatePetById(Pet updatedPet)
+        public Pet UpdatePetById(Pet updatedPet, Attributes updatedAttributes, Environ updatedEnvironment, Tag updatedTags, Address updatedAddress)
         {
-            throw new System.NotImplementedException();
+            IAddressDao updateAddress = new AddressSqlDao(connectionString);
+            Address registeredAddress = updateAddress.UpdateAddress(updatedAddress);
+
+            ITagDao updateTag = new TagSqlDao(connectionString);
+            Tag newTag = updateTag.UpdateTag(updatedTags);
+
+            IEnvironDao updateEnvironment = new EnvironSqlDao(connectionString);
+            Environ newEnviron = updateEnvironment.UpdateEnvironment(updatedEnvironment);
+
+            IAttributesDao updateAttribute = new AttributesSqlDao(connectionString);
+            Attributes newAttribute = updateAttribute.UpdateAttribute(updatedAttributes);
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand("Update pets set type = @type, species = @species, " +
+                        "color = @color, age = @age, name = @name, description = @description, " +
+                        "pet_id = @pet_id", conn);
+                    cmd.Parameters.AddWithValue("@pet_id", updatedPet.PetId);
+                    cmd.Parameters.AddWithValue("@type", updatedPet.Type);
+                    cmd.Parameters.AddWithValue("@species", updatedPet.Species);
+                    cmd.Parameters.AddWithValue("@color", updatedPet.Color);
+                    cmd.Parameters.AddWithValue("@age", updatedPet.Age);
+                    cmd.Parameters.AddWithValue("@name", updatedPet.Name);
+                    cmd.Parameters.AddWithValue("@description", updatedPet.Description);
+
+                    int rowsReturned = cmd.ExecuteNonQuery();
+                    // One row should be affected
+                    if (rowsReturned != 1)
+                    {
+                        throw new SystemException();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            
+            return updatedPet;
         }
 
         private Pet GetPetFromReader(SqlDataReader reader)
@@ -122,7 +322,7 @@ namespace Capstone.DAO
             p.AdopterId = Convert.ToInt32(reader["adopter_id"]);
             p.IsAdopted = Convert.ToBoolean(reader["is_adopted"]);
 
-            Attribute tempAt = new Attribute();
+            Attributes tempAt = new Attributes();
 
             tempAt.AttributeId = Convert.ToInt32(reader["attribute_id"]);
             tempAt.IsSpayedNeutered = Convert.ToBoolean(reader["spayed_neutered"]);

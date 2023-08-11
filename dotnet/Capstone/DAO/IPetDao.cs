@@ -12,16 +12,16 @@ namespace Capstone.DAO
         List<Pet> GetListOfPets(int petId);
 
         //Get list of pets by zip code
-        List<Pet> GetListbyZip(Address zipaddress);
+        List<Pet> GetListByZip(Address zipAddress);
 
         //Get list of pets by adopter id
         List<Pet> GetPetsByAdopter(int adopterId);
         //Update pet by id
-        Pet UpdatePetById(Pet updatedPet);
+        Pet UpdatePetById(Pet updatedPet, Attributes updatedAttributes, Environ updatedEnvironment, Tag updatedTags, Address updatedAddress);
         //Add new pet
-        Pet CreateNewPet(Pet newPet, Attribute Atributes, Environ environment, Tag tags, Address address);
+        Pet CreateNewPet(Pet newPet, Attributes newAttributes, Environ newEnvironment, Tag newTag, CreateAddress newAddress);
         //Get pet by attributes, environments, and tags
-        Pet GetPetByAttribute(Attribute attributes);
+        Pet GetPetByAttribute(Attributes attributes);
         Pet GetPetByEnvironment(Environ environment);
         Pet GetPetByTags(Tag tags);
     }

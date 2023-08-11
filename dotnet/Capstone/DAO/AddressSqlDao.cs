@@ -82,8 +82,8 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("UPDATE addresses (street, city, state_abr, zip)" +
-                        " VALUES (@street, @city, @state_abr, @zip) WHERE address_id = @address_id;", conn);
+                    SqlCommand cmd = new SqlCommand("UPDATE addresses SET street = @street, city = @city, " +
+                        "state_abr = @state_abr, zip = @zip WHERE address_id = @address_id;", conn);
 
                     cmd.Parameters.AddWithValue("@address_id", updatedAddress.AddressId);
                     cmd.Parameters.AddWithValue("@street", updatedAddress.Street);
