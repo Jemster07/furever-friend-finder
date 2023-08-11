@@ -8,6 +8,7 @@ namespace Capstone.Models
         public int PhotoId { get; set; }
         public string PhotoUrl { get; set; }
         public int PetId { get; set; }
+        public bool IsInactive { get; set; }
     }
 
     public class NewPhoto

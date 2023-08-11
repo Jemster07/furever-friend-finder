@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace Capstone.Models
@@ -10,6 +11,7 @@ namespace Capstone.Models
         public string Species { get; set; }
         public string Color { get; set; }
         public int Age { get; set; }
+        public List<Photo> Photos { get; set; }
         public Attributes Attributes { get; set; }
         public Environ Environments { get; set; }
         public Tag Tags { get; set; }
@@ -17,7 +19,6 @@ namespace Capstone.Models
         public string Description { get; set; }
         public Address Address { get; set; }
         public int UserId { get; set; }
-        public int PhotoId { get; set; }
         public int AdopterId { get; set; }
         public bool IsAdopted { get; set; }
     }
@@ -35,6 +36,5 @@ namespace Capstone.Models
         public string Description { get; set; }
         public Address Address { get; set; }
         public int UserId { get; set; }
-        public int PhotoId { get; set; }
     }
 }
