@@ -6,6 +6,7 @@ using System.ComponentModel.Design;
 using System.Data.SqlClient;
 using System.Net;
 using System.Security.Cryptography.Xml;
+using System.Security.Policy;
 using System.Xml.Linq;
 
 namespace Capstone.DAO
@@ -26,69 +27,6 @@ namespace Capstone.DAO
             this.tagDao = tagDao;
             this.environDao = environDao;
             this.attributeDao = attributeDao;
-        }
-
-        public Pet CreatePet(Pet pet, Attributes attributes, Environ environment, Tag tags,
-            CreateAddress address)
-        {
-            Address newAddress = addressDao.CreateAddress(address);
-            Tag newTag = tagDao.CreateTag(tags);
-            Environ newEnviron = environDao.CreateEnvironment(environment);
-            Attributes newAttributes = attributeDao.CreateAttribute(attributes);
-
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
-
-
-
-                    SqlCommand cmd = new SqlCommand("INSERT INTO pets (type, species, color, age, name, description " +
-                        "VALUES (@type, @species, @color, @age, @name, @description)", conn);
-                    cmd.Parameters.AddWithValue("@type", pet.Type);
-                    cmd.Parameters.AddWithValue("@species", pet.Species);
-                    cmd.Parameters.AddWithValue("@color", pet.Color);
-                    cmd.Parameters.AddWithValue("@age", pet.Age);
-                    cmd.Parameters.AddWithValue("@name", pet.Name);
-                    cmd.Parameters.AddWithValue("@description", pet.Description);
-                    cmd.ExecuteNonQuery();
-                }
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-
-            return pet;
-        }
-
-        public List<Pet> ListPets(int petId)
-        {
-            List<Pet> output = new List<Pet>();
-
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
-                    SqlCommand sqlCommand = new SqlCommand("SELECT * FROM pets WHERE pet_id = @pet_id", conn);
-                    sqlCommand.Parameters.AddWithValue("@pet_id", petId);
-                    SqlDataReader reader = sqlCommand.ExecuteReader();
-
-                    while (reader.Read())
-                    {
-                        Pet temp = GetPetFromReader(reader);
-                        output.Add(temp);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-
-            return output;
         }
 
         public Pet GetPet(int petId)
@@ -119,8 +57,163 @@ namespace Capstone.DAO
             return output;
         }
 
+        public Pet UpdatePet(Pet updatedPet, Attributes updatedAttributes, Environ updatedEnvironment, Tag updatedTags, Address updatedAddress)
+        {
+            Address newAddress = addressDao.UpdateAddress(updatedAddress);
+            Tag newTag = tagDao.UpdateTag(updatedTags);
+            Environ newEnviron = environDao.UpdateEnvironment(updatedEnvironment);
+            Attributes newAttributes = attributeDao.UpdateAttribute(updatedAttributes);
+
+            string sql = "UPDATE pets SET type = @type, species = @species, color = @color, age = @age, " +
+                "attribute_id = @attribute_id, environment_id = @environment_id, tag_id = @tag_id, " +
+                "name = @name, description = @description, user_id = @user_id, photo_id = @photo_id, " +
+                "address_id = @address_id WHERE pet_id = @pet_id;";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand userCMD = new SqlCommand(sql, conn);
+                    userCMD.Parameters.AddWithValue("@type", updatedPet.Type);
+                    userCMD.Parameters.AddWithValue("@species", updatedPet.Species);
+                    userCMD.Parameters.AddWithValue("@color", updatedPet.Color);
+                    userCMD.Parameters.AddWithValue("@age", updatedPet.Age);
+                    userCMD.Parameters.AddWithValue("@attribute_id", newAttributes.AttributeId);
+                    userCMD.Parameters.AddWithValue("@environment_id", newEnviron.EnvironmentId);
+                    userCMD.Parameters.AddWithValue("@tag_id", newTag.TagId);
+                    userCMD.Parameters.AddWithValue("@name", updatedPet.Name);
+                    userCMD.Parameters.AddWithValue("@description", updatedPet.Description);
+                    userCMD.Parameters.AddWithValue("@user_id", updatedPet.UserId);
+                    userCMD.Parameters.AddWithValue("@photo_id", updatedPet.PhotoId);
+                    userCMD.Parameters.AddWithValue("@address_id", newAddress.AddressId);
+
+                    int rowsReturned = userCMD.ExecuteNonQuery();
+
+                    if (rowsReturned != 1)
+                    {
+                        throw new Exception("Error updating pet information");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return GetPet(updatedPet.PetId);
+        }
+
+        public Pet CreatePet(RegisterPet pet, Attributes attributes, Environ environment, Tag tags,
+             CreateAddress address)
+        {
+            Address newAddress = addressDao.CreateAddress(address);
+            Tag newTag = tagDao.CreateTag(tags);
+            Environ newEnviron = environDao.CreateEnvironment(environment);
+            Attributes newAttributes = attributeDao.CreateAttribute(attributes);
+
+            int newPetId = 0;
+
+            string sql = "INSERT INTO pets (type, species, color, age, attribute_id, environment_id, tag_id, " +
+                "name, description, user_id, photo_id, address_id) OUTPUT INSERTED.pet_id " +
+                "VALUES (@type, @species, @color, @age, @attribute_id, @environment_id, @tag_id, " +
+                "@name, @description, @user_id, @photo_id, @address_id);";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand userCMD = new SqlCommand(sql, conn);
+                    userCMD.Parameters.AddWithValue("@type", pet.Type);
+                    userCMD.Parameters.AddWithValue("@species", pet.Species);
+                    userCMD.Parameters.AddWithValue("@color", pet.Color);
+                    userCMD.Parameters.AddWithValue("@age", pet.Age);
+                    userCMD.Parameters.AddWithValue("@attribute_id", newAttributes.AttributeId);
+                    userCMD.Parameters.AddWithValue("@environment_id", newEnviron.EnvironmentId);
+                    userCMD.Parameters.AddWithValue("@tag_id", newTag.TagId);
+                    userCMD.Parameters.AddWithValue("@name", pet.Name);
+                    userCMD.Parameters.AddWithValue("@description", pet.Description);
+                    userCMD.Parameters.AddWithValue("@user_id", pet.UserId);
+                    userCMD.Parameters.AddWithValue("@photo_id", pet.PhotoId);
+                    userCMD.Parameters.AddWithValue("@address_id", newAddress.AddressId);
+                    newPetId = Convert.ToInt32(userCMD.ExecuteScalar());
+                }
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+
+            return GetPet(newPetId);
+        }
+
+        public List<Pet> ListPets(int petId)
+        {
+            List<Pet> output = new List<Pet>();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    SqlCommand sqlCommand = new SqlCommand("SELECT * FROM pets WHERE pet_id = @pet_id", conn);
+                    sqlCommand.Parameters.AddWithValue("@pet_id", petId);
+                    SqlDataReader reader = sqlCommand.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        Pet temp = GetPetFromReader(reader);
+                        output.Add(temp);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return output;
+        }
+
+        public List<Pet> ListPetsByZip(string zip)
+        {
+            List<Pet> outputList = new List<Pet>();
+
+            string sql = "SELECT * FROM pets JOIN attributes ON pets.attribute_id = attributes.attribute_id " +
+                "JOIN environments ON pets.environment_id = environments.environment_id " +
+                "JOIN tags ON pets.tag_id = tags.tag_id " +
+                "JOIN addresses ON pets.address_id = addresses.address_id WHERE zip = @zip;";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand sqlCommand = new SqlCommand(sql, conn);
+                    sqlCommand.Parameters.AddWithValue("@zip", zip);
+                    SqlDataReader reader = sqlCommand.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        Pet fetchedPet = GetPetFromReader(reader);
+                        outputList.Add(fetchedPet);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return outputList;
+        }
+
         public List<Pet> ListPetsByAttributes(Attributes attributes)
-        {            
+        {
             List<Pet> outputList = new List<Pet>();
 
             string sql = "SELECT * FROM pets JOIN attributes ON pets.attribute_id = attributes.attribute_id " +
@@ -158,32 +251,6 @@ namespace Capstone.DAO
             return outputList;
         }
 
-        public List<Pet> ListPetsByZip(Address zipAddress)
-        {
-            List<Pet> output = new List<Pet>();
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
-                    SqlCommand sqlCommand = new SqlCommand("SELECT * FROM pets JOIN addresses on " +
-                        "address_id = pet.address_id where zip = @zip", conn);
-                    sqlCommand.Parameters.AddWithValue("@zip", zipAddress);
-                    SqlDataReader reader = sqlCommand.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        Pet temp = GetPetFromReader(reader);
-                        output.Add(temp);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-
-            return output;
-        }
         public List<Pet> ListPetsByEnvironments(Environ environment)
         {
             List<Pet> outputList = new List<Pet>();
@@ -273,73 +340,6 @@ namespace Capstone.DAO
             return outputList;
         }
 
-        public List<Pet> ListPetsByAdopter(int adopterId)
-        {
-            List<Pet> output = new List<Pet>();
-
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
-                    SqlCommand sqlCommand = new SqlCommand("Select * FROM pets WHERE adopter_id = @adopter_id", conn);
-                    sqlCommand.Parameters.AddWithValue("@adopter_id", adopterId);
-                    SqlDataReader reader = sqlCommand.ExecuteReader();
-
-                    while (reader.Read())
-                    {
-                        Pet temp = GetPetFromReader(reader);
-                        output.Add(temp);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-
-            return output;
-        }
-
-        public Pet UpdatePet(Pet updatedPet, Attributes updatedAttributes, Environ updatedEnvironment, Tag updatedTags, Address updatedAddress)
-        {
-            Address newAddress = addressDao.UpdateAddress(updatedAddress);
-            Tag newTag = tagDao.UpdateTag(updatedTags);
-            Environ newEnviron = environDao.UpdateEnvironment(updatedEnvironment);
-            Attributes newAttributes = attributeDao.UpdateAttribute(updatedAttributes);
-
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
-                    SqlCommand cmd = new SqlCommand("UPDATE pets SET type = @type, species = @species, " +
-                        "color = @color, age = @age, name = @name, description = @description, " +
-                        "pet_id = @pet_id", conn);
-                    cmd.Parameters.AddWithValue("@pet_id", updatedPet.PetId);
-                    cmd.Parameters.AddWithValue("@type", updatedPet.Type);
-                    cmd.Parameters.AddWithValue("@species", updatedPet.Species);
-                    cmd.Parameters.AddWithValue("@color", updatedPet.Color);
-                    cmd.Parameters.AddWithValue("@age", updatedPet.Age);
-                    cmd.Parameters.AddWithValue("@name", updatedPet.Name);
-                    cmd.Parameters.AddWithValue("@description", updatedPet.Description);
-
-                    int rowsReturned = cmd.ExecuteNonQuery();
-                    // One row should be affected
-                    if (rowsReturned != 1)
-                    {
-                        throw new SystemException();
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-
-            return updatedPet;
-        }
-
         private Pet GetPetFromReader(SqlDataReader reader)
         {
             Pet p = new Pet();
@@ -371,7 +371,7 @@ namespace Capstone.DAO
             tempE.IsCatSafe = Convert.ToBoolean(reader["cats"]);
             tempE.IsOtherAnimalSafe = Convert.ToBoolean(reader["other_animals"]);
             tempE.IsIndoorOnly = Convert.ToBoolean(reader["indoor_only"]);
-            p.Environment = tempE;
+            p.Environments = tempE;
 
             Tag tempTag = new Tag();
             tempTag.TagId = Convert.ToInt32(reader["tag_id"]);
