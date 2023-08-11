@@ -47,12 +47,56 @@ namespace Capstone.DAO
 
         public Photo AddPhoto(NewPhoto newPhoto)
         {
-            throw new NotImplementedException();
+            int photoId = 0;
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand("INSERT INTO photos (photo_url, pet_id) " +
+                        "OUTPUT INSERTED.photo_id VALUES (@photo_url, @pet_id);", conn);
+                    cmd.Parameters.AddWithValue("@photo_url", newPhoto.PhotoUrl);
+                    cmd.Parameters.AddWithValue("@pet_id", newPhoto.PetId);
+                    photoId = Convert.ToInt32(cmd.ExecuteScalar());
+                }
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+
+            return GetPhoto(photoId);
         }
 
         public Photo UpdatePhoto(Photo photoToUpdate)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand("UPDATE addresses SET street = @street, city = @city, " +
+                        "state_abr = @state_abr, zip = @zip WHERE address_id = @address_id;", conn);
+
+                    //cmd.Parameters.AddWithValue("@address_id", photoToUpdate.AddressId);
+
+                    int rowsReturned = cmd.ExecuteNonQuery();
+                    // One row should be affected
+                    if (rowsReturned != 1)
+                    {
+                        throw new SystemException();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return photoToUpdate;
         }
 
         public List<Photo> ListPhotosByPet(int petId)
