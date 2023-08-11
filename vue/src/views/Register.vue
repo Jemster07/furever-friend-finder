@@ -62,7 +62,6 @@
       <button
         class="button is-success my-4"
         type="submit"
-        v-on:click="register()"
       >
         Create Account
       </button>

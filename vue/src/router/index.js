@@ -4,6 +4,13 @@ import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
 import Logout from '../views/Logout.vue'
 import Register from '../views/Register.vue'
+import FriendApp from '../views/FriendApp.vue'
+import FriendDirectory from '../views/FriendDirectory.vue'
+import NewFriend from '../views/NewFriend.vue'
+import NewPet from '../views/NewPet.vue'
+import PendingApp from '../views/PendingApp.vue'
+import PetDirectory from '../views/PetDirectory.vue'
+
 import store from '../store/index'
 
 Vue.use(Router)
@@ -26,7 +33,7 @@ const router = new Router({
       name: 'home',
       component: Home,
       meta: {
-        requiresAuth: false
+        requiresAuth: true
       }
     },
     {
@@ -53,6 +60,55 @@ const router = new Router({
         requiresAuth: false
       }
     },
+    {
+      path: '/pdirect',
+      name: 'petdirectory',
+      component: PetDirectory,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/pending',
+      name: 'pendingapp',
+      component: PendingApp,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/newpet',
+      name: 'newpet',
+      component: NewPet,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/login/newfriend',
+      name: 'newfriend',
+      component: NewFriend,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/fdirect',
+      name: 'frienddirectory',
+      component: FriendDirectory,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/apply',
+      name: 'friendapp',
+      component: FriendApp,
+      meta: {
+        requiresAuth: true
+      }
+    }
+
   ]
 })
 
