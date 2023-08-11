@@ -1,4 +1,5 @@
 ﻿using Capstone.Models;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -16,8 +17,6 @@ namespace Capstone.DAO
 
         public Photo GetPhoto(int photoId)
         {
-            //Add is_not_active = 0 to WHERE condition
-
             Photo requestedPhoto = new Photo();
 
             try
@@ -26,16 +25,14 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("SELECT photo_id, photo_url, pet_id " +
-                        "FROM photos WHERE photo_id = @photo_id;", conn);
+                    SqlCommand cmd = new SqlCommand("SELECT photo_id, photo_url, pet_id FROM photos " +
+                        "WHERE photo_id = @photo_id AND is_not_active = 0;", conn);
                     cmd.Parameters.AddWithValue("@photo_id", photoId);
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     if (reader.Read())
                     {
                         requestedPhoto.PhotoId = Convert.ToInt32(reader["photo_id"]);
-                        requestedPhoto.PhotoUrl = Convert.ToString(reader["photo_url"]);
-                        requestedPhoto.PetId = Convert.ToInt32(reader["pet_id"]);
                     }
                 }
             }
@@ -48,11 +45,9 @@ namespace Capstone.DAO
         }
 
         public List<Photo> ListPhotosByPet(int petId)
-        {
-            //Add is_not_active = 0 to WHERE condition
-            
+        {            
             List<Photo> photoList = new List<Photo>();
-            string sql = "SELECT photo_id, photo_url, pet_id FROM photos WHERE pet_id = @pet_id;";
+            string sql = "SELECT photo_id, photo_url, pet_id FROM photos WHERE pet_id = @pet_id AND is_not_active = 0;";
             
             try
             {
@@ -108,22 +103,18 @@ namespace Capstone.DAO
             return GetPhoto(photoId);
         }
 
-        public Photo DeactivatePhoto(int photoId)
+        public int DeactivatePhoto(int photoId)
         {
-            //Add is_not_active property to sql queries
-            
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("UPDATE photos SET photo_url = @photo_url, pet_id = @pet_id " +
+                    SqlCommand cmd = new SqlCommand("UPDATE photos SET is_not_active = 1 " +
                         "WHERE photo_id = @photo_id;", conn);
 
-                    cmd.Parameters.AddWithValue("@photo_url", photoToUpdate.PhotoUrl);
-                    cmd.Parameters.AddWithValue("@pet_id", photoToUpdate.PetId);
-                    cmd.Parameters.AddWithValue("@photo_id", photoToUpdate.PhotoId);
+                    cmd.Parameters.AddWithValue("@photo_id", photoId);
 
                     int rowsReturned = cmd.ExecuteNonQuery();
                     // One row should be affected
@@ -138,7 +129,7 @@ namespace Capstone.DAO
                 throw e;
             }
 
-            return photoToUpdate;
+            return 0;
         }
     }
 }
