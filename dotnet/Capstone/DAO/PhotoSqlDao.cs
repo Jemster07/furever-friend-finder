@@ -16,6 +16,8 @@ namespace Capstone.DAO
 
         public Photo GetPhoto(int photoId)
         {
+            //Add is_not_active = 0 to WHERE condition
+
             Photo requestedPhoto = new Photo();
 
             try
@@ -47,6 +49,8 @@ namespace Capstone.DAO
 
         public List<Photo> ListPhotosByPet(int petId)
         {
+            //Add is_not_active = 0 to WHERE condition
+            
             List<Photo> photoList = new List<Photo>();
             string sql = "SELECT photo_id, photo_url, pet_id FROM photos WHERE pet_id = @pet_id;";
             
@@ -104,8 +108,10 @@ namespace Capstone.DAO
             return GetPhoto(photoId);
         }
 
-        public Photo UpdatePhoto(Photo photoToUpdate)
+        public Photo DeactivatePhoto(int photoId)
         {
+            //Add is_not_active property to sql queries
+            
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
