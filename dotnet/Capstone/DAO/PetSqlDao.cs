@@ -367,7 +367,7 @@ namespace Capstone.DAO
             tempAd.City = Convert.ToString(reader["city"]);
             tempAd.State = Convert.ToString(reader["state_abr"]);
             tempAd.Zip = Convert.ToString(reader["zip"]);
-            p.Address= tempAd;
+            p.Address = tempAd;
 
             return p;
         }
