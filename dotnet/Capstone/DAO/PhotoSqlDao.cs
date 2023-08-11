@@ -45,6 +45,40 @@ namespace Capstone.DAO
             return requestedPhoto;
         }
 
+        public List<Photo> ListPhotosByPet(int petId)
+        {
+            List<Photo> photoList = new List<Photo>();
+            string sql = "SELECT photo_id, photo_url, pet_id FROM photos WHERE pet_id = @pet_id;";
+            
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand sqlCommand = new SqlCommand(sql, conn);
+                    sqlCommand.Parameters.AddWithValue("@pet_id", petId);
+                    SqlDataReader reader = sqlCommand.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        Photo requestedPhoto = new Photo();
+                        requestedPhoto.PhotoId = Convert.ToInt32(reader["photo_id"]);
+                        requestedPhoto.PhotoUrl = Convert.ToString(reader["photo_url"]);
+                        requestedPhoto.PetId = Convert.ToInt32(reader["pet_id"]);
+
+                        photoList.Add(requestedPhoto);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return photoList;
+        }
+
         public Photo AddPhoto(NewPhoto newPhoto)
         {
             int photoId = 0;
@@ -78,10 +112,12 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("UPDATE addresses SET street = @street, city = @city, " +
-                        "state_abr = @state_abr, zip = @zip WHERE address_id = @address_id;", conn);
+                    SqlCommand cmd = new SqlCommand("UPDATE photos SET photo_url = @photo_url, pet_id = @pet_id " +
+                        "WHERE photo_id = @photo_id;", conn);
 
-                    //cmd.Parameters.AddWithValue("@address_id", photoToUpdate.AddressId);
+                    cmd.Parameters.AddWithValue("@photo_url", photoToUpdate.PhotoUrl);
+                    cmd.Parameters.AddWithValue("@pet_id", photoToUpdate.PetId);
+                    cmd.Parameters.AddWithValue("@photo_id", photoToUpdate.PhotoId);
 
                     int rowsReturned = cmd.ExecuteNonQuery();
                     // One row should be affected
@@ -97,40 +133,6 @@ namespace Capstone.DAO
             }
 
             return photoToUpdate;
-        }
-
-        public List<Photo> ListPhotosByPet(int petId)
-        {
-            List<Photo> photoList = new List<Photo>();
-            string sql = "SELECT photo_id, photo_url, pet_id FROM photos WHERE pet_id = @pet_id;";
-            
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
-
-                    SqlCommand sqlCommand = new SqlCommand(sql, conn);
-                    sqlCommand.Parameters.AddWithValue("@pet_id", petId);
-                    SqlDataReader reader = sqlCommand.ExecuteReader();
-
-                    while (reader.Read())
-                    {
-                        Photo requestedPhoto = new Photo();
-                        requestedPhoto.PhotoId = Convert.ToInt32(reader["photo_id"]);
-                        requestedPhoto.PhotoUrl = Convert.ToString(reader["photo_url"]);
-                        requestedPhoto.PetId = Convert.ToInt32(reader["pet_id"]);
-
-                        photoList.Add(requestedPhoto);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-
-            return photoList;
         }
     }
 }

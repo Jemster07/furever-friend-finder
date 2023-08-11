@@ -18,15 +18,17 @@ namespace Capstone.DAO
         private readonly ITagDao tagDao;
         private readonly IEnvironDao environDao;
         private readonly IAttributesDao attributeDao;
+        private readonly IPhotoDao photoDao;
 
         public PetSqlDao(string dbConnectionString, IAddressDao addressDao, ITagDao tagDao,
-            IEnvironDao environDao, IAttributesDao attributeDao)
+            IEnvironDao environDao, IAttributesDao attributeDao, IPhotoDao photoDao)
         {
             connectionString = dbConnectionString;
             this.addressDao = addressDao;
             this.tagDao = tagDao;
             this.environDao = environDao;
             this.attributeDao = attributeDao;
+            this.photoDao = photoDao;
         }
 
         public Pet GetPet(int petId)
@@ -57,7 +59,8 @@ namespace Capstone.DAO
             return output;
         }
 
-        public Pet UpdatePet(Pet updatedPet, Attributes updatedAttributes, Environ updatedEnvironment, Tag updatedTags, Address updatedAddress)
+        public Pet UpdatePet(Pet updatedPet, Attributes updatedAttributes, Environ updatedEnvironment, 
+            Tag updatedTags, Address updatedAddress)
         {
             Address newAddress = addressDao.UpdateAddress(updatedAddress);
             Tag newTag = tagDao.UpdateTag(updatedTags);
