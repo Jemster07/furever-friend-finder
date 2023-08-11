@@ -1,7 +1,7 @@
 <template>
   <div id="register" class="has-text-centered">
-        <div class="has-text-right py-4 px-4">
-      <router-link :to="{name: 'home'}" class="button is-light">
+    <div class="has-text-right py-4 px-4">
+      <router-link :to="{ name: 'home' }" class="button is-light">
         Home
       </router-link>
     </div>
@@ -10,44 +10,59 @@
       <div class="my-6" role="alert" v-if="registrationErrors">
         {{ registrationErrorMsg }}
       </div>
-  <div class="columns">
-    <div class="column has-text-right">
-      <div class="form-input-group">
-        <label for="username">Username</label>
-        <input
-          type="text"
-          id="username"
-          v-model="user.username"
-          required
-          autofocus
-        />
-      </div>
-      <div class="form-input-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" v-model="user.email" required />
-      </div>
-      <div class="form-input-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" v-model="user.password" required />
-      </div>
-      <div class="form-input-group">
-        <label for="confirmPassword">Confirm Password</label>
-        <input
-          type="password"
-          id="confirmPassword"
-          v-model="user.confirmPassword"
-          required
-        />
-      </div>
-    </div>
-      <div class="column has-text-left"> 
+      <div class="columns">
+        <div class="column has-text-right">
+          <div class="form-input-group">
+            <label for="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              v-model="user.username"
+              required
+              autofocus
+            />
+          </div>
+          <div class="form-input-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" v-model="user.email" required />
+          </div>
+          <div class="form-input-group">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              v-model="user.password"
+              required
+            />
+          </div>
+          <div class="form-input-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              v-model="user.confirmPassword"
+              required
+            />
+          </div>
+        </div>
+        <div class="column has-text-left">
           <div class="form-input-group">
             <label for="street">Street Address</label>
-            <input type="text" id="street" v-model="user.address.street" required />
+            <input
+              type="text"
+              id="street"
+              v-model="user.address.street"
+              required
+            />
           </div>
           <div class="form-input-group">
             <label for="state">State</label>
-            <input type="text" id="state" v-model="user.address.state" required />
+            <input
+              type="text"
+              id="state"
+              v-model="user.address.state"
+              required
+            />
           </div>
           <div class="form-input-group">
             <label for="city">City</label>
@@ -55,14 +70,16 @@
           </div>
           <div class="form-input-group">
             <label for="zip">Zip Code</label>
-            <input type="number max-99999" id="zip" v-model="user.address.zip" required /> 
+            <input
+              type="number max-99999"
+              id="zip"
+              v-model="user.address.zip"
+              required
+            />
           </div>
+        </div>
       </div>
-    </div>
-      <button
-        class="button is-success my-4"
-        type="submit"
-      >
+      <button class="button is-success my-4" type="submit">
         Create Account
       </button>
       <p>
@@ -82,16 +99,16 @@ export default {
   data() {
     return {
       user: {
-        username: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
+        username: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
         role: "user",
         address: {
-          street: '',
-          city: '',
-          state: '',
-          zip: '',
+          street: "",
+          city: "",
+          state: "",
+          zip: "",
         },
       },
       registrationErrors: false,
