@@ -21,6 +21,21 @@ namespace Capstone.Models
     }
 
     /// <summary>
+    /// Secure model to use when displaying lists of users
+    /// </summary>
+    public class DisplayUser
+    {
+        public int UserId { get; set; }
+        public string Username { get; set; }
+        public string Role { get; set; }
+        public Address Address { get; set; }
+        public string ApplicationStatus { get; set; }
+        public bool IsInactive { get; set; }
+        public string Email { get; set; }
+        public bool IsAdopter { get; set; }
+    }
+
+    /// <summary>
     /// Model to return upon successful login (user data + token)
     /// </summary>
     public class LoginResponse

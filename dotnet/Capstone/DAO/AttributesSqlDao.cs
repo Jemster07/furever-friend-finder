@@ -68,7 +68,6 @@ namespace Capstone.DAO
             return output;
         }
 
-
         public Attributes UpdateAttribute(Attributes updatedAttributes)
         {
             try

@@ -39,9 +39,9 @@ namespace Capstone.DAO
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                throw e;
             }
 
             return address;
@@ -66,9 +66,9 @@ namespace Capstone.DAO
                     addressId = Convert.ToInt32(cmd.ExecuteScalar());
                 }
             }
-            catch (SqlException)
+            catch (SqlException e)
             {
-                throw;
+                throw e;
             }
 
             return GetAddress(addressId);
@@ -99,10 +99,11 @@ namespace Capstone.DAO
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                throw e;
             }
+
             return updatedAddress;
         }
 

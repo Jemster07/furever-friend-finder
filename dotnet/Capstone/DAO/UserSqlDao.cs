@@ -50,7 +50,7 @@ namespace Capstone.DAO
 
         public User AddUser(RegisterUser registerUser)
         {
-            IAddressDao createAddress = new AddressSqlDao(connectionString);                  
+            IAddressDao createAddress = new AddressSqlDao(connectionString);
             Address registeredAddress = createAddress.CreateAddress(registerUser.Address);
 
             IPasswordHasher passwordHasher = new PasswordHasher();
@@ -112,10 +112,42 @@ namespace Capstone.DAO
             return GetUser(userToUpdate);
         }
 
-        public List<User> ListActiveUsers()
+        public DisplayUser GetUserByAdopterId(int adopterId)
         {
-            List<User> output = new List<User>();
-            string sql = "SELECT user_id, username, password_hash, salt, user_role, app_status, " +
+            DisplayUser petAdopter = new DisplayUser();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand("SELECT user_id, username, user_role, app_status, " +
+                        "is_not_active, users.address_id, email, is_adopter, addresses.address_id, street, " +
+                        "city, state_abr, zip FROM users JOIN addresses ON users.address_id = addresses.address_id " +
+                        "WHERE user_id = @user_id AND is_adopter = 1;", conn);
+                    cmd.Parameters.AddWithValue("@user_id", adopterId);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        petAdopter = GetDisplayUserFromReader(reader);
+                    }
+                }
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+
+            return petAdopter;
+        }
+
+        public List<DisplayUser> ListActiveUsers()
+        {
+            List<DisplayUser> output = new List<DisplayUser>();
+
+            string sql = "SELECT user_id, username, user_role, app_status, " +
                 "is_not_active, users.address_id, email, is_adopter, addresses.address_id, " +
                 "street, city, state_abr, zip FROM users JOIN addresses " +
                 "ON users.address_id = addresses.address_id " +
@@ -131,7 +163,7 @@ namespace Capstone.DAO
 
                     while (reader.Read())
                     {
-                        User returnUser = GetUserFromReader(reader);
+                        DisplayUser returnUser = GetDisplayUserFromReader(reader);
                         output.Add(returnUser);
                     }
                 }
@@ -144,10 +176,11 @@ namespace Capstone.DAO
             return output;
         }
 
-        public List<User> ListPendingUsers()
+        public List<DisplayUser> ListPendingUsers()
         {
-            List<User> output = new List<User>();
-            string sql = "SELECT user_id, username, password_hash, salt, user_role, app_status, " +
+            List<DisplayUser> output = new List<DisplayUser>();
+
+            string sql = "SELECT user_id, username, user_role, app_status, " +
                 "is_not_active, users.address_id, email, is_adopter, addresses.address_id, street, " +
                 "city, state_abr, zip FROM users JOIN addresses ON users.address_id = " +
                 "addresses.address_id WHERE user_role = 'friend' AND app_status = 'pending';";
@@ -162,7 +195,7 @@ namespace Capstone.DAO
 
                     while (reader.Read())
                     {
-                        User returnUser = GetUserFromReader(reader);
+                        DisplayUser returnUser = GetDisplayUserFromReader(reader);
                         output.Add(returnUser);
                     }
                 }
@@ -175,10 +208,11 @@ namespace Capstone.DAO
             return output;
         }
 
-        public List<User> ListAllUsers()
+        public List<DisplayUser> ListAllUsers()
         {
-            List<User> output = new List<User>();
-            string sql = "SELECT user_id, username, password_hash, salt, user_role, app_status, " +
+            List<DisplayUser> output = new List<DisplayUser>();
+
+            string sql = "SELECT user_id, username, user_role, app_status, " +
                 "is_not_active, users.address_id, email, is_adopter, addresses.address_id, " +
                 "street, city, state_abr, zip FROM users JOIN addresses " +
                 "ON users.address_id = addresses.address_id;";
@@ -187,13 +221,13 @@ namespace Capstone.DAO
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    
+
                     SqlCommand sqlCommand = new SqlCommand(sql, conn);
                     SqlDataReader reader = sqlCommand.ExecuteReader();
-                    
+
                     while (reader.Read())
                     {
-                        User returnUser = GetUserFromReader(reader);
+                        DisplayUser returnUser = GetDisplayUserFromReader(reader);
                         output.Add(returnUser);
                     }
                 }
@@ -202,7 +236,7 @@ namespace Capstone.DAO
             {
                 throw e;
             }
-            
+
             return output;
         }
 
@@ -213,6 +247,27 @@ namespace Capstone.DAO
             u.Username = Convert.ToString(reader["username"]);
             u.PasswordHash = Convert.ToString(reader["password_hash"]);
             u.Salt = Convert.ToString(reader["salt"]);
+            u.Role = Convert.ToString(reader["user_role"]);
+            u.ApplicationStatus = Convert.ToString(reader["app_status"]);
+            u.IsInactive = Convert.ToBoolean(reader["is_not_active"]);
+            u.Email = Convert.ToString(reader["email"]);
+
+            Address a = new Address();
+            a.AddressId = Convert.ToInt32(reader["address_id"]);
+            a.Street = Convert.ToString(reader["street"]);
+            a.City = Convert.ToString(reader["city"]);
+            a.State = Convert.ToString(reader["state_abr"]);
+            a.Zip = Convert.ToString(reader["zip"]);
+            u.Address = a;
+
+            return u;
+        }
+
+        private DisplayUser GetDisplayUserFromReader(SqlDataReader reader)
+        {
+            DisplayUser u = new DisplayUser();
+            u.UserId = Convert.ToInt32(reader["user_id"]);
+            u.Username = Convert.ToString(reader["username"]);
             u.Role = Convert.ToString(reader["user_role"]);
             u.ApplicationStatus = Convert.ToString(reader["app_status"]);
             u.IsInactive = Convert.ToBoolean(reader["is_not_active"]);
