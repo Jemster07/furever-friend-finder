@@ -8,6 +8,6 @@ namespace Capstone.DAO
         Photo GetPhoto(int photoId);
         List<Photo> ListPhotosByPet(int petId);
         Photo AddPhoto(NewPhoto newPhoto);
-        Photo UpdatePhoto(Photo photoToUpdate);
+        int DeactivatePhoto(int photoId);
     }
 }

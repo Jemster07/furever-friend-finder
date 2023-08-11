@@ -18,20 +18,24 @@ namespace Capstone.DAO
         private readonly ITagDao tagDao;
         private readonly IEnvironDao environDao;
         private readonly IAttributesDao attributeDao;
+        private readonly IPhotoDao photoDao;
 
         public PetSqlDao(string dbConnectionString, IAddressDao addressDao, ITagDao tagDao,
-            IEnvironDao environDao, IAttributesDao attributeDao)
+            IEnvironDao environDao, IAttributesDao attributeDao, IPhotoDao photoDao)
         {
             connectionString = dbConnectionString;
             this.addressDao = addressDao;
             this.tagDao = tagDao;
             this.environDao = environDao;
             this.attributeDao = attributeDao;
+            this.photoDao = photoDao;
         }
 
         public Pet GetPet(int petId)
         {
-            Pet output = new Pet();
+            List<Photo> petPhotos = photoDao.ListPhotosByPet(petId);
+            
+            Pet fetchedPet = new Pet();
 
             try
             {
@@ -39,13 +43,21 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("SELECT * FROM pets WHERE pet_id = @pet_id", conn);
+                    SqlCommand cmd = new SqlCommand("SELECT * FROM pets " +
+                        "JOIN attributes ON pets.attribute_id = attributes.attribute_id " +
+                        "JOIN environments ON pets.environment_id = environments.environment_id " +
+                        "JOIN tags ON pets.tag_id = tags.tag_id " +
+                        "JOIN addresses ON pets.address_id = addresses.address_id " +
+                        "WHERE pet_id = @pet_id;", conn);
+                    
                     cmd.Parameters.AddWithValue("@pet_id", petId);
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     if (reader.Read())
                     {
-                        output = GetPetFromReader(reader);
+                        fetchedPet = GetPetFromReader(reader);
+
+                        fetchedPet.Photos = petPhotos;
                     }
                 }
             }
@@ -54,10 +66,11 @@ namespace Capstone.DAO
                 throw e;
             }
 
-            return output;
+            return fetchedPet;
         }
 
-        public Pet UpdatePet(Pet updatedPet, Attributes updatedAttributes, Environ updatedEnvironment, Tag updatedTags, Address updatedAddress)
+        public Pet UpdatePet(Pet updatedPet, Attributes updatedAttributes, Environ updatedEnvironment, 
+            Tag updatedTags, Address updatedAddress)
         {
             Address newAddress = addressDao.UpdateAddress(updatedAddress);
             Tag newTag = tagDao.UpdateTag(updatedTags);
@@ -66,7 +79,7 @@ namespace Capstone.DAO
 
             string sql = "UPDATE pets SET type = @type, species = @species, color = @color, age = @age, " +
                 "attribute_id = @attribute_id, environment_id = @environment_id, tag_id = @tag_id, " +
-                "name = @name, description = @description, user_id = @user_id, photo_id = @photo_id, " +
+                "name = @name, description = @description, user_id = @user_id, " +
                 "address_id = @address_id WHERE pet_id = @pet_id;";
 
             try
@@ -86,7 +99,6 @@ namespace Capstone.DAO
                     userCMD.Parameters.AddWithValue("@name", updatedPet.Name);
                     userCMD.Parameters.AddWithValue("@description", updatedPet.Description);
                     userCMD.Parameters.AddWithValue("@user_id", updatedPet.UserId);
-                    userCMD.Parameters.AddWithValue("@photo_id", updatedPet.PhotoId);
                     userCMD.Parameters.AddWithValue("@address_id", newAddress.AddressId);
 
                     int rowsReturned = userCMD.ExecuteNonQuery();
@@ -116,9 +128,9 @@ namespace Capstone.DAO
             int newPetId = 0;
 
             string sql = "INSERT INTO pets (type, species, color, age, attribute_id, environment_id, tag_id, " +
-                "name, description, user_id, photo_id, address_id) OUTPUT INSERTED.pet_id " +
+                "name, description, user_id, address_id) OUTPUT INSERTED.pet_id " +
                 "VALUES (@type, @species, @color, @age, @attribute_id, @environment_id, @tag_id, " +
-                "@name, @description, @user_id, @photo_id, @address_id);";
+                "@name, @description, @user_id, @address_id);";
 
             try
             {
@@ -137,7 +149,6 @@ namespace Capstone.DAO
                     userCMD.Parameters.AddWithValue("@name", pet.Name);
                     userCMD.Parameters.AddWithValue("@description", pet.Description);
                     userCMD.Parameters.AddWithValue("@user_id", pet.UserId);
-                    userCMD.Parameters.AddWithValue("@photo_id", pet.PhotoId);
                     userCMD.Parameters.AddWithValue("@address_id", newAddress.AddressId);
                     newPetId = Convert.ToInt32(userCMD.ExecuteScalar());
                 }
@@ -150,24 +161,36 @@ namespace Capstone.DAO
             return GetPet(newPetId);
         }
 
-        public List<Pet> ListPets(int petId)
+        public List<Pet> ListPets()
         {
-            List<Pet> output = new List<Pet>();
+            List<Pet> petList = new List<Pet>();
 
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    SqlCommand sqlCommand = new SqlCommand("SELECT * FROM pets WHERE pet_id = @pet_id", conn);
-                    sqlCommand.Parameters.AddWithValue("@pet_id", petId);
-                    SqlDataReader reader = sqlCommand.ExecuteReader();
+
+                    SqlCommand cmd = new SqlCommand("SELECT * FROM pets " +
+                        "JOIN attributes ON pets.attribute_id = attributes.attribute_id " +
+                        "JOIN environments ON pets.environment_id = environments.environment_id " +
+                        "JOIN tags ON pets.tag_id = tags.tag_id " +
+                        "JOIN addresses ON pets.address_id = addresses.address_id", conn);
+                    SqlDataReader reader = cmd.ExecuteReader();
 
                     while (reader.Read())
                     {
-                        Pet temp = GetPetFromReader(reader);
-                        output.Add(temp);
+                        Pet fetchedPet = GetPetFromReader(reader);
+
+                        petList.Add(fetchedPet);
                     }
+                }
+
+                foreach (Pet item in petList)
+                {
+                    List<Photo> petPhotos = photoDao.ListPhotosByPet(item.PetId);
+                    
+                    item.Photos = petPhotos;
                 }
             }
             catch (Exception e)
@@ -175,12 +198,12 @@ namespace Capstone.DAO
                 throw e;
             }
 
-            return output;
+            return petList;
         }
 
         public List<Pet> ListPetsByZip(string zip)
         {
-            List<Pet> outputList = new List<Pet>();
+            List<Pet> petList = new List<Pet>();
 
             string sql = "SELECT * FROM pets JOIN attributes ON pets.attribute_id = attributes.attribute_id " +
                 "JOIN environments ON pets.environment_id = environments.environment_id " +
@@ -200,21 +223,30 @@ namespace Capstone.DAO
                     while (reader.Read())
                     {
                         Pet fetchedPet = GetPetFromReader(reader);
-                        outputList.Add(fetchedPet);
+
+                        petList.Add(fetchedPet);
                     }
                 }
+
+                foreach (Pet item in petList)
+                {
+                    List<Photo> petPhotos = photoDao.ListPhotosByPet(item.PetId);
+
+                    item.Photos = petPhotos;
+                }
+
             }
             catch (Exception e)
             {
                 throw e;
             }
 
-            return outputList;
+            return petList;
         }
 
         public List<Pet> ListPetsByAttributes(Attributes attributes)
         {
-            List<Pet> outputList = new List<Pet>();
+            List<Pet> petList = new List<Pet>();
 
             string sql = "SELECT * FROM pets JOIN attributes ON pets.attribute_id = attributes.attribute_id " +
                 "JOIN environments ON pets.environment_id = environments.environment_id " +
@@ -239,21 +271,30 @@ namespace Capstone.DAO
                     while (reader.Read())
                     {
                         Pet fetchedPet = GetPetFromReader(reader);
-                        outputList.Add(fetchedPet);
+
+                        petList.Add(fetchedPet);
                     }
                 }
+
+                foreach (Pet item in petList)
+                {
+                    List<Photo> petPhotos = photoDao.ListPhotosByPet(item.PetId);
+
+                    item.Photos = petPhotos;
+                }
+
             }
             catch (Exception e)
             {
                 throw e;
             }
 
-            return outputList;
+            return petList;
         }
 
         public List<Pet> ListPetsByEnvironments(Environ environment)
         {
-            List<Pet> outputList = new List<Pet>();
+            List<Pet> petList = new List<Pet>();
 
             string sql = "SELECT * FROM pets JOIN attributes ON pets.attribute_id = attributes.attribute_id " +
                 "JOIN environments ON pets.environment_id = environments.environment_id " +
@@ -278,21 +319,29 @@ namespace Capstone.DAO
                     while (reader.Read())
                     {
                         Pet fetchedPet = GetPetFromReader(reader);
-                        outputList.Add(fetchedPet);
+                        petList.Add(fetchedPet);
                     }
                 }
+
+                foreach (Pet item in petList)
+                {
+                    List<Photo> petPhotos = photoDao.ListPhotosByPet(item.PetId);
+
+                    item.Photos = petPhotos;
+                }
+
             }
             catch (Exception e)
             {
                 throw e;
             }
 
-            return outputList;
+            return petList;
         }
 
         public List<Pet> ListPetsByTags(Tag tags)
         {
-            List<Pet> outputList = new List<Pet>();
+            List<Pet> petList = new List<Pet>();
 
             string sql = "SELECT * FROM pets JOIN attributes ON pets.attribute_id = attributes.attribute_id " +
                 "JOIN environments ON pets.environment_id = environments.environment_id " +
@@ -328,16 +377,24 @@ namespace Capstone.DAO
                     while (reader.Read())
                     {
                         Pet fetchedPet = GetPetFromReader(reader);
-                        outputList.Add(fetchedPet);
+                        petList.Add(fetchedPet);
                     }
                 }
+
+                foreach (Pet item in petList)
+                {
+                    List<Photo> petPhotos = photoDao.ListPhotosByPet(item.PetId);
+
+                    item.Photos = petPhotos;
+                }
+
             }
             catch (Exception e)
             {
                 throw e;
             }
 
-            return outputList;
+            return petList;
         }
 
         private Pet GetPetFromReader(SqlDataReader reader)
@@ -351,7 +408,6 @@ namespace Capstone.DAO
             p.Name = Convert.ToString(reader["name"]);
             p.Description = Convert.ToString(reader["description"]);
             p.UserId = Convert.ToInt32(reader["user_id"]);
-            p.PhotoId = Convert.ToInt32(reader["photo_id"]);
             p.AdopterId = Convert.ToInt32(reader["adopter_id"]);
             p.IsAdopted = Convert.ToBoolean(reader["is_adopted"]);
 
