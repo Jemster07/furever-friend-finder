@@ -13,10 +13,10 @@ namespace Capstone.Controllers
     //    // get pet directory [HttpGet("/directory/pet")]
     //    // add pet page
 
-    //    // GET: PetsController
-    //    public IActionResult Index()
-    //    {
-    //        return View();
-    //    }
+    //    // Assign UserId to pet AdopterId
+    //    // Updates user's IsAdopter property
+    //    // Update pet's IsAdopted property
+
+    //    // Get user by adopter id
     //}
 }

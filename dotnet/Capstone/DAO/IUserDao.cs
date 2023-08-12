@@ -15,6 +15,9 @@ namespace Capstone.DAO
         //Use this method to get the user who adopted a specific pet
         DisplayUser GetUserByAdopterId(int adopterId);
 
+        //Updates user's IsAdopter property
+        User ToggleUserIsAdopter(User userToUpdate);
+
         //List active users for directory
         List<DisplayUser> ListActiveUsers();
 

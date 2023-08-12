@@ -45,6 +45,28 @@ namespace Capstone.Controllers
             }
         }
 
+        [HttpGet("/user/{username}")]
+        public ActionResult<User> GetUser(string username)
+        {
+            try
+            {
+                User fetchedUser = userDao.GetUser(username);
+
+                if (fetchedUser.ApplicationStatus != "approved" || !fetchedUser.IsInactive)
+                {
+                    return Unauthorized("Access denied");
+                }
+                else
+                {
+                    return Ok(fetchedUser);
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
         // admin application approval page
 
         //[Authorize(Roles = "admin")]
@@ -53,7 +75,16 @@ namespace Capstone.Controllers
         {
             try
             {
-                return Ok(userDao.ListPendingUsers());
+                List<DisplayUser> pendingUsers = userDao.ListPendingUsers();
+
+                if (pendingUsers.Count <= 0)
+                {
+                    return NoContent();
+                }
+                else
+                {
+                    return Ok(pendingUsers);
+                }
             }
             catch (Exception)
             {
@@ -62,19 +93,24 @@ namespace Capstone.Controllers
         }
 
         //[Authorize(Roles = "admin")]
-        [HttpPut("/application/update")]
+        [HttpPut("/application/update/{userId}")]
         public ActionResult<User> ApproveRejectApp(string userToUpdate, string newStatus)
         {
             try
             {
-                return Ok(userDao.ChangeAppStatus(userToUpdate, newStatus));
+                if (newStatus != "rejected" || newStatus != "approved")
+                {
+                    return BadRequest("Incorrect status type: Enter [rejected] or [approved]");
+                }
+                else
+                {
+                    return Ok(userDao.ChangeAppStatus(userToUpdate, newStatus));
+                }
             }
             catch (Exception)
             {
                 return StatusCode(500);
             }
         }
-
-        // first time login for newly approved friend
     }
 }
