@@ -11,6 +11,10 @@ using Capstone.DAO;
 using Capstone.Security;
 using Microsoft.OpenApi.Models;
 using System.Collections.Generic;
+using Capstone.DAO.PetFinder;
+using Capstone.Models;
+using Capstone.Services;
+using Capstone.Controllers;
 
 namespace Capstone
 {
@@ -65,6 +69,8 @@ namespace Capstone
             services.AddSingleton<ITokenGenerator>(tk => new JwtGenerator(Configuration["JwtSecret"]));
             services.AddSingleton<IPasswordHasher>(ph => new PasswordHasher());
             services.AddTransient<IUserDao>(m => new UserSqlDao(connectionString));
+            services.AddTransient<PetFinderService>(l => new PetFinderService(Configuration["apiUrl"], Configuration["client_id"], Configuration["grant_type"], Configuration["client_secret"]));
+            // Configuration["client_id"], Configuration["grant_type"], Configuration["client_secret"]
             //TODO: Configure for other DAO objects
 
             services.AddSwaggerGen(s => {

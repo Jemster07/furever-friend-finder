@@ -12,4 +12,5 @@ namespace Capstone.Models
         public bool IsSpecialNeeds { get; set; }
         public bool IsShotsCurrent { get; set; }
     }
+
 }

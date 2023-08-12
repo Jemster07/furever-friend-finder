@@ -37,4 +37,5 @@ namespace Capstone.Models
         public Address Address { get; set; }
         public int UserId { get; set; }
     }
+    
 }
