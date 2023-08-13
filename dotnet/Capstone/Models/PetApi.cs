@@ -9,16 +9,14 @@ namespace Capstone.Models
     {
         public List<PetApi> Animals { get; set; }
     }
+
     public class PetApi
     {
-
-
         public int Id { get; set; }
         public string Organization_id { get; set; }
         public string Url { get; set; }
         public string Type { get; set; }
         public string Species { get; set; }
-
         public BreedsApi Breed { get; set; }
         public ColorApi Color { get; set; }
         public string Age { get; set; }
@@ -36,25 +34,23 @@ namespace Capstone.Models
         public List<string> Videos { get; set; }
         public string Status { get; set; }
         public Contact Contact { get; set; }
-
-
     }
+
     public class BreedsApi
     {
         public string Primary { get; set; }
         public string Secondary { get; set; }
-
         public bool Mixed { get; set; }
         public bool Unknown { get; set; }
-
     }
+
     public class ColorApi
     {
         public string Primary { get; set; }
         public string Secondary { get; set; }
         public string Tertiary { get; set; }
-
     }
+
     public class AttributesApi
     {
         public bool Spayed_neutered { get; set; }
@@ -63,13 +59,14 @@ namespace Capstone.Models
         public bool Special_needs { get; set; }
         public bool Shots_current { get; set; }
     }
+
     public class EnvironmentApi
     {
         public bool Children { get; set; }
         public bool Dogs { get; set; }
         public bool Cats { get; set; }
-        
     }
+
     public class Primary_photo_cropped
     {
         public string Small { get; set; }
@@ -77,12 +74,14 @@ namespace Capstone.Models
         public string Large { get; set; }
         public string Full { get; set; }
     }
+
     public class Contact
     {
         public string Email { get; set; }
         public string Phone { get; set; }
-        public AddressApi AddressaApi { get; set; }
+        public AddressApi AddressApi { get; set; }
     }
+
     public class AddressApi
     {
         public string Address1 { get; set; }
@@ -93,4 +92,3 @@ namespace Capstone.Models
         public string Country { get; set; }
     }
 }
-

@@ -5,16 +5,14 @@ using System.Collections.Generic;
 using System.Net.Http;
 
 namespace Capstone.Services
-
 {
     public class PetFinderService
     {
         private string PetUrl = "https://api.petfinder.com/v2/oauth2/token";
-
-
         public IRestClient client;
         public PetFinderApiAuth auth;
         public string Token;
+
         public PetFinderService(string apiUrl, string clientId, string grantType, string clientSecret)
         {
             client = new RestClient(apiUrl);
@@ -41,6 +39,7 @@ namespace Capstone.Services
             client.AddDefaultHeader("Authorization", Token);
             return response.Data;
         }
+
         public List<PetApi> GetAnimalsByType(string animalType)
         {
             GetToken();
