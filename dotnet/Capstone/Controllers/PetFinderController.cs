@@ -28,5 +28,11 @@ namespace Capstone.Controllers
         {
             return finderDao.GetAnimalByBreed(breed);
         }
+        [HttpGet("/petfinder/location/{address}/")]
+        public ActionResult<List<PetApi>> ListByLoc(string address)
+        {
+            return finderDao.GetAnimalByZip(address);
+        }
+
     }
 }

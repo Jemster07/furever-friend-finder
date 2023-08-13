@@ -64,16 +64,16 @@ namespace Capstone.Services
             return response.Data.Animals;
         }
 
-        public List<PetApi> GetAnimalByZip(string zip)
+        public List<PetApi> GetAnimalByZip(string address)
         {
             GetToken();
-            RestRequest request = new RestRequest($"animals?location={zip}");
-            IRestResponse<List<PetApi>> response = client.Get<List<PetApi>>(request);
+            RestRequest request = new RestRequest($"animals?location={address}");
+            IRestResponse<PetContainer> response = client.Get<PetContainer>(request);
             if (!response.IsSuccessful)
             {
                 throw new HttpRequestException("There was an error made. " + response.StatusCode);
             }
-            return response.Data;
+            return response.Data.Animals;
         }
     }
 }
