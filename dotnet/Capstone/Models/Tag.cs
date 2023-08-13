@@ -20,4 +20,5 @@ namespace Capstone.Models
         public bool IsLeashTrained { get; set; }
         public bool IsHypoallergenic { get; set; }
     }
+
 }
