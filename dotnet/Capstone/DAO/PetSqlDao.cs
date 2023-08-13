@@ -161,7 +161,37 @@ namespace Capstone.DAO
             return GetPet(newPetId);
         }
 
-        public List<Pet> ListPets()
+        public Pet PetIsAdopted(Pet adoptedPet, int adopterId)
+        {
+            string sql = "UPDATE pets SET is_adopted = 1, adopter_id = @adopter_id WHERE pet_id = @pet_id;";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand userCMD = new SqlCommand(sql, conn);
+                    userCMD.Parameters.AddWithValue("@adopter_id", adopterId);
+                    userCMD.Parameters.AddWithValue("@pet_id", adoptedPet.PetId);
+
+                    int rowsReturned = userCMD.ExecuteNonQuery();
+
+                    if (rowsReturned != 1)
+                    {
+                        throw new Exception("Error updating pet adopted status");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return GetPet(adoptedPet.PetId);
+        }
+
+        public List<Pet> ListAvailablePets()
         {
             List<Pet> petList = new List<Pet>();
 
@@ -175,7 +205,8 @@ namespace Capstone.DAO
                         "JOIN attributes ON pets.attribute_id = attributes.attribute_id " +
                         "JOIN environments ON pets.environment_id = environments.environment_id " +
                         "JOIN tags ON pets.tag_id = tags.tag_id " +
-                        "JOIN addresses ON pets.address_id = addresses.address_id", conn);
+                        "JOIN addresses ON pets.address_id = addresses.address_id " +
+                        "WHERE is_adopted = 0;", conn);
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     while (reader.Read())
@@ -189,7 +220,7 @@ namespace Capstone.DAO
                 foreach (Pet item in petList)
                 {
                     List<Photo> petPhotos = photoDao.ListPhotosByPet(item.PetId);
-                    
+
                     item.Photos = petPhotos;
                 }
             }
@@ -388,6 +419,46 @@ namespace Capstone.DAO
                     item.Photos = petPhotos;
                 }
 
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return petList;
+        }
+
+        public List<Pet> ListPets()
+        {
+            List<Pet> petList = new List<Pet>();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand("SELECT * FROM pets " +
+                        "JOIN attributes ON pets.attribute_id = attributes.attribute_id " +
+                        "JOIN environments ON pets.environment_id = environments.environment_id " +
+                        "JOIN tags ON pets.tag_id = tags.tag_id " +
+                        "JOIN addresses ON pets.address_id = addresses.address_id", conn);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        Pet fetchedPet = GetPetFromReader(reader);
+
+                        petList.Add(fetchedPet);
+                    }
+                }
+
+                foreach (Pet item in petList)
+                {
+                    List<Photo> petPhotos = photoDao.ListPhotosByPet(item.PetId);
+                    
+                    item.Photos = petPhotos;
+                }
             }
             catch (Exception e)
             {
