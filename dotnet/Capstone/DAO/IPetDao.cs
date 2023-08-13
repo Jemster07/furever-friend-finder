@@ -10,9 +10,6 @@ namespace Capstone.DAO
             Address updatedAddress);
         Pet CreatePet(RegisterPet newPet, Attributes newAttributes, Environ newEnvironment, Tag newTag, 
             CreateAddress newAddress);
-
-        // adopterId is the userId of the person adopting the pet
-        Pet PetIsAdopted(Pet adoptedPet, int adopterId);
         List<Pet> ListAvailablePets();
         List<Pet> ListPetsByZip(string zip);
         List<Pet> ListPetsByAttributes(Attributes attributes);

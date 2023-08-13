@@ -155,36 +155,6 @@ namespace Capstone.DAO
             return GetPet(newPetId);
         }
 
-        public Pet PetIsAdopted(Pet adoptedPet, int adopterId)
-        {
-            string sql = "UPDATE pets SET is_adopted = 1, adopter_id = @adopter_id WHERE pet_id = @pet_id;";
-
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
-
-                    SqlCommand userCMD = new SqlCommand(sql, conn);
-                    userCMD.Parameters.AddWithValue("@adopter_id", adopterId);
-                    userCMD.Parameters.AddWithValue("@pet_id", adoptedPet.PetId);
-
-                    int rowsReturned = userCMD.ExecuteNonQuery();
-
-                    if (rowsReturned != 1)
-                    {
-                        throw new Exception("Error updating pet adopted status");
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-
-            return GetPet(adoptedPet.PetId);
-        }
-
         public List<Pet> ListAvailablePets()
         {
             List<Pet> petList = new List<Pet>();
@@ -473,7 +443,6 @@ namespace Capstone.DAO
             p.Name = Convert.ToString(reader["name"]);
             p.Description = Convert.ToString(reader["description"]);
             p.UserId = Convert.ToInt32(reader["user_id"]);
-            p.AdopterId = Convert.ToInt32(reader["adopter_id"]);
             p.IsAdopted = Convert.ToBoolean(reader["is_adopted"]);
 
             Attributes tempAt = new Attributes();
