@@ -45,7 +45,7 @@ namespace Capstone.Controllers
             }
         }
 
-        [HttpGet("/user/{username}")]
+        [HttpGet("/directory/friend/{username}")]
         public ActionResult<User> GetUser(string username)
         {
             try
@@ -66,7 +66,7 @@ namespace Capstone.Controllers
                 return StatusCode(500);
             }
         }
-
+        
         // admin application approval page
 
         //[Authorize(Roles = "admin")]

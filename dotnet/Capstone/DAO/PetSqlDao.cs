@@ -20,15 +20,9 @@ namespace Capstone.DAO
         private readonly IAttributesDao attributeDao;
         private readonly IPhotoDao photoDao;
 
-        public PetSqlDao(string dbConnectionString, IAddressDao addressDao, ITagDao tagDao,
-            IEnvironDao environDao, IAttributesDao attributeDao, IPhotoDao photoDao)
+        public PetSqlDao(string dbConnectionString)
         {
             connectionString = dbConnectionString;
-            this.addressDao = addressDao;
-            this.tagDao = tagDao;
-            this.environDao = environDao;
-            this.attributeDao = attributeDao;
-            this.photoDao = photoDao;
         }
 
         public Pet GetPet(int petId)
