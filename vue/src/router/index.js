@@ -4,7 +4,6 @@ import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
 import Logout from '../views/Logout.vue'
 import Register from '../views/Register.vue'
-import FriendApp from '../views/FriendApp.vue'
 import FriendDirectory from '../views/FriendDirectory.vue'
 import NewFriend from '../views/NewFriend.vue'
 import NewPet from '../views/NewPet.vue'
@@ -33,7 +32,7 @@ const router = new Router({
       name: 'home',
       component: Home,
       meta: {
-        requiresAuth: true
+        requiresAuth: false
       }
     },
     {
@@ -61,11 +60,11 @@ const router = new Router({
       }
     },
     {
-      path: '/pdirect',
+      path: '/direct/pet',
       name: 'petdirectory',
       component: PetDirectory,
       meta: {
-        requiresAuth: true
+        requiresAuth: false
       }
     },
     {
@@ -93,22 +92,13 @@ const router = new Router({
       }
     },
     {
-      path: '/fdirect',
+      path: '/direct/friend',
       name: 'frienddirectory',
       component: FriendDirectory,
       meta: {
         requiresAuth: true
       }
-    },
-    {
-      path: '/apply',
-      name: 'friendapp',
-      component: FriendApp,
-      meta: {
-        requiresAuth: true
-      }
     }
-
   ]
 })
 
