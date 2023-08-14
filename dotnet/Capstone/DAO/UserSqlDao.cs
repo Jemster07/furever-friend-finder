@@ -48,6 +48,41 @@ namespace Capstone.DAO
             return returnUser;
         }
 
+        public User GetAdopter(int adopterId)
+        {
+            User adopter = new User();
+
+            string sql = "SELECT user_id, username, password_hash, salt, user_role, " +
+                "app_status, is_not_active, users.address_id, email, is_adopter, " +
+                "addresses.address_id, street, city, state_abr, zip FROM users " +
+                "JOIN addresses ON users.address_id = addresses.address_id " +
+                "JOIN user_adopter ON user_id = adopter_id " +
+                "WHERE adopter_id = @adopterId;";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@adopterId", adopterId);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        adopter = GetUserFromReader(reader);
+                    }
+                }
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+
+            return adopter;
+        }
+
         public User AddUser(RegisterUser registerUser)
         {
             IAddressDao createAddress = new AddressSqlDao(connectionString);
@@ -110,75 +145,6 @@ namespace Capstone.DAO
             }
 
             return GetUser(userToUpdate);
-        }
-
-        public DisplayUser GetUserByAdopterId(int adopterId)
-        {
-            DisplayUser petAdopter = new DisplayUser();
-
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
-
-                    SqlCommand cmd = new SqlCommand("SELECT user_id, username, user_role, app_status, " +
-                        "is_not_active, users.address_id, email, is_adopter, addresses.address_id, street, " +
-                        "city, state_abr, zip FROM users JOIN addresses ON users.address_id = addresses.address_id " +
-                        "WHERE user_id = @user_id AND is_adopter = 1;", conn);
-                    cmd.Parameters.AddWithValue("@user_id", adopterId);
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    if (reader.Read())
-                    {
-                        petAdopter = GetDisplayUserFromReader(reader);
-                    }
-                }
-            }
-            catch (SqlException e)
-            {
-                throw e;
-            }
-
-            return petAdopter;
-        }
-
-        public User ToggleUserIsAdopter(User userToUpdate)
-        {
-            string sql = "";
-            string makeAdopter = "UPDATE users SET is_adopter = 1 WHERE user_id = @user_id;";
-            string makeNotAdopter = "UPDATE users SET is_adopter = 0 WHERE user_id = @user_id;";
-
-            if (!userToUpdate.IsAdopter)
-            {
-                sql = makeAdopter;
-            }
-            else
-            {
-                sql = makeNotAdopter;
-            }
-
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
-                    SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@user_id", userToUpdate.UserId);
-                    int rowsReturned = cmd.ExecuteNonQuery();
-
-                    if (rowsReturned != 1)
-                    {
-                        throw new Exception("Error updating user adopter status");
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-
-            return GetUser(userToUpdate.Username);
         }
 
         public List<DisplayUser> ListActiveUsers()
@@ -321,6 +287,5 @@ namespace Capstone.DAO
 
             return u;
         }
-
     }
 }
