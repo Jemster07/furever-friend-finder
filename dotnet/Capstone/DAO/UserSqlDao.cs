@@ -143,6 +143,44 @@ namespace Capstone.DAO
             return petAdopter;
         }
 
+        public User ToggleUserIsAdopter(User userToUpdate)
+        {
+            string sql = "";
+            string makeAdopter = "UPDATE users SET is_adopter = 1 WHERE user_id = @user_id;";
+            string makeNotAdopter = "UPDATE users SET is_adopter = 0 WHERE user_id = @user_id;";
+
+            if (!userToUpdate.IsAdopter)
+            {
+                sql = makeAdopter;
+            }
+            else
+            {
+                sql = makeNotAdopter;
+            }
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@user_id", userToUpdate.UserId);
+                    int rowsReturned = cmd.ExecuteNonQuery();
+
+                    if (rowsReturned != 1)
+                    {
+                        throw new Exception("Error updating user adopter status");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return GetUser(userToUpdate.Username);
+        }
+
         public List<DisplayUser> ListActiveUsers()
         {
             List<DisplayUser> output = new List<DisplayUser>();
@@ -283,5 +321,6 @@ namespace Capstone.DAO
 
             return u;
         }
+
     }
 }
