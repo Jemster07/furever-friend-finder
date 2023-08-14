@@ -19,7 +19,6 @@ namespace Capstone.Models
         public string Description { get; set; }
         public Address Address { get; set; }
         public int UserId { get; set; }
-        public int AdopterId { get; set; }
         public bool IsAdopted { get; set; }
     }
 

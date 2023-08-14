@@ -6,17 +6,12 @@ namespace Capstone.DAO
     public interface IUserDao
     {
         User GetUser(string username);
+        User GetAdopter(int adopterId);
         User AddUser(RegisterUser registerUser);
         
         //UserController class should pass in both the admin user calling the method
         //and the user to be changed, to confirm the admin's role before execution
         User ChangeAppStatus(string userToUpdate, string newStatus);
-
-        //Use this method to get the user who adopted a specific pet
-        DisplayUser GetUserByAdopterId(int adopterId);
-
-        //Updates user's IsAdopter property
-        User ToggleUserIsAdopter(User userToUpdate);
 
         //List active users for directory
         List<DisplayUser> ListActiveUsers();

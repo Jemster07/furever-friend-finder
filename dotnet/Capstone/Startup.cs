@@ -69,9 +69,13 @@ namespace Capstone
             services.AddSingleton<ITokenGenerator>(tk => new JwtGenerator(Configuration["JwtSecret"]));
             services.AddSingleton<IPasswordHasher>(ph => new PasswordHasher());
             services.AddTransient<IUserDao>(m => new UserSqlDao(connectionString));
+            services.AddTransient<IAddressDao>(m => new AddressSqlDao(connectionString));
+            services.AddTransient<IAttributesDao>(m => new AttributesSqlDao(connectionString));
+            services.AddTransient<IEnvironDao>(m => new EnvironSqlDao(connectionString));
+            services.AddTransient<IPhotoDao>(m => new PhotoSqlDao(connectionString));
+            services.AddTransient<ITagDao>(m => new TagSqlDao(connectionString));
+            services.AddTransient<IPetDao>(m => new PetSqlDao(connectionString));
             services.AddTransient<PetFinderService>(l => new PetFinderService(Configuration["apiUrl"], Configuration["client_id"], Configuration["grant_type"], Configuration["client_secret"]));
-            // Configuration["client_id"], Configuration["grant_type"], Configuration["client_secret"]
-            //TODO: Configure for other DAO objects
 
             services.AddSwaggerGen(s => {
                 s.SwaggerDoc("v1", new OpenApiInfo

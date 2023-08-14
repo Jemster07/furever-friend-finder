@@ -45,7 +45,7 @@ namespace Capstone.Controllers
             }
         }
 
-        [HttpGet("/user/{username}")]
+        [HttpGet("/directory/friend/{username}")]
         public ActionResult<User> GetUser(string username)
         {
             try
@@ -59,6 +59,30 @@ namespace Capstone.Controllers
                 else
                 {
                     return Ok(fetchedUser);
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
+        // users who are adopters
+
+        [HttpGet("/directory/friend/{adopterId}")]
+        public ActionResult<User> GetAdopter(int adopterId)
+        {
+            try
+            {
+                User adopter = userDao.GetAdopter(adopterId);
+
+                if (!adopter.IsAdopter || !adopter.IsInactive)
+                {
+                    return Unauthorized("Access denied");
+                }
+                else
+                {
+                    return Ok(adopter);
                 }
             }
             catch (Exception)
@@ -100,7 +124,7 @@ namespace Capstone.Controllers
             {
                 if (newStatus != "rejected" || newStatus != "approved")
                 {
-                    return BadRequest("Incorrect status type: Enter [rejected] or [approved]");
+                    return BadRequest("Incorrect status type: Select [rejected] or [approved]");
                 }
                 else
                 {

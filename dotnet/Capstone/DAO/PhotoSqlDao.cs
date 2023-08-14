@@ -47,7 +47,8 @@ namespace Capstone.DAO
         public List<Photo> ListPhotosByPet(int petId)
         {            
             List<Photo> photoList = new List<Photo>();
-            string sql = "SELECT photo_id, photo_url, pet_id FROM photos WHERE pet_id = @pet_id AND is_not_active = 0;";
+            string sql = "SELECT photo_id, photo_url, pet_id FROM photos " +
+                "WHERE pet_id = @pet_id AND is_not_active = 0;";
             
             try
             {
