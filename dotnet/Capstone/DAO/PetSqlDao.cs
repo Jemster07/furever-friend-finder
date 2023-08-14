@@ -28,7 +28,7 @@ namespace Capstone.DAO
         public Pet GetPet(int petId)
         {
             List<Photo> petPhotos = photoDao.ListPhotosByPet(petId);
-            
+
             Pet fetchedPet = new Pet();
 
             try
@@ -43,7 +43,7 @@ namespace Capstone.DAO
                         "JOIN tags ON pets.tag_id = tags.tag_id " +
                         "JOIN addresses ON pets.address_id = addresses.address_id " +
                         "WHERE pet_id = @pet_id;", conn);
-                    
+
                     cmd.Parameters.AddWithValue("@pet_id", petId);
                     SqlDataReader reader = cmd.ExecuteReader();
 
@@ -63,7 +63,7 @@ namespace Capstone.DAO
             return fetchedPet;
         }
 
-        public Pet UpdatePet(Pet updatedPet, Attributes updatedAttributes, Environ updatedEnvironment, 
+        public Pet UpdatePet(Pet updatedPet, Attributes updatedAttributes, Environ updatedEnvironment,
             Tag updatedTags, Address updatedAddress)
         {
             Address newAddress = addressDao.UpdateAddress(updatedAddress);
@@ -153,6 +153,38 @@ namespace Capstone.DAO
             }
 
             return GetPet(newPetId);
+        }
+
+        public Pet AssignAdopter(Pet adoptedPet, int adopterId)
+        {
+            string sql = "UPDATE pets SET is_adopted = 1 WHERE pet_id = @pet_id; " +
+                "UPDATE users SET is_adopter = 1 WHERE user_id = @adopter_id; " +
+                "INSERT INTO user_adopter (pet_id, adopter_id) VALUES (@pet_id, @adopter_id);";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand userCMD = new SqlCommand(sql, conn);
+                    userCMD.Parameters.AddWithValue("@pet_id", adoptedPet.PetId);
+                    userCMD.Parameters.AddWithValue("@adopter_id", adopterId);
+
+                    int rowsReturned = userCMD.ExecuteNonQuery();
+
+                    if (rowsReturned != 1)
+                    {
+                        throw new Exception("Error updating pet adopted status");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return adoptedPet;
         }
 
         public List<Pet> ListAvailablePets()
@@ -420,7 +452,7 @@ namespace Capstone.DAO
                 foreach (Pet item in petList)
                 {
                     List<Photo> petPhotos = photoDao.ListPhotosByPet(item.PetId);
-                    
+
                     item.Photos = petPhotos;
                 }
             }

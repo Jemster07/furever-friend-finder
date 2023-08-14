@@ -6,10 +6,11 @@ namespace Capstone.DAO
     public interface IPetDao
     {
         Pet GetPet(int petId);
-        Pet UpdatePet(Pet updatedPet, Attributes updatedAttributes, Environ updatedEnvironment, Tag updatedTags, 
+        Pet UpdatePet(Pet updatedPet, Attributes updatedAttributes, Environ updatedEnvironment, Tag updatedTags,
             Address updatedAddress);
-        Pet CreatePet(RegisterPet newPet, Attributes newAttributes, Environ newEnvironment, Tag newTag, 
+        Pet CreatePet(RegisterPet newPet, Attributes newAttributes, Environ newEnvironment, Tag newTag,
             CreateAddress newAddress);
+        Pet AssignAdopter(Pet adoptedPet, int adopterId);
         List<Pet> ListAvailablePets();
         List<Pet> ListPetsByZip(string zip);
         List<Pet> ListPetsByAttributes(Attributes attributes);

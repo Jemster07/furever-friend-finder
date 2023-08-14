@@ -74,7 +74,6 @@ namespace Capstone
             services.AddTransient<IEnvironDao>(m => new EnvironSqlDao(connectionString));
             services.AddTransient<IPhotoDao>(m => new PhotoSqlDao(connectionString));
             services.AddTransient<ITagDao>(m => new TagSqlDao(connectionString));
-            services.AddTransient<IAdopterDao>(m => new AdopterSqlDao(connectionString));
             services.AddTransient<IPetDao>(m => new PetSqlDao(connectionString));
             services.AddTransient<PetFinderService>(l => new PetFinderService(Configuration["apiUrl"], Configuration["client_id"], Configuration["grant_type"], Configuration["client_secret"]));
 
