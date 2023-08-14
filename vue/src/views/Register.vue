@@ -103,7 +103,7 @@ export default {
         email: "",
         password: "",
         confirmPassword: "",
-        role: "user",
+        role: "friend",
         address: {
           street: "",
           city: "",

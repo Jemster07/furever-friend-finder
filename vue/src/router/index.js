@@ -60,7 +60,7 @@ const router = new Router({
       }
     },
     {
-      path: '/pdirect',
+      path: '/direct/pet',
       name: 'petdirectory',
       component: PetDirectory,
       meta: {
@@ -92,7 +92,7 @@ const router = new Router({
       }
     },
     {
-      path: '/fdirect',
+      path: '/direct/friend',
       name: 'frienddirectory',
       component: FriendDirectory,
       meta: {
