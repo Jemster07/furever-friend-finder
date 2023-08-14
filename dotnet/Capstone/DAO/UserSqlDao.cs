@@ -48,6 +48,41 @@ namespace Capstone.DAO
             return returnUser;
         }
 
+        public User GetAdopter(int adopterId)
+        {
+            User adopter = new User();
+
+            string sql = "SELECT user_id, username, password_hash, salt, user_role, " +
+                "app_status, is_not_active, users.address_id, email, is_adopter, " +
+                "addresses.address_id, street, city, state_abr, zip FROM users " +
+                "JOIN addresses ON users.address_id = addresses.address_id " +
+                "JOIN user_adopter ON user_id = adopter_id " +
+                "WHERE adopter_id = @adopterId;";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@adopterId", adopterId);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        adopter = GetUserFromReader(reader);
+                    }
+                }
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+
+            return adopter;
+        }
+
         public User AddUser(RegisterUser registerUser)
         {
             IAddressDao createAddress = new AddressSqlDao(connectionString);

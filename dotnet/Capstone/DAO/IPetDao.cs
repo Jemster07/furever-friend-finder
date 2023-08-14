@@ -10,7 +10,7 @@ namespace Capstone.DAO
             Address updatedAddress);
         Pet CreatePet(RegisterPet newPet, Attributes newAttributes, Environ newEnvironment, Tag newTag,
             CreateAddress newAddress);
-        Pet AssignAdopter(Pet adoptedPet, int adopterId);
+        Pet AssignAdopter(int petId, int adopterId);
         List<Pet> ListAvailablePets();
         List<Pet> ListPetsByZip(string zip);
         List<Pet> ListPetsByAttributes(Attributes attributes);

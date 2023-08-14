@@ -6,6 +6,7 @@ namespace Capstone.DAO
     public interface IUserDao
     {
         User GetUser(string username);
+        User GetAdopter(int adopterId);
         User AddUser(RegisterUser registerUser);
         
         //UserController class should pass in both the admin user calling the method

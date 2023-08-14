@@ -14,11 +14,6 @@ namespace Capstone.DAO
     public class PetSqlDao : IPetDao
     {
         private readonly string connectionString;
-        private readonly IAddressDao addressDao;
-        private readonly ITagDao tagDao;
-        private readonly IEnvironDao environDao;
-        private readonly IAttributesDao attributeDao;
-        private readonly IPhotoDao photoDao;
 
         public PetSqlDao(string dbConnectionString)
         {
@@ -27,6 +22,7 @@ namespace Capstone.DAO
 
         public Pet GetPet(int petId)
         {
+            IPhotoDao photoDao = new PhotoSqlDao(connectionString);
             List<Photo> petPhotos = photoDao.ListPhotosByPet(petId);
 
             Pet fetchedPet = new Pet();
@@ -66,9 +62,16 @@ namespace Capstone.DAO
         public Pet UpdatePet(Pet updatedPet, Attributes updatedAttributes, Environ updatedEnvironment,
             Tag updatedTags, Address updatedAddress)
         {
+            IAddressDao addressDao = new AddressSqlDao(connectionString);
             Address newAddress = addressDao.UpdateAddress(updatedAddress);
+            
+            ITagDao tagDao = new TagSqlDao(connectionString);
             Tag newTag = tagDao.UpdateTag(updatedTags);
+            
+            IEnvironDao environDao = new EnvironSqlDao(connectionString);
             Environ newEnviron = environDao.UpdateEnvironment(updatedEnvironment);
+            
+            IAttributesDao attributeDao = new AttributesSqlDao(connectionString);
             Attributes newAttributes = attributeDao.UpdateAttribute(updatedAttributes);
 
             string sql = "UPDATE pets SET type = @type, species = @species, color = @color, age = @age, " +
@@ -114,9 +117,16 @@ namespace Capstone.DAO
         public Pet CreatePet(RegisterPet pet, Attributes attributes, Environ environment, Tag tags,
              CreateAddress address)
         {
+            IAddressDao addressDao = new AddressSqlDao(connectionString);
             Address newAddress = addressDao.CreateAddress(address);
+            
+            ITagDao tagDao = new TagSqlDao(connectionString);
             Tag newTag = tagDao.CreateTag(tags);
+            
+            IEnvironDao environDao = new EnvironSqlDao(connectionString);
             Environ newEnviron = environDao.CreateEnvironment(environment);
+            
+            IAttributesDao attributeDao = new AttributesSqlDao(connectionString);
             Attributes newAttributes = attributeDao.CreateAttribute(attributes);
 
             int newPetId = 0;
@@ -155,7 +165,7 @@ namespace Capstone.DAO
             return GetPet(newPetId);
         }
 
-        public Pet AssignAdopter(Pet adoptedPet, int adopterId)
+        public Pet AssignAdopter(int petId, int adopterId)
         {
             string sql = "UPDATE pets SET is_adopted = 1 WHERE pet_id = @pet_id; " +
                 "UPDATE users SET is_adopter = 1 WHERE user_id = @adopter_id; " +
@@ -168,7 +178,7 @@ namespace Capstone.DAO
                     conn.Open();
 
                     SqlCommand userCMD = new SqlCommand(sql, conn);
-                    userCMD.Parameters.AddWithValue("@pet_id", adoptedPet.PetId);
+                    userCMD.Parameters.AddWithValue("@pet_id", petId);
                     userCMD.Parameters.AddWithValue("@adopter_id", adopterId);
 
                     int rowsReturned = userCMD.ExecuteNonQuery();
@@ -184,11 +194,13 @@ namespace Capstone.DAO
                 throw e;
             }
 
-            return adoptedPet;
+            return GetPet(petId);
         }
 
         public List<Pet> ListAvailablePets()
         {
+            IPhotoDao photoDao = new PhotoSqlDao(connectionString);
+
             List<Pet> petList = new List<Pet>();
 
             try
@@ -230,6 +242,8 @@ namespace Capstone.DAO
 
         public List<Pet> ListPetsByZip(string zip)
         {
+            IPhotoDao photoDao = new PhotoSqlDao(connectionString);
+
             List<Pet> petList = new List<Pet>();
 
             string sql = "SELECT * FROM pets JOIN attributes ON pets.attribute_id = attributes.attribute_id " +
@@ -273,6 +287,8 @@ namespace Capstone.DAO
 
         public List<Pet> ListPetsByAttributes(Attributes attributes)
         {
+            IPhotoDao photoDao = new PhotoSqlDao(connectionString);
+
             List<Pet> petList = new List<Pet>();
 
             string sql = "SELECT * FROM pets JOIN attributes ON pets.attribute_id = attributes.attribute_id " +
@@ -321,6 +337,8 @@ namespace Capstone.DAO
 
         public List<Pet> ListPetsByEnvironments(Environ environment)
         {
+            IPhotoDao photoDao = new PhotoSqlDao(connectionString);
+
             List<Pet> petList = new List<Pet>();
 
             string sql = "SELECT * FROM pets JOIN attributes ON pets.attribute_id = attributes.attribute_id " +
@@ -368,6 +386,8 @@ namespace Capstone.DAO
 
         public List<Pet> ListPetsByTags(Tag tags)
         {
+            IPhotoDao photoDao = new PhotoSqlDao(connectionString);
+
             List<Pet> petList = new List<Pet>();
 
             string sql = "SELECT * FROM pets JOIN attributes ON pets.attribute_id = attributes.attribute_id " +
@@ -426,6 +446,8 @@ namespace Capstone.DAO
 
         public List<Pet> ListPets()
         {
+            IPhotoDao photoDao = new PhotoSqlDao(connectionString);
+
             List<Pet> petList = new List<Pet>();
 
             try
@@ -467,7 +489,7 @@ namespace Capstone.DAO
         private Pet GetPetFromReader(SqlDataReader reader)
         {
             Pet p = new Pet();
-            p.PetId = Convert.ToInt32(reader["petId"]);
+            p.PetId = Convert.ToInt32(reader["pet_id"]);
             p.Type = Convert.ToString(reader["type"]);
             p.Species = Convert.ToString(reader["species"]);
             p.Color = Convert.ToString(reader["color"]);

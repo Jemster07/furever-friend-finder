@@ -11,7 +11,7 @@ namespace Capstone.Controllers
     [Route("[controller]")]
     [ApiController]
 
-    //[Authorize] //Make sure to allow the generic list pets to be displayed without login
+    //[Authorize]
     public class PetsController : Controller
     {
         private IUserDao userDao;
@@ -22,6 +22,7 @@ namespace Capstone.Controllers
             this.petDao = petDao;
         }
 
+        [AllowAnonymous]
         [HttpGet("/directory/pet")]
         public ActionResult<List<Pet>> GetPetDirectory()
         {
@@ -44,7 +45,6 @@ namespace Capstone.Controllers
             }
         }
 
-        // get pet by id
         [HttpGet("/directory/pet/{petId}")]
         public ActionResult<Pet> GetPet(int petId)
         {
@@ -67,14 +67,33 @@ namespace Capstone.Controllers
             }
         }
 
-
-
         // add pet
+        // TODO: Make separate Add Photo DAO calls BEFORE calling this endpoint!!
+        [HttpPost("/directory/pet/add")]
+        public ActionResult<Pet> AddPet(RegisterPet pet, Attributes attributes, Environ environment, Tag tags,
+             CreateAddress address)
+        {
+            try
+            {
+                return Ok(petDao.CreatePet(pet, attributes, environment, tags, address));
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
 
-        // Get user by adopter id
-
-        // Assign UserId to pet AdopterId
-        // Updates user's IsAdopter property
-        // Update pet's IsAdopted property
+        [HttpPut("/directory/pet/{petId}/adopted")]
+        public ActionResult<Pet> AssignAdopter(int petId, int adopterId)
+        {
+            try
+            {
+                return Ok(petDao.AssignAdopter(petId, adopterId));
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
     }
 }

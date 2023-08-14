@@ -66,7 +66,31 @@ namespace Capstone.Controllers
                 return StatusCode(500);
             }
         }
-        
+
+        // users who are adopters
+
+        [HttpGet("/directory/friend/{adopterId}")]
+        public ActionResult<User> GetAdopter(int adopterId)
+        {
+            try
+            {
+                User adopter = userDao.GetAdopter(adopterId);
+
+                if (!adopter.IsAdopter || !adopter.IsInactive)
+                {
+                    return Unauthorized("Access denied");
+                }
+                else
+                {
+                    return Ok(adopter);
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
         // admin application approval page
 
         //[Authorize(Roles = "admin")]
@@ -100,7 +124,7 @@ namespace Capstone.Controllers
             {
                 if (newStatus != "rejected" || newStatus != "approved")
                 {
-                    return BadRequest("Incorrect status type: Enter [rejected] or [approved]");
+                    return BadRequest("Incorrect status type: Select [rejected] or [approved]");
                 }
                 else
                 {
