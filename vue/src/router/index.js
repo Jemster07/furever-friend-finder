@@ -64,7 +64,7 @@ const router = new Router({
       name: 'petdirectory',
       component: PetDirectory,
       meta: {
-        requiresAuth: true
+        requiresAuth: false
       }
     },
     {

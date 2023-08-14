@@ -71,7 +71,7 @@
           <div class="form-input-group">
             <label for="zip">Zip Code</label>
             <input
-              type="number max-99999"
+              type="number"
               id="zip"
               v-model="user.address.zip"
               required
@@ -135,7 +135,7 @@ export default {
             const response = error.response;
             this.registrationErrors = true;
             if (response.status === 400) {
-              this.registrationErrorMsg = "Bad Request: Validation Errors";
+              this.registrationErrorMsg = "An Error Occured. Please check all fields for correct inputs";
             }
           });
       }
