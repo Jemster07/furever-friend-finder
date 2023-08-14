@@ -18,8 +18,10 @@ namespace Capstone.DAO
             connectionString = dbConnectionString;
         }
 
-        public Tag CreateTag(Tag newTag)
+        public Tag CreateTag(NewTag newTag)
         {
+            int tagId = 0;
+
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -27,7 +29,7 @@ namespace Capstone.DAO
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand("INSERT INTO Tags (playful, needs_exercise, cute, affectionate, large, " +
-                        "intelligent, happy, short_haired, shedder, shy, faithful, leash_trained, hypoallergenic) " +
+                        "intelligent, happy, short_haired, shedder, shy, faithful, leash_trained, hypoallergenic) OUTPUT INSERTED.tag_id " +
                         "VALUES (@playful, @needs_exercise, @cute, @affectionate, @large, @intelligent, @happy, " +
                         "@short_haired, @shedder, @shy, @faithful, @leash_trained, @hypoallergenic)", conn);
                     cmd.Parameters.AddWithValue("@playful", newTag.IsPlayful);
@@ -42,7 +44,7 @@ namespace Capstone.DAO
                     cmd.Parameters.AddWithValue("@faithful", newTag.IsFaithful);
                     cmd.Parameters.AddWithValue("@leash_trained", newTag.IsLeashTrained);
                     cmd.Parameters.AddWithValue("@Hypoallergenic", newTag.IsHypoallergenic);
-                    cmd.ExecuteNonQuery();
+                    tagId = Convert.ToInt32(cmd.ExecuteScalar());
                 }
             }
             catch (Exception e)
@@ -50,7 +52,7 @@ namespace Capstone.DAO
                 throw e;
             }
             
-            return newTag;
+            return GetTag(tagId);
         }
 
         public Tag GetTag(int tagId)
@@ -122,6 +124,7 @@ namespace Capstone.DAO
 
             return updatedTags;
         }
+
         private Tag GetTagsFromReader(SqlDataReader reader)
         {
             Tag u = new Tag();

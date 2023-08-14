@@ -15,7 +15,7 @@ namespace Capstone.DAO
             connectionString = dbConnectionString;
         }
 
-        public Photo GetPhoto(int photoId)
+        public Photo GetPhotoFromDB(int photoId)
         {
             Photo requestedPhoto = new Photo();
 
@@ -79,7 +79,7 @@ namespace Capstone.DAO
             return photoList;
         }
 
-        public Photo AddPhoto(NewPhoto newPhoto)
+        public Photo AddPhotoToDB(NewPhoto newPhoto)
         {
             int photoId = 0;
 
@@ -101,7 +101,7 @@ namespace Capstone.DAO
                 throw e;
             }
 
-            return GetPhoto(photoId);
+            return GetPhotoFromDB(photoId);
         }
 
         public int DeactivatePhoto(int photoId)
