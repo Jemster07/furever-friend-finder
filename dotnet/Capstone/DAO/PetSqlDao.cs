@@ -59,21 +59,8 @@ namespace Capstone.DAO
             return fetchedPet;
         }
 
-        public Pet UpdatePet(Pet updatedPet, Attributes updatedAttributes, Environ updatedEnvironment,
-            Tag updatedTags, Address updatedAddress)
+        public Pet UpdatePet(Pet updatedPet)
         {
-            IAddressDao addressDao = new AddressSqlDao(connectionString);
-            Address newAddress = addressDao.UpdateAddress(updatedAddress);
-            
-            ITagDao tagDao = new TagSqlDao(connectionString);
-            Tag newTag = tagDao.UpdateTag(updatedTags);
-            
-            IEnvironDao environDao = new EnvironSqlDao(connectionString);
-            Environ newEnviron = environDao.UpdateEnvironment(updatedEnvironment);
-            
-            IAttributesDao attributeDao = new AttributesSqlDao(connectionString);
-            Attributes newAttributes = attributeDao.UpdateAttribute(updatedAttributes);
-
             string sql = "UPDATE pets SET type = @type, species = @species, color = @color, age = @age, " +
                 "attribute_id = @attribute_id, environment_id = @environment_id, tag_id = @tag_id, " +
                 "name = @name, description = @description, user_id = @user_id, " +
@@ -90,13 +77,13 @@ namespace Capstone.DAO
                     userCMD.Parameters.AddWithValue("@species", updatedPet.Species);
                     userCMD.Parameters.AddWithValue("@color", updatedPet.Color);
                     userCMD.Parameters.AddWithValue("@age", updatedPet.Age);
-                    userCMD.Parameters.AddWithValue("@attribute_id", newAttributes.AttributeId);
-                    userCMD.Parameters.AddWithValue("@environment_id", newEnviron.EnvironmentId);
-                    userCMD.Parameters.AddWithValue("@tag_id", newTag.TagId);
+                    userCMD.Parameters.AddWithValue("@attribute_id", updatedPet.Attributes.AttributeId);
+                    userCMD.Parameters.AddWithValue("@environment_id", updatedPet.Environments.EnvironmentId);
+                    userCMD.Parameters.AddWithValue("@tag_id", updatedPet.Tags.TagId);
                     userCMD.Parameters.AddWithValue("@name", updatedPet.Name);
                     userCMD.Parameters.AddWithValue("@description", updatedPet.Description);
                     userCMD.Parameters.AddWithValue("@user_id", updatedPet.UserId);
-                    userCMD.Parameters.AddWithValue("@address_id", newAddress.AddressId);
+                    userCMD.Parameters.AddWithValue("@address_id", updatedPet.Address.AddressId);
 
                     int rowsReturned = userCMD.ExecuteNonQuery();
 
@@ -114,23 +101,9 @@ namespace Capstone.DAO
             return GetPet(updatedPet.PetId);
         }
 
-        public Pet CreatePet(RegisterPet pet, Attributes attributes, Environ environment, Tag tags,
-             CreateAddress address)
+        public Pet CreatePet(RegisterPet pet)
         {
-            IAddressDao addressDao = new AddressSqlDao(connectionString);
-            Address newAddress = addressDao.CreateAddress(address);
-            
-            ITagDao tagDao = new TagSqlDao(connectionString);
-            Tag newTag = tagDao.CreateTag(tags);
-            
-            IEnvironDao environDao = new EnvironSqlDao(connectionString);
-            Environ newEnviron = environDao.CreateEnvironment(environment);
-            
-            IAttributesDao attributeDao = new AttributesSqlDao(connectionString);
-            Attributes newAttributes = attributeDao.CreateAttribute(attributes);
-
             int newPetId = 0;
-
             string sql = "INSERT INTO pets (type, species, color, age, attribute_id, environment_id, tag_id, " +
                 "name, description, user_id, address_id) OUTPUT INSERTED.pet_id " +
                 "VALUES (@type, @species, @color, @age, @attribute_id, @environment_id, @tag_id, " +
@@ -147,13 +120,13 @@ namespace Capstone.DAO
                     userCMD.Parameters.AddWithValue("@species", pet.Species);
                     userCMD.Parameters.AddWithValue("@color", pet.Color);
                     userCMD.Parameters.AddWithValue("@age", pet.Age);
-                    userCMD.Parameters.AddWithValue("@attribute_id", newAttributes.AttributeId);
-                    userCMD.Parameters.AddWithValue("@environment_id", newEnviron.EnvironmentId);
-                    userCMD.Parameters.AddWithValue("@tag_id", newTag.TagId);
+                    userCMD.Parameters.AddWithValue("@attribute_id", pet.Attributes.AttributeId);
+                    userCMD.Parameters.AddWithValue("@environment_id", pet.Environments.EnvironmentId);
+                    userCMD.Parameters.AddWithValue("@tag_id", pet.Tags.TagId);
                     userCMD.Parameters.AddWithValue("@name", pet.Name);
                     userCMD.Parameters.AddWithValue("@description", pet.Description);
                     userCMD.Parameters.AddWithValue("@user_id", pet.UserId);
-                    userCMD.Parameters.AddWithValue("@address_id", newAddress.AddressId);
+                    userCMD.Parameters.AddWithValue("@address_id", pet.Address.AddressId);
                     newPetId = Convert.ToInt32(userCMD.ExecuteScalar());
                 }
             }

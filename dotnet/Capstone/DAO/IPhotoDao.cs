@@ -5,9 +5,9 @@ namespace Capstone.DAO
 {
     public interface IPhotoDao
     {
-        Photo GetPhoto(int photoId);
+        Photo GetPhotoFromDB(int photoId);
         List<Photo> ListPhotosByPet(int petId);
-        Photo AddPhoto(NewPhoto newPhoto);
+        Photo AddPhotoToDB(NewPhoto newPhoto);
         int DeactivatePhoto(int photoId);
     }
 }

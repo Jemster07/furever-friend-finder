@@ -13,8 +13,10 @@ namespace Capstone.DAO
             connectionString = dbConnectionString;
         }
 
-        public Environ CreateEnvironment(Environ newEnvironment)
+        public Environ CreateEnvironment(NewEnviron newEnvironment)
         {
+            int environmentId = 0;
+
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -22,15 +24,14 @@ namespace Capstone.DAO
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand("INSERT INTO environments (children, dogs, cats, other_animals, " +
-                        "indoor_only) VALUES (@children, @dog, @cat, @other_animals, @indoor_only) " +
-                        "where environment_id = @environment_id", conn);
-                    cmd.Parameters.AddWithValue("@environment_id", newEnvironment.EnvironmentId);
+                        "indoor_only) OUTPUT INSERTED.environment_id " +
+                        "VALUES (@children, @dog, @cat, @other_animals, @indoor_only)", conn);
                     cmd.Parameters.AddWithValue("@children", newEnvironment.IsChildSafe);
                     cmd.Parameters.AddWithValue("@dog", newEnvironment.IsDogSafe);
                     cmd.Parameters.AddWithValue("@cat", newEnvironment.IsCatSafe);
                     cmd.Parameters.AddWithValue("@other_animals", newEnvironment.IsOtherAnimalSafe);
                     cmd.Parameters.AddWithValue("@indoor_only", newEnvironment.IsIndoorOnly);
-                    cmd.ExecuteNonQuery();
+                    environmentId = Convert.ToInt32(cmd.ExecuteScalar());
                 }
             }
             catch (Exception e)
@@ -38,7 +39,7 @@ namespace Capstone.DAO
                 throw e;
             }
             
-            return newEnvironment;
+            return GetEnvironment(environmentId);
         }
 
         public Environ GetEnvironment(int environmentId)

@@ -117,8 +117,8 @@ namespace Capstone.Controllers
         }
 
         //[Authorize(Roles = "admin")]
-        [HttpPut("/application/update/{userId}")]
-        public ActionResult<User> ApproveRejectApp(string userToUpdate, string newStatus)
+        [HttpPut("/application/update/{username}")]
+        public ActionResult<User> ApproveRejectApp(string username, string newStatus)
         {
             try
             {
@@ -128,7 +128,7 @@ namespace Capstone.Controllers
                 }
                 else
                 {
-                    return Ok(userDao.ChangeAppStatus(userToUpdate, newStatus));
+                    return Ok(userDao.ChangeAppStatus(username, newStatus));
                 }
             }
             catch (Exception)
