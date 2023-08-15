@@ -2,7 +2,7 @@
   <div id="main-page">
     <div id="header">
       <div id="page-title" class="has-text-left is-size-2">All Friends</div>
-
+         
       <div class="has-text-right py-4 px-4">
         <router-link :to="{ name: 'home' }" class="button is-light">
           Home
@@ -20,15 +20,18 @@
 
     <div id="friend-list">
       <div>
-        
+         <user-card></user-card>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import UserCard from '../components/UserCard.vue'
+
 export default {
   name: "frienddirectory",
+  components: { UserCard },
 };
 </script>
 
