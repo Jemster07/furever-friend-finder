@@ -15,5 +15,6 @@ namespace Capstone.Models
     {
         public string PhotoUrl { get; set; }
         public int PetId { get; set; }
+        public bool IsInactive { get; set; }
     }
 }

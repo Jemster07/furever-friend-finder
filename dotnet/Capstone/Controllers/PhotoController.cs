@@ -16,7 +16,7 @@ namespace Capstone.Controllers
     //[Authorize]
     public class PhotoController : ControllerBase
     {
-        string directoryPath = ".\\dotnet\\Pet_Photos\\";
+        string directoryPath = ".\\Pet_Photos\\";
         private IPhotoDao photoDao;
 
         public PhotoController(IPhotoDao photoDao)
@@ -29,6 +29,11 @@ namespace Capstone.Controllers
         [HttpPost("/photo/save/{petId}")]
         public ActionResult<Photo> SaveUserImage(IFormFile formFile, int petId)
         {
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
+
             try
             {
                 if (formFile.Length > 0)
@@ -44,6 +49,7 @@ namespace Capstone.Controllers
 
                     newPhoto.PetId = petId;
                     newPhoto.PhotoUrl = filePath;
+                    newPhoto.IsInactive = false;
 
                     return Ok(photoDao.AddPhotoToDB(newPhoto));
                 }
@@ -60,18 +66,20 @@ namespace Capstone.Controllers
 
         // Grabs image from file directory and sends it up to the front end
 
-        [HttpGet("/photo/retrieve/{photo}")]
-        public ActionResult RetrieveImage(Photo photo)
+        [HttpGet("/photo/retrieve/{photoId}")]
+        public ActionResult RetrieveImage(int photoId)
         {
+            Photo fetchedPhoto = photoDao.GetPhotoFromDB(photoId);
+
             try
             {
-                if (photo == null)
+                if (fetchedPhoto == null)
                 {
                     return Content("Missing file");
                 }
                 else
                 {                    
-                    string photoUrlLower = photo.PhotoUrl.ToLower();
+                    string photoUrlLower = fetchedPhoto.PhotoUrl.ToLower();
 
                     Byte[] b = System.IO.File.ReadAllBytes(photoUrlLower);
 
