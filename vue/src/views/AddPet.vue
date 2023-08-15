@@ -1,6 +1,5 @@
 <template>
   <div id="addpet">
-  
     <div class="has-text-right py-4 px-4">
       <router-link v-bind:to="{ name: 'home' }" class="button is-light">
         Home
@@ -11,15 +10,19 @@
     </router-link>
     </div>
 
-
+    <div class="has-text-right py-4 px-4">
+      <router-link :to="{ name: 'home' }" class="button is-light">
+        Home
+      </router-link>
+    </div>
     <h1 class="has-text-centered is-size-1 py-3">Add a Pet</h1>
     <p class="has-text-centered py-3">
       Please fill out the required fields below
     </p>
     <p />
     <div class="py-3"></div>
-
-    <form @submit.prevent="addpet" class="has-text-centered">
+  <div id="wholeform">
+    <form id='formbox' @submit.prevent="newpet" class="has-text-centered">
       <div class="form-input-group">
         <label for="petname">Pet Name</label>
         <input id="petname" type="text" v-model="newpet.name" />
@@ -38,32 +41,8 @@
       </div>
       <div class="form-input-group">
         <label for="petspecies">Pet Breed</label>
-        <select for="petspecies">
-          <option value="afghanhound">Afghan Hound</option>
-          <option value="airedaleterrier">Airedale Terrier</option>
-          <option value="akbash">Akbash</option>
-          <option value="akita">Akita</option>
-          <option value="alaskanmalamute">Alaskan Malamute</option>
-          <option value="americanbulldog">American Bulldog</option>
-          <option value="americanbully">American Bully</option>
-          <option value="americaneskimodog">American Eskimo Dog</option>
-          <option value="americanfoxhound">American Foxhound</option>
-          <option value="americanhairlessterrier">
-            American Hairless Terrier
-          </option>
-          <option value="americanstaffordshireterrier">
-            American Staffordshire Terrier
-          </option>
-          <option value="americanwaterspaniel">American Water Spaniel</option>
-          <option value="anatolianshepard">Anatolian Shepard</option>
-          <option value="appenzell">Appenzell Mountain Dog</option>
-          <option value="aussiedoodle">Aussiedoodle</option>
-          <option value="australiancattledog">
-            Australian Cattle Dog / Blue Heeler
-          </option>
-          <option value="australiankelpie">Australian Kelpie</option>
-          <option value="australianshepard">Australian Shepard</option>
-          <option value="australianterrier">Australian Terrier</option>
+        <select id="petspecies">
+          <option v-for="breed in breeds" :key="breed.value" :value="breed.value">{{ breed.text }}</option>
         </select>
         <input id="petspecies" type="hidden" v-model="newpet.breed" />
       </div>
