@@ -19,7 +19,7 @@
             >
           </li>
           <li id="tab">
-            <router-link v-bind:to="{ name: 'newpet' }" style="color: black"
+            <router-link v-bind:to="{ name: 'addpet' }" style="color: black"
               >ADD NEW PET</router-link
             >
           </li>
@@ -51,7 +51,6 @@
             id="logout"
             v-bind:to="{ name: 'logout' }"
             class="button is-size-6 is-light"
-            v-if="this.$store.user.role == 'friend'"
             >Logout</router-link
           >
         </div>

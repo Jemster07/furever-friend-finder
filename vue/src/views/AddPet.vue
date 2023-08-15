@@ -1,16 +1,18 @@
 <template>
-  <div id="newpet">
-  
+  <div id="addpet">
     <div class="has-text-right py-4 px-4">
       <router-link v-bind:to="{ name: 'home' }" class="button is-light">
         Home
       </router-link>
 
-    <router-link v-bind:to="{ name: 'logout' }" v-if="$store.state.token != ''" class="button is-light mx-3">
-      Logout
-    </router-link>
+      <router-link
+        v-bind:to="{ name: 'logout' }"
+        v-if="$store.state.token != ''"
+        class="button is-light mx-3"
+      >
+        Logout
+      </router-link>
     </div>
-
 
     <div class="has-text-right py-4 px-4">
       <router-link :to="{ name: 'home' }" class="button is-light">
@@ -24,9 +26,11 @@
     </p>
     <p />
     <div class="py-3"></div>
+  <div id="wholeform">
+    <form id='formbox' @submit.prevent="newpet" class="has-text-centered">
 
-    <form @submit.prevent="newpet" class="has-text-centered">
       <div class="form-input-group">
+        <hr/>
         <label for="petname">Pet Name</label>
         <input id="petname" type="text" v-model="newpet.name" />
       </div>
@@ -44,32 +48,8 @@
       </div>
       <div class="form-input-group">
         <label for="petspecies">Pet Breed</label>
-        <select for="petspecies" v-if="pettype.value === 'dog'">
-          <option value="afghanhound">Afghan Hound</option>
-          <option value="airedaleterrier">Airedale Terrier</option>
-          <option value="akbash">Akbash</option>
-          <option value="akita">Akita</option>
-          <option value="alaskanmalamute">Alaskan Malamute</option>
-          <option value="americanbulldog">American Bulldog</option>
-          <option value="americanbully">American Bully</option>
-          <option value="americaneskimodog">American Eskimo Dog</option>
-          <option value="americanfoxhound">American Foxhound</option>
-          <option value="americanhairlessterrier">
-            American Hairless Terrier
-          </option>
-          <option value="americanstaffordshireterrier">
-            American Staffordshire Terrier
-          </option>
-          <option value="americanwaterspaniel">American Water Spaniel</option>
-          <option value="anatolianshepard">Anatolian Shepard</option>
-          <option value="appenzell">Appenzell Mountain Dog</option>
-          <option value="aussiedoodle">Aussiedoodle</option>
-          <option value="australiancattledog">
-            Australian Cattle Dog / Blue Heeler
-          </option>
-          <option value="australiankelpie">Australian Kelpie</option>
-          <option value="australianshepard">Australian Shepard</option>
-          <option value="australianterrier">Australian Terrier</option>
+        <select id="petspecies">
+          <option v-for="breed in breeds" :key="breed.value" :value="breed.value">{{ breed.text }}</option>
         </select>
         <input id="petspecies" type="hidden" v-model="newpet.breed" />
       </div>
@@ -79,19 +59,30 @@
       </div>
       <div class="form-input-group">
         <label for="petage">Pet Age</label>
-        <input id="petage" type="number" v-model="newpet.age" />
+        <select id="petage">
+          <option value="baby">Baby</option>
+          <option value="young">Young</option>
+          <option value="adult">Adult</option>
+          <option value="senior">Senior</option>
+        </select>
+        <input id="petage" type="hidden" v-model="newpet.age" />
       </div>
       <div class="form-input-group">
         <p>Please enter a short description for your pet.</p>
         <input id="petdesc" type="textarea" v-model="newpet.description" />
       </div>
+      <hr/>
     </form>
+    </div>
   </div>
 </template>
 
 <script>
+
+import BreedsService from '../services/BreedsService.js';
+
 export default {
-  name: "newpet",
+  name: "addpet",
   data() {
     return {
       newpet: {
@@ -101,9 +92,34 @@ export default {
         age: "",
         name: "",
         description: "",
-      },
-    };
+
+        },
+        breeds: [],
+    }
   },
-};
+  created() {
+        this.breeds = BreedsService.getBreedOfDogs();
+    }
+  
+}
 </script>
 
+<style>
+#addpet
+{
+  background-color:lightgreen
+}
+#wholeform {
+  display:flex;
+  height: 50vh;
+  justify-content: center;
+  justify-items: center;
+}
+#formbox{
+  background-color: rgb(196, 255, 201);
+  padding: 15px;
+  border:black solid 2px;
+  border-radius: 10px;
+  margin: 10px;
+}
+</style>
