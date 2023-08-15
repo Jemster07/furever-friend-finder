@@ -6,9 +6,10 @@ import Logout from '../views/Logout.vue'
 import Register from '../views/Register.vue'
 import FriendDirectory from '../views/FriendDirectory.vue'
 import NewFriend from '../views/NewFriend.vue'
-import NewPet from '../views/NewPet.vue'
+import AddPet from '../views/AddPet.vue'
 import PendingApp from '../views/PendingApp.vue'
 import PetDirectory from '../views/PetDirectory.vue'
+import PetPage from '../views/PetPage.vue'
 
 import store from '../store/index'
 
@@ -76,9 +77,9 @@ const router = new Router({
       }
     },
     {
-      path: '/newpet',
-      name: 'newpet',
-      component: NewPet,
+      path: '/addpet',
+      name: 'addpet',
+      component: AddPet,
       meta: {
         requiresAuth: true
       }
@@ -95,6 +96,14 @@ const router = new Router({
       path: '/direct/friend',
       name: 'frienddirectory',
       component: FriendDirectory,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/pet/:petid',
+      name: 'petpage',
+      component: PetPage,
       meta: {
         requiresAuth: true
       }
