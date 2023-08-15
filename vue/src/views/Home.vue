@@ -58,10 +58,7 @@
             id="logout"
             v-bind:to="{ name: 'logout' }"
             class="button is-size-6 is-light"
-<<<<<<< HEAD
-=======
             v-if="$store.state.token != ''"
->>>>>>> 4e1e07a6ce8ad4ed017830867bf0541581087286
             >Logout</router-link
           >
         </div>
