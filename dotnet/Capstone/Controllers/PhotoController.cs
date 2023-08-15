@@ -19,10 +19,9 @@ namespace Capstone.Controllers
         string directoryPath = ".\\dotnet\\Pet_Photos\\";
         private IPhotoDao photoDao;
 
-        public PhotoController(IPhotoDao photoDao, string directoryPath)
+        public PhotoController(IPhotoDao photoDao)
         {
             this.photoDao = photoDao;
-            this.directoryPath = directoryPath;
         }
 
         // Writes user uploaded image to file directory
@@ -111,7 +110,7 @@ namespace Capstone.Controllers
         // Deactivate photo
 
         [HttpPut("/photo/delete/{photoId}")]
-        public ActionResult DeletePhoto(int photoId)
+        public ActionResult<int> DeletePhoto(int photoId)
         {
             try
             {
