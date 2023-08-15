@@ -38,16 +38,22 @@
           <router-link
             v-bind:to="{ name: 'login' }"
             class="button is-size-6 is-primary navbar-item my-3"
-            v-if="!this.$route.query.registration"
+            v-if="this.$route.query.registration"
             >Login</router-link
           >
           <router-link
             v-bind:to="{ name: 'register' }"
             class="button is-size-6 is-success navbar-item my-3"
-            v-if="!this.$route.query.registration"
+            v-if="this.$route.query.registration"
             >Create Account</router-link
           >
-          <router-link id="logout"></router-link>
+          <router-link
+            id="logout"
+            v-bind:to="{ name: 'logout' }"
+            class="button is-size-6 is-light"
+            v-if="this.$store.user.role == 'friend'"
+            >Logout</router-link
+          >
         </div>
       </div>
     </nav>
@@ -91,11 +97,10 @@
         </div>
 
         <div class="content">
-            (description) Lorem, ipsum dolor sit amet consectetur adipisicing
-            elit. Quaerat pariatur dolorem quo aliquam sapiente eos accusamus
-            sunt tempore. Praesentium natus repudiandae commodi eaque eligendi a
-            molestiae rem quo delectus numquam.
-          
+          (description) Lorem, ipsum dolor sit amet consectetur adipisicing
+          elit. Quaerat pariatur dolorem quo aliquam sapiente eos accusamus sunt
+          tempore. Praesentium natus repudiandae commodi eaque eligendi a
+          molestiae rem quo delectus numquam.
         </div>
       </div>
     </div>
