@@ -1,7 +1,9 @@
-﻿using Capstone.Models;
+﻿using Capstone.DAO;
+using Capstone.Models;
 using Capstone.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 
 namespace Capstone.Controllers
@@ -19,19 +21,68 @@ namespace Capstone.Controllers
 
         [HttpGet("/petfinder/type/{petType}/")]
         public ActionResult<List<PetApi>> ListAnimals(string petType)
-        {    
-                return finderDao.GetAnimalsByType(petType);
+        {
+            try
+            {   
+
+                List<PetApi> availablePets = finderDao.GetAnimalsByType(petType);
+           
+                if (availablePets.Count <= 0)
+                {
+                    return NoContent();
+                }
+                else
+                {
+                    return Ok(availablePets);           
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
         }
 
         [HttpGet("/petfinder/breed/{breed}/")]
         public ActionResult<List<PetApi>> ListBreeds(string breed)
         {
-            return finderDao.GetAnimalByBreed(breed);
+            try
+            {
+                List<PetApi> availablePets = finderDao.GetAnimalByBreed(breed);
+                if (availablePets.Count <= 0)
+                {
+                    return NoContent();
+                }
+                else
+                {
+                    return Ok(availablePets);
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
         }
+      
         [HttpGet("/petfinder/location/{address}/")]
         public ActionResult<List<PetApi>> ListByLoc(string address)
         {
-            return finderDao.GetAnimalByZip(address);
+            try
+            {
+                List<PetApi> availablePets = finderDao.GetAnimalByZip(address);
+                if (availablePets.Count <= 0)
+                {
+                    return NoContent();
+                }
+                else
+                {
+                    return Ok(availablePets);
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+
         }
 
     }
