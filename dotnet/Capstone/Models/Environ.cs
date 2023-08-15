@@ -12,4 +12,13 @@ namespace Capstone.Models
         public bool IsOtherAnimalSafe { get; set; }
         public bool IsIndoorOnly { get; set; }
     }
+
+    public class NewEnviron
+    {
+        public bool IsChildSafe { get; set; }
+        public bool IsDogSafe { get; set; }
+        public bool IsCatSafe { get; set; }
+        public bool IsOtherAnimalSafe { get; set; }
+        public bool IsIndoorOnly { get; set; }
+    }
 }

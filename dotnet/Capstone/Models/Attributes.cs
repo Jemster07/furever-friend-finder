@@ -12,4 +12,13 @@ namespace Capstone.Models
         public bool IsSpecialNeeds { get; set; }
         public bool IsShotsCurrent { get; set; }
     }
+
+    public class NewAttributes
+    {
+        public bool IsSpayedNeutered { get; set; }
+        public bool IsHouseTrained { get; set; }
+        public bool IsDeclawed { get; set; }
+        public bool IsSpecialNeeds { get; set; }
+        public bool IsShotsCurrent { get; set; }
+    }
 }

@@ -14,11 +14,9 @@ namespace Capstone.Controllers
     //[Authorize]
     public class PetsController : Controller
     {
-        private IUserDao userDao;
         private IPetDao petDao;
-        public PetsController(IUserDao userDao, IPetDao petDao)
+        public PetsController(IPetDao petDao)
         {
-            this.userDao = userDao;
             this.petDao = petDao;
         }
 
@@ -159,21 +157,31 @@ namespace Capstone.Controllers
             }
         }
 
-        // add pet
-        // TODO: Make separate Add Photo DAO calls BEFORE calling this endpoint!!
-        //[HttpPost("/directory/pet/add")]
-        //public ActionResult<Pet> AddPet(RegisterPet pet, Attributes attributes, Environ environment, Tag tags,
-        //     CreateAddress address)
-        //{
-        //    try
-        //    {
-        //        return Ok(petDao.CreatePet(pet, attributes, environment, tags, address));
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return StatusCode(500);
-        //    }
-        //  }
+        [HttpPut("/directory/pet/{petId}/update")]
+        public ActionResult<Pet> UpdatePet(Pet updatedPet)
+        {
+            try
+            {
+                return Ok(petDao.UpdatePet(updatedPet));
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPost("/directory/pet/add")]
+        public ActionResult<Pet> AddPet(RegisterPet newPet)
+        {
+            try
+            {
+                return Ok(petDao.CreatePet(newPet));
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
 
         [HttpPut("/directory/pet/{petId}/adopted")]
         public ActionResult<Pet> AssignAdopter(int petId, int adopterId)

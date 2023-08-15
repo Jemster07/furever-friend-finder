@@ -21,4 +21,20 @@ namespace Capstone.Models
         public bool IsHypoallergenic { get; set; }
     }
 
+    public class NewTag
+    {
+        public bool IsPlayful { get; set; }
+        public bool NeedsExercise { get; set; }
+        public bool IsCute { get; set; }
+        public bool IsAffectionate { get; set; }
+        public bool IsLarge { get; set; }
+        public bool IsIntelligent { get; set; }
+        public bool IsHappy { get; set; }
+        public bool IsShortHaired { get; set; }
+        public bool IsShedder { get; set; }
+        public bool IsShy { get; set; }
+        public bool IsFaithful { get; set; }
+        public bool IsLeashTrained { get; set; }
+        public bool IsHypoallergenic { get; set; }
+    }
 }
