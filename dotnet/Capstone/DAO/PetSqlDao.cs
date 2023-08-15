@@ -466,7 +466,7 @@ namespace Capstone.DAO
             p.Type = Convert.ToString(reader["type"]);
             p.Species = Convert.ToString(reader["species"]);
             p.Color = Convert.ToString(reader["color"]);
-            p.Age = Convert.ToInt32(reader["age"]);
+            p.Age = Convert.ToString(reader["age"]);
             p.Name = Convert.ToString(reader["name"]);
             p.Description = Convert.ToString(reader["description"]);
             p.UserId = Convert.ToInt32(reader["user_id"]);

@@ -10,7 +10,7 @@ namespace Capstone.Models
         public string Type { get; set; }
         public string Species { get; set; }
         public string Color { get; set; }
-        public int Age { get; set; }
+        public string Age { get; set; }
         public List<Photo> Photos { get; set; }
         public Attributes Attributes { get; set; }
         public Environ Environments { get; set; }
@@ -27,7 +27,7 @@ namespace Capstone.Models
         public string Type { get; set; }
         public string Species { get; set; }
         public string Color { get; set; }
-        public int Age { get; set; }
+        public string Age { get; set; }
         public Attributes Attributes { get; set; }
         public Environ Environments { get; set; }
         public Tag Tags { get; set; }
