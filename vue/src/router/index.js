@@ -105,7 +105,7 @@ const router = new Router({
       name: 'petpage',
       component: PetPage,
       meta: {
-        requiresAuth: true
+        requiresAuth: false
       }
     }
   ]

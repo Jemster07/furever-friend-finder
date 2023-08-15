@@ -1,5 +1,5 @@
 <template>
-  <div id="newpet">
+  <div id="addpet">
   
     <div class="has-text-right py-4 px-4">
       <router-link v-bind:to="{ name: 'home' }" class="button is-light">
@@ -12,12 +12,6 @@
     </div>
 
 
-    <div class="has-text-right py-4 px-4">
-      <router-link :to="{ name: 'home' }" class="button is-light">
-        Home
-      </router-link>
-    </div>
-
     <h1 class="has-text-centered is-size-1 py-3">Add a Pet</h1>
     <p class="has-text-centered py-3">
       Please fill out the required fields below
@@ -25,7 +19,7 @@
     <p />
     <div class="py-3"></div>
 
-    <form @submit.prevent="newpet" class="has-text-centered">
+    <form @submit.prevent="addpet" class="has-text-centered">
       <div class="form-input-group">
         <label for="petname">Pet Name</label>
         <input id="petname" type="text" v-model="newpet.name" />
@@ -44,7 +38,7 @@
       </div>
       <div class="form-input-group">
         <label for="petspecies">Pet Breed</label>
-        <select for="petspecies" v-if="pettype.value === 'dog'">
+        <select for="petspecies">
           <option value="afghanhound">Afghan Hound</option>
           <option value="airedaleterrier">Airedale Terrier</option>
           <option value="akbash">Akbash</option>
@@ -91,7 +85,7 @@
 
 <script>
 export default {
-  name: "newpet",
+  name: "addpet",
   data() {
     return {
       newpet: {
