@@ -13,12 +13,12 @@ namespace Capstone.Controllers
     [ApiController]
 
     //[Authorize]
-    public class FileUploadController : ControllerBase
+    public class FileIOController : ControllerBase
     {
         string directoryPath = ".\\dotnet\\Pet_Photos\\";
         private IPhotoDao photoDao;
 
-        public FileUploadController(IPhotoDao photoDao, string directoryPath)
+        public FileIOController(IPhotoDao photoDao, string directoryPath)
         {
             this.photoDao = photoDao;
             this.directoryPath = directoryPath;
@@ -59,5 +59,11 @@ namespace Capstone.Controllers
                 return StatusCode(500);
             }
         }
+
+        // Deactivate photo
+
+        // List photos by pet id
+
+        // Get photo from db by photo id
     }
 }

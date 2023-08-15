@@ -33,9 +33,24 @@ namespace Capstone
             }
         }
 
-        //public Photo CreatePhotoObject()
-        //{
+        public string GetPhotoByPath(Photo dbPhoto)
+        {
+            string[] pathArray = GeneratePhotoPathArray();
 
-        //}
+            string photoPath = "";
+
+            foreach (string item in pathArray)
+            {
+                if (item == dbPhoto.PhotoUrl)
+                {
+                    photoPath = item;
+                    break;
+                }
+            }
+
+            return photoPath;
+        }
+
+        public 
     }
 }
