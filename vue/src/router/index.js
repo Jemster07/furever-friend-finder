@@ -7,9 +7,10 @@ import Register from '../views/Register.vue'
 import FriendDirectory from '../views/FriendDirectory.vue'
 import NewFriend from '../views/NewFriend.vue'
 import AddPet from '../views/AddPet.vue'
-import PendingApp from '../views/PendingApp.vue'
+import AdminPage from '../views/AdminPage.vue'
 import PetDirectory from '../views/PetDirectory.vue'
 import PetPage from '../views/PetPage.vue'
+import SearchPet from '../views/SearchPet.vue'
 
 import store from '../store/index'
 
@@ -69,9 +70,9 @@ const router = new Router({
       }
     },
     {
-      path: '/pending',
-      name: 'pendingapp',
-      component: PendingApp,
+      path: '/admin',
+      name: 'adminpage',
+      component: AdminPage,
       meta: {
         requiresAuth: true
       }
@@ -105,6 +106,14 @@ const router = new Router({
       name: 'petpage',
       component: PetPage,
       meta: {
+        requiresAuth: false
+      }
+    },
+    {
+      path: '/direct/pet/search',
+      name: 'searchpet',
+      component: SearchPet,
+      meta: {
         requiresAuth: true
       }
     }
@@ -117,6 +126,7 @@ router.beforeEach((to, from, next) => {
 
   // If it does and they are not logged in, send the user to "/login"
   if (requiresAuth && store.state.token === '') {
+    alert('You cannot access that page without a valid account.')
     next("/login");
   } else {
     // Else let them go to their next destination

@@ -25,7 +25,7 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("SELECT photo_id, photo_url, pet_id FROM photos " +
+                    SqlCommand cmd = new SqlCommand("SELECT photo_id, photo_url, pet_id, is_not_active FROM photos " +
                         "WHERE photo_id = @photo_id AND is_not_active = 0;", conn);
                     cmd.Parameters.AddWithValue("@photo_id", photoId);
                     SqlDataReader reader = cmd.ExecuteReader();
@@ -33,6 +33,9 @@ namespace Capstone.DAO
                     if (reader.Read())
                     {
                         requestedPhoto.PhotoId = Convert.ToInt32(reader["photo_id"]);
+                        requestedPhoto.PhotoUrl = Convert.ToString(reader["photo_url"]);
+                        requestedPhoto.PetId = Convert.ToInt32(reader["pet_id"]);
+                        requestedPhoto.IsInactive = Convert.ToBoolean(reader["is_not_active"]);
                     }
                 }
             }
@@ -89,10 +92,11 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("INSERT INTO photos (photo_url, pet_id) " +
-                        "OUTPUT INSERTED.photo_id VALUES (@photo_url, @pet_id);", conn);
+                    SqlCommand cmd = new SqlCommand("INSERT INTO photos (photo_url, pet_id, is_not_active) " +
+                        "OUTPUT INSERTED.photo_id VALUES (@photo_url, @pet_id, @is_not_active);", conn);
                     cmd.Parameters.AddWithValue("@photo_url", newPhoto.PhotoUrl);
                     cmd.Parameters.AddWithValue("@pet_id", newPhoto.PetId);
+                    cmd.Parameters.AddWithValue("@is_not_active", newPhoto.IsInactive);
                     photoId = Convert.ToInt32(cmd.ExecuteScalar());
                 }
             }
