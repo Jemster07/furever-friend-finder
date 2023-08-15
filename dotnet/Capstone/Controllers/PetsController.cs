@@ -161,19 +161,19 @@ namespace Capstone.Controllers
 
         // add pet
         // TODO: Make separate Add Photo DAO calls BEFORE calling this endpoint!!
-        [HttpPost("/directory/pet/add")]
-        public ActionResult<Pet> AddPet(RegisterPet pet, Attributes attributes, Environ environment, Tag tags,
-             CreateAddress address)
-        {
-            try
-            {
-                return Ok(petDao.CreatePet(pet, attributes, environment, tags, address));
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
-        }
+        //[HttpPost("/directory/pet/add")]
+        //public ActionResult<Pet> AddPet(RegisterPet pet, Attributes attributes, Environ environment, Tag tags,
+        //     CreateAddress address)
+        //{
+        //    try
+        //    {
+        //        return Ok(petDao.CreatePet(pet, attributes, environment, tags, address));
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return StatusCode(500);
+        //    }
+        //  }
 
         [HttpPut("/directory/pet/{petId}/adopted")]
         public ActionResult<Pet> AssignAdopter(int petId, int adopterId)
