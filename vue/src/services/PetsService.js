@@ -37,10 +37,5 @@ export default {
     AddPet(newPet) {
         return axios.post('/directory/pet/add', newPet);
     },
-
-    // adopterId refers to the UserId of the User object adopting the pet
-    UpdateAdoptionStatus(adopterId) {
-        return axios.put(`/directory/pet/${petId}/adopted`, adopterId);
-    },
     
 }

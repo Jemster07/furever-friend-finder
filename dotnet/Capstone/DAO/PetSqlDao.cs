@@ -139,35 +139,6 @@ namespace Capstone.DAO
             return GetPet(newPetId);
         }
 
-        public Pet UpdateAdoptionStatus(int petId)
-        {
-            string sql = "UPDATE pets SET is_adopted = 1 WHERE pet_id = @pet_id;";
-
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
-
-                    SqlCommand userCMD = new SqlCommand(sql, conn);
-                    userCMD.Parameters.AddWithValue("@pet_id", petId);
-
-                    int rowsReturned = userCMD.ExecuteNonQuery();
-
-                    if (rowsReturned != 1)
-                    {
-                        throw new Exception("Error updating pet adopted status");
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-
-            return GetPet(petId);
-        }
-
         public List<Pet> ListAvailablePets()
         {
             IPhotoDao photoDao = new PhotoSqlDao(connectionString);

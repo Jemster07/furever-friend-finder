@@ -182,18 +182,5 @@ namespace Capstone.Controllers
                 return StatusCode(500);
             }
         }
-
-        [HttpPut("/directory/pet/{petId}/adopted")]
-        public ActionResult<Pet> UpdateAdoptionStatus(int petId)
-        {
-            try
-            {
-                return Ok(petDao.UpdateAdoptionStatus(petId));
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
-        }
     }
 }

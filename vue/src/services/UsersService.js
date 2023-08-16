@@ -14,8 +14,8 @@ export default {
     return http.get(`/directory/friend/${username}`);
   },
 
-  GetAdopter(adopterId) {
-    return http.get(`/directory/friend/${adopterId}`);
+  GetAdopter(petId) {
+    return http.get(`/directory/friend/${petId}`);
   },
 
   ListPendingUsers() {
@@ -26,6 +26,12 @@ export default {
     return axios.put(`/application/update/${updatedUser.username}`, updatedUser);
   },
 
-  //add RegisterAdopter method
+  RegisterAdopter(adopter) {
+    return axios.post('/directory/friend/register-adopter', adopter);
+  },
+
+  UpdateAdopterStatus(username) {
+    return axios.put(`/directory/friend/${username}/update-adopter`, username);
+  },
 
 }

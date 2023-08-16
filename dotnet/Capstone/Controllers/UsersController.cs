@@ -70,12 +70,12 @@ namespace Capstone.Controllers
 
         // users who are adopters
 
-        [HttpGet("/directory/friend/{adopterId}")]
-        public ActionResult<User> GetAdopter(int adopterId)
+        [HttpGet("/directory/friend/{petId}")]
+        public ActionResult<User> GetAdopter(int petId)
         {
             try
             {
-                User adopter = userDao.GetAdopter(adopterId);
+                User adopter = userDao.GetAdopter(petId);
 
                 if (!adopter.IsAdopter || !adopter.IsInactive)
                 {
@@ -152,7 +152,7 @@ namespace Capstone.Controllers
 
         }
 
-        [HttpPut("/directory/friend/update-adopter")]
+        [HttpPut("/directory/friend/{username}/update-adopter")]
         public ActionResult<User> UpdateAdopterStatus(string username)
         {
             try
