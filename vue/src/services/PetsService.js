@@ -11,19 +11,19 @@ export default {
     },
 
     ListPetsByZip(zip) {
-        return http.get(`/directory/pet/${zip}`);
+        return http.get(`/directory/pet/zip/${zip}`);
     },
     
     ListPetsByAttributes(attributes) {
-        return http.get(`/directory/pet/${attributes}`);
+        return http.get(`/directory/pet/attributes/${attributes}`);
     },
 
     ListPetsByEnvironments(environment) {
-        return http.get(`/directory/pet/${environment}`);
+        return http.get(`/directory/pet/environment/${environment}`);
     },
 
     ListPetsByTags(tags) {
-        return http.get(`/directory/pet/${tags}`);
+        return http.get(`/directory/pet/tags/${tags}`);
     },
 
     GetPet(petId) {
@@ -31,7 +31,7 @@ export default {
     },
 
     UpdatePet(updatedPet) {
-        return axios.put(`/directory/pet/${updatedPet.petId}/update`, updatedPet);
+        return axios.put(`/directory/pet/update/${updatedPet.petId}`, updatedPet);
       },    
 
     AddPet(newPet) {
