@@ -48,16 +48,15 @@ namespace Capstone.DAO
             return returnUser;
         }
 
-        public User GetAdopter(int adopterId)
+        public User GetAdopter(int petId)
         {
             User adopter = new User();
 
-            string sql = "SELECT user_id, username, password_hash, salt, user_role, " +
-                "app_status, is_not_active, users.address_id, email, is_adopter, " +
-                "addresses.address_id, street, city, state_abr, zip FROM users " +
+            string sql = "SELECT user_id, username, password_hash, salt, user_role, app_status, is_not_active, " +
+                "users.address_id, email, is_adopter, addresses.address_id, street, city, state_abr, zip FROM users " +
                 "JOIN addresses ON users.address_id = addresses.address_id " +
                 "JOIN user_adopter ON user_id = adopter_id " +
-                "WHERE adopter_id = @adopterId;";
+                "WHERE pet_id = @petId;";
 
             try
             {
@@ -66,7 +65,7 @@ namespace Capstone.DAO
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@adopterId", adopterId);
+                    cmd.Parameters.AddWithValue("@petId", petId);
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     if (reader.Read())
@@ -80,7 +79,7 @@ namespace Capstone.DAO
                 throw e;
             }
 
-            return adopter;
+            return GetUser(adopter.Username);
         }
 
         public User AddUser(RegisterUser registerUser)
@@ -119,7 +118,7 @@ namespace Capstone.DAO
             return GetUser(registerUser.Username);
         }
 
-        public User ChangeAppStatus(string userToUpdate, string newStatus)
+        public User ChangeAppStatus(User updatedUser)
         {
             string sql = "UPDATE users SET app_status = @newStatus where username = @userToUpdate;";
 
@@ -129,8 +128,8 @@ namespace Capstone.DAO
                 {
                     conn.Open();
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@newStatus", newStatus);
-                    cmd.Parameters.AddWithValue("@userToUpdate", userToUpdate);
+                    cmd.Parameters.AddWithValue("@newStatus", updatedUser.ApplicationStatus);
+                    cmd.Parameters.AddWithValue("@userToUpdate", updatedUser.Username);
                     int rowsReturned = cmd.ExecuteNonQuery();
 
                     if (rowsReturned != 1)
@@ -144,7 +143,66 @@ namespace Capstone.DAO
                 throw e;
             }
 
-            return GetUser(userToUpdate);
+            return GetUser(updatedUser.Username);
+        }
+
+        public Adopter RegisterAdopter(Adopter adopter)
+        {
+            string sql = "INSERT INTO user_adopter (pet_id, adopter_id) VALUES (@pet_id, @adopter_id);";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand userCMD = new SqlCommand(sql, conn);
+                    userCMD.Parameters.AddWithValue("@pet_id", adopter.PetId);
+                    userCMD.Parameters.AddWithValue("@adopter_id", adopter.AdopterId);
+
+                    int rowsReturned = userCMD.ExecuteNonQuery();
+
+                    if (rowsReturned != 1)
+                    {
+                        throw new Exception("Error registering adopter");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return adopter;
+        }
+
+        public User UpdateAdopterStatus(string username)
+        {
+            string sql = "UPDATE users SET is_adopter = 1 WHERE username = @username;";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand userCMD = new SqlCommand(sql, conn);
+                    userCMD.Parameters.AddWithValue("@username", username);
+
+                    int rowsReturned = userCMD.ExecuteNonQuery();
+
+                    if (rowsReturned != 1)
+                    {
+                        throw new Exception("Error updating adopter status");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return GetUser(username);
         }
 
         public List<DisplayUser> ListActiveUsers()
@@ -276,6 +334,7 @@ namespace Capstone.DAO
             u.ApplicationStatus = Convert.ToString(reader["app_status"]);
             u.IsInactive = Convert.ToBoolean(reader["is_not_active"]);
             u.Email = Convert.ToString(reader["email"]);
+            u.IsAdopter = Convert.ToBoolean(reader["is_adopter"]);
 
             Address a = new Address();
             a.AddressId = Convert.ToInt32(reader["address_id"]);

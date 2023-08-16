@@ -71,4 +71,10 @@ namespace Capstone.Models
         [Required(ErrorMessage = "An address is required")]
         public CreateAddress Address { get; set; }
     }
+
+    public class Adopter
+    {
+        public int AdopterId { get; set; }
+        public int PetId { get; set; }
+    }
 }

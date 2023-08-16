@@ -157,7 +157,7 @@ namespace Capstone.Controllers
             }
         }
 
-        [HttpPut("/directory/pet/{petId}/update")]
+        [HttpPut("/directory/pet/{updatedPet}/update")]
         public ActionResult<Pet> UpdatePet(Pet updatedPet)
         {
             try
@@ -176,19 +176,6 @@ namespace Capstone.Controllers
             try
             {
                 return Ok(petDao.CreatePet(newPet));
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
-        }
-
-        [HttpPut("/directory/pet/{petId}/adopted")]
-        public ActionResult<Pet> AssignAdopter(int petId, int adopterId)
-        {
-            try
-            {
-                return Ok(petDao.AssignAdopter(petId, adopterId));
             }
             catch (Exception)
             {
