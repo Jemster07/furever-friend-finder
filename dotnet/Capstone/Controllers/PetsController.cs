@@ -157,7 +157,7 @@ namespace Capstone.Controllers
             }
         }
 
-        [HttpPut("/directory/pet/{petId}/update")]
+        [HttpPut("/directory/pet/{updatedPet}/update")]
         public ActionResult<Pet> UpdatePet(Pet updatedPet)
         {
             try
@@ -184,11 +184,11 @@ namespace Capstone.Controllers
         }
 
         [HttpPut("/directory/pet/{petId}/adopted")]
-        public ActionResult<Pet> AssignAdopter(int petId, int adopterId)
+        public ActionResult<Pet> UpdateAdoptionStatus(int petId)
         {
             try
             {
-                return Ok(petDao.AssignAdopter(petId, adopterId));
+                return Ok(petDao.UpdateAdoptionStatus(petId));
             }
             catch (Exception)
             {

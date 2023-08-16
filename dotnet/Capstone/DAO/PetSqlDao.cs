@@ -64,7 +64,7 @@ namespace Capstone.DAO
             string sql = "UPDATE pets SET type = @type, species = @species, color = @color, age = @age, " +
                 "attribute_id = @attribute_id, environment_id = @environment_id, tag_id = @tag_id, " +
                 "name = @name, description = @description, user_id = @user_id, " +
-                "address_id = @address_id WHERE pet_id = @pet_id;";
+                "address_id = @address_id, is_adopted = @is_adopted WHERE pet_id = @pet_id;";
 
             try
             {
@@ -84,6 +84,7 @@ namespace Capstone.DAO
                     userCMD.Parameters.AddWithValue("@description", updatedPet.Description);
                     userCMD.Parameters.AddWithValue("@user_id", updatedPet.UserId);
                     userCMD.Parameters.AddWithValue("@address_id", updatedPet.Address.AddressId);
+                    userCMD.Parameters.AddWithValue("@is_adopted", updatedPet.IsAdopted);
 
                     int rowsReturned = userCMD.ExecuteNonQuery();
 
@@ -138,11 +139,9 @@ namespace Capstone.DAO
             return GetPet(newPetId);
         }
 
-        public Pet AssignAdopter(int petId, int adopterId)
+        public Pet UpdateAdoptionStatus(int petId)
         {
-            string sql = "UPDATE pets SET is_adopted = 1 WHERE pet_id = @pet_id; " +
-                "UPDATE users SET is_adopter = 1 WHERE user_id = @adopter_id; " +
-                "INSERT INTO user_adopter (pet_id, adopter_id) VALUES (@pet_id, @adopter_id);";
+            string sql = "UPDATE pets SET is_adopted = 1 WHERE pet_id = @pet_id;";
 
             try
             {
@@ -152,7 +151,6 @@ namespace Capstone.DAO
 
                     SqlCommand userCMD = new SqlCommand(sql, conn);
                     userCMD.Parameters.AddWithValue("@pet_id", petId);
-                    userCMD.Parameters.AddWithValue("@adopter_id", adopterId);
 
                     int rowsReturned = userCMD.ExecuteNonQuery();
 

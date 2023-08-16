@@ -119,7 +119,7 @@ namespace Capstone.DAO
             return GetUser(registerUser.Username);
         }
 
-        public User ChangeAppStatus(string userToUpdate, string newStatus)
+        public User ChangeAppStatus(User updatedUser)
         {
             string sql = "UPDATE users SET app_status = @newStatus where username = @userToUpdate;";
 
@@ -129,8 +129,8 @@ namespace Capstone.DAO
                 {
                     conn.Open();
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@newStatus", newStatus);
-                    cmd.Parameters.AddWithValue("@userToUpdate", userToUpdate);
+                    cmd.Parameters.AddWithValue("@newStatus", updatedUser.ApplicationStatus);
+                    cmd.Parameters.AddWithValue("@userToUpdate", updatedUser.Username);
                     int rowsReturned = cmd.ExecuteNonQuery();
 
                     if (rowsReturned != 1)
@@ -144,7 +144,66 @@ namespace Capstone.DAO
                 throw e;
             }
 
-            return GetUser(userToUpdate);
+            return GetUser(updatedUser.Username);
+        }
+
+        public Adopter RegisterAdopter(Adopter adopter)
+        {
+            string sql = "INSERT INTO user_adopter (pet_id, adopter_id) VALUES (@pet_id, @adopter_id);";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand userCMD = new SqlCommand(sql, conn);
+                    userCMD.Parameters.AddWithValue("@pet_id", adopter.PetId);
+                    userCMD.Parameters.AddWithValue("@adopter_id", adopter.AdopterId);
+
+                    int rowsReturned = userCMD.ExecuteNonQuery();
+
+                    if (rowsReturned != 1)
+                    {
+                        throw new Exception("Error registering adopter");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return adopter;
+        }
+
+        public User UpdateAdopterStatus(string username)
+        {
+            string sql = "UPDATE users SET is_adopter = 1 WHERE username = @username;";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand userCMD = new SqlCommand(sql, conn);
+                    userCMD.Parameters.AddWithValue("@username", username);
+
+                    int rowsReturned = userCMD.ExecuteNonQuery();
+
+                    if (rowsReturned != 1)
+                    {
+                        throw new Exception("Error updating pet adopted status");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return GetUser(username);
         }
 
         public List<DisplayUser> ListActiveUsers()

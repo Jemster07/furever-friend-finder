@@ -11,7 +11,11 @@ namespace Capstone.DAO
         
         //UserController class should pass in both the admin user calling the method
         //and the user to be changed, to confirm the admin's role before execution
-        User ChangeAppStatus(string userToUpdate, string newStatus);
+        User ChangeAppStatus(User updatedUser);
+
+        Adopter RegisterAdopter(Adopter adopter);
+
+        User UpdateAdopterStatus(string username);
 
         //List active users for directory
         List<DisplayUser> ListActiveUsers();

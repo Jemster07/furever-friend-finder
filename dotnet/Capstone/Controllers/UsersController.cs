@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Data.SqlClient;
 
 namespace Capstone.Controllers
 {
@@ -117,19 +118,46 @@ namespace Capstone.Controllers
         }
 
         //[Authorize(Roles = "admin")]
-        [HttpPut("/application/update/{username}")]
-        public ActionResult<User> ApproveRejectApp(string username, string newStatus)
+        [HttpPut("/application/update/{updatedUser}")]
+        public ActionResult<User> ApproveRejectApp(User updatedUser)
         {
             try
             {
-                if (newStatus != "rejected" || newStatus != "approved")
+                if (updatedUser.ApplicationStatus != "rejected" || updatedUser.ApplicationStatus != "approved")
                 {
                     return BadRequest("Incorrect status type: Select [rejected] or [approved]");
                 }
                 else
                 {
-                    return Ok(userDao.ChangeAppStatus(username, newStatus));
+                    return Ok(userDao.ChangeAppStatus(updatedUser));
                 }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPost("/directory/friend/register-adopter")]
+        public ActionResult<Adopter> RegisterAdopter(Adopter adopter)
+        {
+            try
+            {
+                return Ok(userDao.RegisterAdopter(adopter));
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+
+        }
+
+        [HttpPut("/directory/friend/update-adopter")]
+        public ActionResult<User> UpdateAdopterStatus(string username)
+        {
+            try
+            {
+                return Ok(userDao.UpdateAdopterStatus(username));
             }
             catch (Exception)
             {
