@@ -66,9 +66,9 @@ namespace Capstone.DAO
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand("SELECT * from tags where tag_id = @tag_id", conn);
+                    cmd.Parameters.AddWithValue("@tag_id", tagId);
                     SqlDataReader reader = cmd.ExecuteReader();
 
-                    cmd.Parameters.AddWithValue("@tag_id", tagId);
                     if (reader.Read())
                     {
                         output = GetTagsFromReader(reader);

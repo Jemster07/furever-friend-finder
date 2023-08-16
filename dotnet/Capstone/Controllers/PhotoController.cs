@@ -27,7 +27,7 @@ namespace Capstone.Controllers
         // Writes user uploaded image to file directory
 
         [HttpPost("/photo/save/{petId}")]
-        public ActionResult<Photo> SaveUserImage(IFormFile formFile, int petId)
+        public ActionResult<Photo> SaveUserImage([FromForm] IFormFile formFile, int petId)
         {
             if (!Directory.Exists(directoryPath))
             {

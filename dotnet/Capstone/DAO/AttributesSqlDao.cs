@@ -52,9 +52,9 @@ namespace Capstone.DAO
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand("SELECT * from attributes where attribute_id = @attribute_id", conn);
+                    cmd.Parameters.AddWithValue("@attribute_id", attribute_id);
                     SqlDataReader reader = cmd.ExecuteReader();
 
-                    cmd.Parameters.AddWithValue("@attribute_id", attribute_id);
                     if (reader.Read())
                     {
                         output = GetAttributesFromReader(reader);
