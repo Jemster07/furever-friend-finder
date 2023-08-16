@@ -6,32 +6,20 @@ const http = axios.create({
 
 export default {
 
-  GetFriendDirectory() {
-    return http.get('/directory/friend');
+  RetrieveImage(photoId) {
+    return http.get(`/photo/retrieve/${photoId}`);
   },
 
-  GetUser(username) {
-    return http.get(`/directory/friend/${username}`);
+  GeneratePhotoList(petId) {
+    return http.get(`/photo/list/${petId}`);
   },
 
-  GetAdopter(petId) {
-    return http.get(`/directory/friend/adopter/${petId}`);
+  SaveUserImage(formFile, petId) {
+    return axios.post(`/photo/save/${petId}`, formFile);
   },
 
-  ListPendingUsers() {
-    return http.get('/application/list');
-  },
-
-  ApproveRejectApp(updatedUser) {
-    return axios.put(`/application/update/${updatedUser.username}`, updatedUser);
-  },
-
-  RegisterAdopter(adopter) {
-    return axios.post('/directory/friend/adopter/register', adopter);
-  },
-
-  UpdateAdopterStatus(username) {
-    return axios.put(`/directory/friend/adopter/update/${username}`, username);
+  DeletePhoto(photoId) {
+    return axios.put(`/photo/delete/${photoId}`, photoId);
   },
 
 }

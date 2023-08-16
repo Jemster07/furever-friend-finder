@@ -43,7 +43,7 @@ namespace Capstone.Controllers
             }
         }
 
-        [HttpPut("/address/{addressId}/update")]
+        [HttpPut("/address/update/{addressId}")]
         public ActionResult<Address> UpdateAddress(Address updatedAddress)
         {
             try
