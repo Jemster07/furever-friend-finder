@@ -15,7 +15,7 @@ export default {
   },
 
   GetAdopter(petId) {
-    return http.get(`/directory/friend/${petId}`);
+    return http.get(`/directory/friend/adopter/${petId}`);
   },
 
   ListPendingUsers() {
@@ -27,11 +27,11 @@ export default {
   },
 
   RegisterAdopter(adopter) {
-    return axios.post('/directory/friend/register-adopter', adopter);
+    return axios.post('/directory/friend/adopter/register', adopter);
   },
 
   UpdateAdopterStatus(username) {
-    return axios.put(`/directory/friend/${username}/update-adopter`, username);
+    return axios.put(`/directory/friend/adopter/update/${username}`, username);
   },
 
 }

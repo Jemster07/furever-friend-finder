@@ -44,7 +44,7 @@ namespace Capstone.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("/directory/pet/{zip}")]
+        [HttpGet("/directory/pet/zip/{zip}")]
         public ActionResult<List<Pet>> ListPetsByZip(string zip)
         {
             try
@@ -67,7 +67,7 @@ namespace Capstone.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("/directory/pet/{attributes}")]
+        [HttpGet("/directory/pet/attributes/{attributes}")]
         public ActionResult<List<Pet>> ListPetsByAttributes(Attributes attributes)
         {
             try
@@ -90,7 +90,7 @@ namespace Capstone.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("/directory/pet/{environment}")]
+        [HttpGet("/directory/pet/environment/{environment}")]
         public ActionResult<List<Pet>> ListPetsByEnvironments(Environ environment)
         {
             try
@@ -113,7 +113,7 @@ namespace Capstone.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("/directory/pet/{tags}")]
+        [HttpGet("/directory/pet/tags/{tags}")]
         public ActionResult<List<Pet>> ListPetsByTags(Tag tags)
         {
             try
@@ -157,7 +157,7 @@ namespace Capstone.Controllers
             }
         }
 
-        [HttpPut("/directory/pet/{updatedPet}/update")]
+        [HttpPut("/directory/pet/update/{updatedPet}")]
         public ActionResult<Pet> UpdatePet(Pet updatedPet)
         {
             try

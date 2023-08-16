@@ -53,7 +53,7 @@ namespace Capstone.Controllers
             {
                 User fetchedUser = userDao.GetUser(username);
 
-                if (fetchedUser.ApplicationStatus != "approved" || !fetchedUser.IsInactive)
+                if (fetchedUser.ApplicationStatus != "approved" || fetchedUser.IsInactive)
                 {
                     return Unauthorized("Access denied");
                 }
@@ -70,14 +70,14 @@ namespace Capstone.Controllers
 
         // users who are adopters
 
-        [HttpGet("/directory/friend/{petId}")]
+        [HttpGet("/directory/friend/adopter/{petId}")]
         public ActionResult<User> GetAdopter(int petId)
         {
             try
             {
                 User adopter = userDao.GetAdopter(petId);
 
-                if (!adopter.IsAdopter || !adopter.IsInactive)
+                if (!adopter.IsAdopter || adopter.IsInactive)
                 {
                     return Unauthorized("Access denied");
                 }
@@ -138,7 +138,7 @@ namespace Capstone.Controllers
             }
         }
 
-        [HttpPost("/directory/friend/register-adopter")]
+        [HttpPost("/directory/friend/adopter/register")]
         public ActionResult<Adopter> RegisterAdopter(Adopter adopter)
         {
             try
@@ -152,7 +152,7 @@ namespace Capstone.Controllers
 
         }
 
-        [HttpPut("/directory/friend/{username}/update-adopter")]
+        [HttpPut("/directory/friend/adopter/update/{username}")]
         public ActionResult<User> UpdateAdopterStatus(string username)
         {
             try
