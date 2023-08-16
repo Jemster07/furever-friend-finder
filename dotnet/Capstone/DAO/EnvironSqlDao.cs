@@ -53,9 +53,9 @@ namespace Capstone.DAO
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand("SELECT * from environments where environment_id = @environment_id", conn);
+                    cmd.Parameters.AddWithValue("@environment_id", environmentId);
                     SqlDataReader reader = cmd.ExecuteReader();
 
-                    cmd.Parameters.AddWithValue("@environment_id", environmentId);
                     if (reader.Read())
                     {
                         output = GetEnvironmentFromReader(reader);
