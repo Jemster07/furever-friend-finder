@@ -99,7 +99,7 @@
       </div>
       <div class="form-input-group">
         <label for="petspecies">Pet Breed</label>
-        <select id="petspecies">
+        <select id="petspecies" v-model="newpet.species">
           <option v-for="breed in breeds" :key="breed.value" :value="breed.value">{{ breed.text }}</option>
         </select>
         <input id="petspecies" type="hidden" v-model="newpet.breed" />
@@ -123,14 +123,69 @@
         <p>Please enter a short description for your pet.</p>
         <input id="petdesc" type="textarea" v-model="newpet.description" />
       </div>
+
+      <form id=environments>
+        <h1 class="subtitle">Environment</h1>
+        <input type=checkbox id="children" value="children">
+        <label for="children">Is good with children</label><br>
+        <input type=checkbox id="dogs" value="dogs">
+        <label for="dogs">Is good with dogs</label><br>
+        <input type=checkbox id="cats" value="cats">
+        <label for="cats">Is good with cats</label><br>
+        <input type=checkbox id="others" value="others">
+        <label for="others">Is good with other animals</label><br>
+        <input type=checkbox id="indoor" value="indoor">
+        <label for="indoor">Indoor only</label><br>
+        <hr/>    
+      </form>
+       <form id=attributes>
+        <p>Attributes</p>
+        <input type=checkbox id="spayed_neutered" v-model="newpet.attributes.IsSpayedNeutered">
+        <label for="spayed_neutered">Has been spayed/Neutered</label><br>
+        <input type=checkbox id="house_trained" v-model="newpet.attributes.IsHouseTrained">
+        <label for="house_trained">House Trained</label><br>
+        <input type=checkbox id="declawed" v-model="newpet.attributes.IsDeclawed">
+        <label for="declawed">Declawed</label><br>
+        <input type=checkbox id="special_needs" v-model="newpet.attributes.IsSpecialNeeds">
+        <label for="special_needs">Has special needs</label><br>
+        <input type=checkbox id="shots_current" v-model="newpet.attributes.IsShotsCurrent">
+        <label for="shots_current">Current on shots</label><br>
+        <hr/>    
+      </form>
+       <form id=tags>
+        <p>Tags</p>
+        <input type=checkbox id="playful" value="playful">
+        <label for="playful">Playful</label><br>
+        <input type=checkbox id="needs_exercise" value="needs_exercise">
+        <label for="needs_exercise">Needs Exercise</label><br>
+        <input type=checkbox id="cute" value="cute">
+        <label for="cute">Cute</label><br>
+        <input type=checkbox id="affectionate" value="affectionate">
+        <label for="affectionate">Affectionate</label><br>
+        <input type=checkbox id="large" value="large">
+        <label for="large">Large</label><br>
+        <input type=checkbox id="intellegent" value="intellegent">
+        <label for="intellegen">Intellegent</label><br>
+        <input type=checkbox id="happy" value="happy">
+        <label for="happy">Happy</label><br>
+        <input type=checkbox id="short" value="short">
+        <label for="short">Short</label><br>
+        <input type=checkbox id="shedder" value="shedder">
+        <label for="shedder">Shedder</label><br>
+        <input type=checkbox id="shy" value="shy">
+        <label for="shy">Shy</label><br>
+        <input type=checkbox id="faithful" value="faithful">
+        <label for="faithful">Faithful</label><br>
+        <input type=checkbox id="leash_trained" value="leash_trained">
+        <label for="leash_trained">Leash Trained</label><br>
+        <input type=checkbox id="hypoallergenic" value="hypoallergenic">
+        <label for="hypoallergenic">Hypoallergenic</label><br>
+      </form>
+      <hr/>    
       <p class="has-text-centered py-3">
       Add Picture(s) below.
       </p>
-      <form @submit.prevent="doSubmit">
-      <input type="file" @change="imageUploaded">
-      <input type="submit" value="Submit">
-      </form>
-      <hr/>    
+      <input type="file" @change="imageUploaded"><br>
       <button class="button is-success my-4" type="submit">
         Add Pet
       </button>
@@ -157,10 +212,20 @@ export default {
       newpet: {
         type: "Please select type",
         breed: "",
+        species: "",
         color: "",
         age: "",
         name: "",
         description: "",
+        is_adopted:false,
+        attributes: {
+          IsSpayedNeutered: false,
+          IsHouseTrained: false,
+          IsDeclawed: false,
+          IsSpecialNeeds: false,
+          IsShotsCurrent: false,
+
+        },
 
         },
         breeds: [],
@@ -201,8 +266,10 @@ export default {
     },
     submitPet()
     {
+      this.newpet.userid = this.$store.state.user.userId;
       PetsService.AddPet(this.newpet)
       .then((response) => {
+        console.log(response.data)
         this.submitPhoto(response.data);
       })
     },
@@ -215,7 +282,7 @@ export default {
                     'Content-Type': 'multipart/form-data'
                 }
             };
-            axios.post(`/photo/save/${pet.petid}`, formData, config);
+            axios.post(`/photo/save/${pet.petId}`, formData, config);
     },
 
         imageUploaded(event) {
@@ -235,7 +302,7 @@ export default {
 }
 #wholeform {
   display:flex;
-  height: 90vh;
+  height: 220vh;
   justify-content: center;
   justify-items: center;
 }
@@ -310,7 +377,7 @@ export default {
 }
 #main-page {
   background-color: lightgreen;
-  height: 160vh;
+  height: max;
 }
 #message-box {
   display: flex;
