@@ -13,6 +13,13 @@
         <ul id="tabs">
           <li id="tab">
             <router-link
+              v-bind:to="{ name: 'home' }"
+              style="color: black"
+              >HOME</router-link
+            >
+          </li>
+          <li id="tab">
+            <router-link
               v-bind:to="{ name: 'searchpet' }"
               style="color: black"
               >SEARCH PETS</router-link
@@ -116,19 +123,31 @@
         <p>Please enter a short description for your pet.</p>
         <input id="petdesc" type="textarea" v-model="newpet.description" />
       </div>
-      <hr/>
+      <p class="has-text-centered py-3">
+      Add Picture(s) below.
+      </p>
+      <form @submit.prevent="doSubmit">
+      <input type="file" @change="imageUploaded">
+      <input type="submit" value="Submit">
+      </form>
+      <hr/>    
       <button class="button is-success my-4" type="submit">
         Add Pet
       </button>
 
     </form>
     </div>
+
+
   </div>
+
+
 </template>
 
 <script>
 
 import BreedsService from '../services/BreedsService.js';
+import axios from 'axios';
 
 export default {
   name: "addpet",
@@ -145,6 +164,7 @@ export default {
         },
         breeds: [],
         newBreed: "",
+        imageFile: '',
     }
   },
   created() {
@@ -177,7 +197,22 @@ export default {
       {
         this.breeds = BreedsService.getBreedsofOthers();
       }
-    }
+    },
+    doSubmit() {
+            const formData = new FormData();
+            formData.append('formFile', this.imageFile);
+
+            const config = {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            };
+            axios.post('/fileupload', formData, config);
+    },
+
+        imageUploaded(event) {
+            this.imageFile = event.target.files[0];
+        }
   }
 };
   
@@ -192,7 +227,7 @@ export default {
 }
 #wholeform {
   display:flex;
-  height: 75vh;
+  height: 90vh;
   justify-content: center;
   justify-items: center;
 }
