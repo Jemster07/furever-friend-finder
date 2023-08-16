@@ -8,7 +8,6 @@ namespace Capstone.DAO
         Pet GetPet(int petId);
         Pet UpdatePet(Pet updatedPet);
         Pet CreatePet(RegisterPet newPet);
-        Pet AssignAdopter(int petId, int adopterId);
         List<Pet> ListAvailablePets();
         List<Pet> ListPetsByZip(string zip);
         List<Pet> ListPetsByAttributes(Attributes attributes);

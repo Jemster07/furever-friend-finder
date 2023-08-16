@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Data.SqlClient;
 
 namespace Capstone.Controllers
 {
@@ -52,7 +53,7 @@ namespace Capstone.Controllers
             {
                 User fetchedUser = userDao.GetUser(username);
 
-                if (fetchedUser.ApplicationStatus != "approved" || !fetchedUser.IsInactive)
+                if (fetchedUser.ApplicationStatus != "approved" || fetchedUser.IsInactive)
                 {
                     return Unauthorized("Access denied");
                 }
@@ -69,14 +70,14 @@ namespace Capstone.Controllers
 
         // users who are adopters
 
-        [HttpGet("/directory/friend/{adopterId}")]
-        public ActionResult<User> GetAdopter(int adopterId)
+        [HttpGet("/directory/friend/adopter/{petId}")]
+        public ActionResult<User> GetAdopter(int petId)
         {
             try
             {
-                User adopter = userDao.GetAdopter(adopterId);
+                User adopter = userDao.GetAdopter(petId);
 
-                if (!adopter.IsAdopter || !adopter.IsInactive)
+                if (!adopter.IsAdopter || adopter.IsInactive)
                 {
                     return Unauthorized("Access denied");
                 }
@@ -117,19 +118,46 @@ namespace Capstone.Controllers
         }
 
         //[Authorize(Roles = "admin")]
-        [HttpPut("/application/update/{username}")]
-        public ActionResult<User> ApproveRejectApp(string username, string newStatus)
+        [HttpPut("/application/update/{updatedUser}")]
+        public ActionResult<User> ApproveRejectApp(User updatedUser)
         {
             try
             {
-                if (newStatus != "rejected" || newStatus != "approved")
+                if (updatedUser.ApplicationStatus != "rejected" || updatedUser.ApplicationStatus != "approved")
                 {
                     return BadRequest("Incorrect status type: Select [rejected] or [approved]");
                 }
                 else
                 {
-                    return Ok(userDao.ChangeAppStatus(username, newStatus));
+                    return Ok(userDao.ChangeAppStatus(updatedUser));
                 }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPost("/directory/friend/adopter/register")]
+        public ActionResult<Adopter> RegisterAdopter(Adopter adopter)
+        {
+            try
+            {
+                return Ok(userDao.RegisterAdopter(adopter));
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+
+        }
+
+        [HttpPut("/directory/friend/adopter/update/{username}")]
+        public ActionResult<User> UpdateAdopterStatus(string username)
+        {
+            try
+            {
+                return Ok(userDao.UpdateAdopterStatus(username));
             }
             catch (Exception)
             {
