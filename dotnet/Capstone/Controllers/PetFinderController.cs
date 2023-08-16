@@ -19,7 +19,7 @@ namespace Capstone.Controllers
             this.finderDao = finderDao;
         }
 
-        [HttpGet("/petfinder/type/{petType}/")]
+        [HttpGet("/petfinder/type/{petType}")]
         public ActionResult<List<PetApi>> ListAnimals(string petType)
         {
             try
@@ -42,7 +42,7 @@ namespace Capstone.Controllers
             }
         }
 
-        [HttpGet("/petfinder/breed/{breed}/")]
+        [HttpGet("/petfinder/breed/{breed}")]
         public ActionResult<List<PetApi>> ListBreeds(string breed)
         {
             try
@@ -63,7 +63,7 @@ namespace Capstone.Controllers
             }
         }
       
-        [HttpGet("/petfinder/location/{address}/")]
+        [HttpGet("/petfinder/location/{address}")]
         public ActionResult<List<PetApi>> ListByLoc(string address)
         {
             try

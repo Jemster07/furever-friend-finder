@@ -43,7 +43,7 @@ namespace Capstone.Controllers
             }
         }
 
-        [HttpPut("/environments/{environmentId}/update")]
+        [HttpPut("/environments/update/{environmentId}")]
         public ActionResult<Environ> UpdateEnvironment(Environ updatedEnvironment)
         {
             try

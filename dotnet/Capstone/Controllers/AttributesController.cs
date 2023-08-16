@@ -43,7 +43,7 @@ namespace Capstone.Controllers
             }
         }
 
-        [HttpPut("/attributes/{attributesId}/update")]
+        [HttpPut("/attributes/update/{attributesId}")]
         public ActionResult<Attributes> UpdateAttribute(Attributes updatedAttributes)
         {
             try

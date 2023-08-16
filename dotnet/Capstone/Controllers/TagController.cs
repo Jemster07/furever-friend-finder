@@ -43,7 +43,7 @@ namespace Capstone.Controllers
             }
         }
 
-        [HttpPut("/tags/{tagId}/update")]
+        [HttpPut("/tags/update/{tagId}")]
         public ActionResult<Tag> UpdateTag(Tag updatedTags)
         {
             try

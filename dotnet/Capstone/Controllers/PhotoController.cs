@@ -141,7 +141,7 @@ namespace Capstone.Controllers
 
         // List photos by pet id
 
-        [HttpGet("/photo/{petId}/list")]
+        [HttpGet("/photo/list/{petId}")]
         public ActionResult<List<Photo>> GeneratePhotoList(int petId)
         {
             try
