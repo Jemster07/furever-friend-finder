@@ -13,6 +13,13 @@
         <ul id="tabs">
           <li id="tab">
             <router-link
+              v-bind:to="{ name: 'home' }"
+              style="color: black"
+              >HOME</router-link
+            >
+          </li>
+          <li id="tab">
+            <router-link
               v-bind:to="{ name: 'searchpet' }"
               style="color: black"
               >SEARCH PETS</router-link
