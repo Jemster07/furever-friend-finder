@@ -313,6 +313,7 @@ namespace Capstone.DAO
             u.ApplicationStatus = Convert.ToString(reader["app_status"]);
             u.IsInactive = Convert.ToBoolean(reader["is_not_active"]);
             u.Email = Convert.ToString(reader["email"]);
+            u.IsAdopter = Convert.ToBoolean(reader["is_adopter"]);
 
             Address a = new Address();
             a.AddressId = Convert.ToInt32(reader["address_id"]);
