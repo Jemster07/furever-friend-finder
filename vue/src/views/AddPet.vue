@@ -75,7 +75,7 @@
       <h1>Add A Pet</h1>
     </div>
   <div id="wholeform">
-    <form id='formbox' @submit.prevent="newpet" class="has-text-centered">
+    <form id='formbox' @submit.prevent="submitPet" class="has-text-centered">
 
       <div class="form-input-group">    
         <p class="has-text-centered py-3">
@@ -147,6 +147,7 @@
 <script>
 
 import BreedsService from '../services/BreedsService.js';
+import PetsService from '../services/PetsService.js';
 import axios from 'axios';
 
 export default {
@@ -198,7 +199,14 @@ export default {
         this.breeds = BreedsService.getBreedsofOthers();
       }
     },
-    doSubmit() {
+    submitPet()
+    {
+      PetsService.AddPet(this.newpet)
+      .then((response) => {
+        this.submitPhoto(response.data);
+      })
+    },
+    submitPhoto(pet) {
             const formData = new FormData();
             formData.append('formFile', this.imageFile);
 
@@ -207,7 +215,7 @@ export default {
                     'Content-Type': 'multipart/form-data'
                 }
             };
-            axios.post('/fileupload', formData, config);
+            axios.post(`/photo/save/${pet.petid}`, formData, config);
     },
 
         imageUploaded(event) {
