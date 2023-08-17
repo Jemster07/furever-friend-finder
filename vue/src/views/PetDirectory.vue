@@ -41,6 +41,7 @@
         </ul>
       </a>
 
+
       <div>
         <div id="buttons">
           <router-link
@@ -65,36 +66,122 @@
         </div>
       </div>
     </nav>
-
+    <div>
+        <p class="title has-text-centered">Our Local Friends Available For Adoptions</p>
+    </div>
   <div id="pets-list">
 
       <div>
          <pet-card v-for='displayPet in pets' v-bind:key="displayPet.name" v-bind:displayPet="displayPet"></pet-card>
       </div>
-
+    <div>
+        <p class="title has-text-centered">Search Pet-Finder for Friends To Adopt</p>
+    </div>
+  <div>
+      <form id='searchform' @submit.prevent="search" class="has-text-centered">
+        <div class="form-input-group">
+          <label for="searchtype">How do you want to search? </label>
+          <select for="searchtype" v-model="searchType">
+            <option value="type">Search by pet type</option>
+            <option value="breed">Search by breed</option>
+            <option value="zip">Search by zip-code</option>
+          </select>
+          <input id="type" type="hidden"/>
+        </div>
+        <div class="form-input-group" v-show="searchType == 'type'">
+         <label for="pettype">Pet Type </label>
+            <select for="pettype" v-model="petType">
+              <option value="dog">Dog</option>
+              <option value="cat">Cat</option>
+              <option value="rabbit">Rabbit</option>
+              <option value="horse">Horse</option>
+              <option value="bird">Bird</option>
+              <option value="other">Other</option>
+            </select>
+          <input id="pettype" type="hidden"/>
+        </div>
+        <div v-show="searchType == 'breed'">
+           <label for="searchbreed">Pet Breed</label>
+           <input id="searchbreed" type="text" v-model="petBreed" />
+        </div>
+        <div v-show="searchType == 'zip'">
+           <label for="searchzip">Zip-Code</label>
+           <input id="searchzip" type="text" v-model="petZip" />
+        </div>
+         <button class="button is-success my-4" type="submit">
+          Search
+        </button>
+        <div v-show="!hasSearchResults">Search Results not Found</div>
+      </form>
   </div>
 
   </div>
+
+  <div id="search-results">
+    <pet-search-card v-for="pet in petSearchResults" :key="pet.id" :displayPet="pet"></pet-search-card>
+  </div>
+
+  </div>
+  
 </template>
 
 <script>
 import PetCard from '../components/PetCard.vue'
+import PetSearchCard from '../components/PetSearchCard.vue'
 import PetsService from '../services/PetsService.js'
+import PetFinderService from '../services/PetFinderService.js'
 
 export default {
   name: "petdirectory",
-  components: { PetCard },
+  components: { PetCard, PetSearchCard },
   data() {
     return{
-      pets: []
+      pets: [],
+      searchType: "",
+      petType: '',
+      petBreed: '',
+      petZip: '',
+      petSearchResults: [],
+      hasSearchResults: true
     }
   },
   created() {
       PetsService.GetPetDirectory().then(response => {
           this.pets = response.data
       })
+    },
+  methods:{
+    search()
+    {
+      if(this.searchType == "type"){
+         PetFinderService.ListPetFinderAnimals(this.petType).then(response => {
+           this.petSearchResults = response.data;
+           this.hasSearchResults = this.petSearchResults.length > 0;
+         })
+         .catch(() => {
+           this.hasSearchResults = false;
+         })
+      }
+      if(this.searchType == "breed"){
+        PetFinderService.ListPetFinderBreeds(this.petBreed).then(response => {
+           this.petSearchResults = response.data;
+           this.hasSearchResults = this.petSearchResults.length > 0;
+         })
+         .catch(() => {
+           this.hasSearchResults = false;
+         })
+      }
+      if(this.searchType == "zip"){
+        PetFinderService.ListPetFinderByLocation(this.petZip).then(response => {
+           this.petSearchResults = response.data;
+           this.hasSearchResults = this.petSearchResults.length > 0;
+         })
+         .catch(() => {
+           this.hasSearchResults = false;
+         })
+      }
     }
-
+  }
 };
 
 </script>
@@ -116,7 +203,7 @@ export default {
     margin-left: 2rem;
   }
   #main-page{
-    height: 300vh;
+    height: max;
     background-color: lightgreen;
   }
   #header{

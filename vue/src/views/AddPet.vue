@@ -164,12 +164,12 @@
         <label for="affectionate">Affectionate</label><br>
         <input type=checkbox id="large" v-model="newpet.tags.IsLarge">
         <label for="large">Large</label><br>
-        <input type=checkbox id="intellegent" v-model="newpet.tags.IsIntelligent">
-        <label for="intellegen">Intellegent</label><br>
+        <input type=checkbox id="intelligent" v-model="newpet.tags.IsIntelligent">
+        <label for="intelligent">Intelligent</label><br>
         <input type=checkbox id="happy" v-model="newpet.tags.IsHappy">
         <label for="happy">Happy</label><br>
         <input type=checkbox id="short" v-model="newpet.tags.IsShortHaired">
-        <label for="short">Short</label><br>
+        <label for="short">Short Haired</label><br>
         <input type=checkbox id="shedder" v-model="newpet.tags.IsShedder">
         <label for="shedder">Shedder</label><br>
         <input type=checkbox id="shy" v-model="newpet.tags.IsShy">
@@ -195,7 +195,7 @@
       </form>
       <hr/>    
       <p class="has-text-centered py-3">
-      Add Picture(s) below.
+      Add picture below.
       </p>
       <input type="file" @change="imageUploaded"><br>
       <hr/>
