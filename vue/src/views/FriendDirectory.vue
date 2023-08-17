@@ -68,7 +68,12 @@
 
     <div id="friend-list">
       <div>
-         <user-card v-for='displayUser in users' v-bind:key="displayUser.username" v-bind:displayUser="displayUser"></user-card>
+        <button class="button is-success my-4" type="submit">
+          <router-link v-bind:to="{ name: 'adminpage' }" style="color: white">Pending Users</router-link>
+        </button>
+
+        <user-card v-for='displayUser in users' v-bind:key="displayUser.username" 
+        v-bind:displayUser="displayUser"></user-card>
       </div>
     </div>
   </div>
