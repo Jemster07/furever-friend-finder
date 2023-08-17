@@ -11,6 +11,7 @@
             <div class="media-content has-text-left">
               <p class="title is-4">{{displayUser.username}}</p>
               <p class="subtitle is-6">{{displayUser.role}}</p>
+              <p class="subtitle is-6">{{displayUser.email}}</p>
             </div>
           </div>
 
@@ -27,6 +28,11 @@
             {{displayUser.address.zip}}
           </div>
 
+          <div>
+            <button class="button is-success my-4" type="submit">Approve</button>
+            <button class="button is-success my-4" type="submit">Reject</button>
+          </div>
+
         </div>
       </div>
 </template>
@@ -36,7 +42,11 @@
 export default {
     name: 'user-card',
     props: ['displayUser'],
+    // computed: {
+    //   DisplayApprovalButtons(){
 
+    //   }
+    // }
 }
 </script>
 
