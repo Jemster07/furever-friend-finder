@@ -239,11 +239,11 @@ namespace Capstone.DAO
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand("SELECT * FROM pets " +
-                        "JOIN attributes ON pets.attribute_id = attributes.attribute_id " +
-                        "JOIN environments ON pets.environment_id = environments.environment_id " +
-                        "JOIN tags ON pets.tag_id = tags.tag_id " +
-                        "JOIN addresses ON pets.address_id = addresses.address_id " +
-                        "WHERE is_adopted = 1;", conn);
+                        "LEFT JOIN attributes ON pets.attribute_id = attributes.attribute_id " +
+                        "LEFT JOIN environments ON pets.environment_id = environments.environment_id " +
+                        "LEFT JOIN tags ON pets.tag_id = tags.tag_id " +
+                        "LEFT JOIN addresses ON pets.address_id = addresses.address_id " +
+                        "WHERE is_adopted = 0;", conn);
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     while (reader.Read())
