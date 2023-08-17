@@ -5,7 +5,7 @@ import Login from '../views/Login.vue'
 import Logout from '../views/Logout.vue'
 import Register from '../views/Register.vue'
 import FriendDirectory from '../views/FriendDirectory.vue'
-import NewFriend from '../views/NewFriend.vue'
+import UpdatePet from '../views/UpdatePet.vue'
 import AddPet from '../views/AddPet.vue'
 import AdminPage from '../views/AdminPage.vue'
 import PetDirectory from '../views/PetDirectory.vue'
@@ -85,9 +85,9 @@ const router = new Router({
       }
     },
     {
-      path: '/login/newfriend',
-      name: 'newfriend',
-      component: NewFriend,
+      path: '/updatepet',
+      name: 'updatepet',
+      component: UpdatePet,
       meta: {
         requiresAuth: true
       }
@@ -105,7 +105,7 @@ const router = new Router({
       name: 'petpage',
       component: PetPage,
       meta: {
-        requiresAuth: false
+        requiresAuth: true
       }
     },
   ]

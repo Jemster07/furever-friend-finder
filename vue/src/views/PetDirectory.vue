@@ -69,7 +69,17 @@
   <div id="pets-list">
 
       <div>
-         <pet-card v-for='displayPet in pets' v-bind:key="displayPet.name" v-bind:displayPet="displayPet"></pet-card>
+         <pet-card v-for='displayPet in pets' v-bind:key="displayPet.name" v-bind:displayPet="displayPet">
+                 <router-link
+        v-bind:to="{ name: 'updatepet' }"
+        
+        v-bind:key="petToChange.id"
+        v-bind:petToChange="petToChange"
+        v-show="$store.state.user.applicationStatus == 'approved'"
+        >Edit Pet</router-link
+      >
+
+         </pet-card>
       </div>
 
   </div>
