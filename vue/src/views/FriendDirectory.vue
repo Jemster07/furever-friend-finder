@@ -21,13 +21,6 @@
           </li>
           <li id="tab">
             <router-link
-              v-bind:to="{ name: 'searchpet' }"
-              style="color: black"
-              >SEARCH PETS</router-link
-            >
-          </li>
-          <li id="tab">
-            <router-link
               v-bind:to="{ name: 'petdirectory' }"
               style="color: black"
               >VIEW PETS</router-link
@@ -75,18 +68,34 @@
 
     <div id="friend-list">
       <div>
-         <user-card></user-card>
+        <button class="button is-success my-4" type="submit">
+          <router-link v-bind:to="{ name: 'adminpage' }" style="color: white">Pending Users</router-link>
+        </button>
+
+        <user-card v-for='displayUser in users' v-bind:key="displayUser.username" 
+        v-bind:displayUser="displayUser"></user-card>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import UserCard from '../components/UserCard.vue'
+import UserCard from '../components/UserCard.vue';
+import UsersService from '../services/UsersService.js';
 
 export default {
   name: "frienddirectory",
   components: { UserCard },
+  data() {
+    return {
+      users: []
+    }
+  },
+  created() {
+    UsersService.GetFriendDirectory().then(response => {
+      this.users = response.data;
+    });
+  }
 };
 </script>
 
@@ -104,7 +113,7 @@ export default {
   background-color: white;
 }
 #main-page {
-  height: 100vh;
+  height: max-content;
   background-color: lightgreen;
 }
 #page-title {

@@ -18,7 +18,6 @@
               >HOME</router-link
             >
           </li>
-         
           <li id="tab">
             <router-link
               v-bind:to="{ name: 'petdirectory' }"
@@ -26,6 +25,12 @@
               >VIEW PETS</router-link
             >
           </li>
+                    <li id="tab">
+            <router-link v-bind:to="{ name: 'addpet' }" style="color: black"
+              >ADD NEW PET</router-link
+            >
+          </li>
+
           <li id="tab">
             <router-link
               v-bind:to="{ name: 'frienddirectory' }"

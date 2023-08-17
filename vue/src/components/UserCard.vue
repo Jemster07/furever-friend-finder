@@ -1,21 +1,55 @@
 <template>
-  <div class="card">
-      <p>Username</p>
-      <p>Role</p>
-      <p>Address</p>
-      <p>Email</p>
-  </div>
+  <div class="card" id="card">
+        <div class="card-image">
+          
+        </div>
+        <div class="card-content">
+          <div class="media">
+            <div class="media-left">
+              
+            </div>
+            <div class="media-content has-text-left">
+              <p class="title is-4">{{displayUser.username}}</p>
+              <p class="subtitle is-6">{{displayUser.role}}</p>
+              <p class="subtitle is-6">{{displayUser.email}}</p>
+            </div>
+          </div>
+
+          <div class="content">
+            {{displayUser.address.street}}
+          </div>
+          <div class="content">
+            {{displayUser.address.city}}
+          </div>
+          <div class="content">
+            {{displayUser.address.state}}
+          </div>
+          <div class="content">
+            {{displayUser.address.zip}}
+          </div>
+
+          <div>
+            <button class="button is-success my-4" type="submit">Approve</button>
+
+            <button class="button is-success my-4" type="submit">Reject</button>
+          </div>
+
+        </div>
+      </div>
 </template>
 
 <script>
+
 export default {
     name: 'user-card',
-    computed: {
-        
-    },
-    methods: {
-        
-    },
+    props: ['displayUser'],
+    // computed: {
+    //   DisplayApprovalButtons(){
+    //       if() {
+
+    //       }
+    //   }
+    // }
 }
 </script>
 
@@ -32,6 +66,4 @@ export default {
   margin-bottom: 4rem;
   margin-top: 3rem;
 }
-
-
 </style>
