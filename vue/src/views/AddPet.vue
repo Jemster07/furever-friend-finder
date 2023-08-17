@@ -225,7 +225,7 @@ export default {
         age: "",
         name: "",
         description: "",
-        is_adopted:false,
+        is_adopted: true,
         attributes: {
           IsSpayedNeutered: false,
           IsHouseTrained: false,
