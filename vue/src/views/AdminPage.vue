@@ -7,7 +7,7 @@
 
 <script>
 export default {
-    name: 'pendingapp'
+    name: 'adminpage'
 }
 </script>
 

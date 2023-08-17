@@ -10,7 +10,6 @@ import AddPet from '../views/AddPet.vue'
 import AdminPage from '../views/AdminPage.vue'
 import PetDirectory from '../views/PetDirectory.vue'
 import PetPage from '../views/PetPage.vue'
-import SearchPet from '../views/SearchPet.vue'
 
 import store from '../store/index'
 
@@ -109,14 +108,6 @@ const router = new Router({
         requiresAuth: false
       }
     },
-    {
-      path: '/direct/pet/search',
-      name: 'searchpet',
-      component: SearchPet,
-      meta: {
-        requiresAuth: true
-      }
-    }
   ]
 })
 
