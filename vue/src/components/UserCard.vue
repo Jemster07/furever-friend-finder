@@ -32,36 +32,36 @@
 </template>
 
 <script>
-import UsersService from '../services/UsersService.js';
+// import UsersService from '../services/UsersService.js';
 
 export default {
     name: 'user-card',
-    props: ['users'],
+    props: ['displayUser'],
     data() {
       return {
-        displayUser: {
-          userId: 0,
-          username: "",
-          role: "",
-          address: {
-            addressId: 0,
-            street: "",
-            city: "",
-            state: "",
-            zip: 0,
-          },
-          applicationStatus: "",
-          isInactive: false,
-          email: "",
-          isAdopter: false
-        }
+        // tempUser: {
+        //   userId: 0,
+        //   username: "",
+        //   role: "",
+        //   address: {
+        //     addressId: 0,
+        //     street: "",
+        //     city: "",
+        //     state: "",
+        //     zip: 0,
+        //   },
+        //   applicationStatus: "",
+        //   isInactive: false,
+        //   email: "",
+        //   isAdopter: false
+        // }
       }
     },
-    created() {
-        UsersService.GetUser(this.users.displayUser.username).then(response => {
-        this.displayUser = response.data;
-    });
-  }
+  //   created() {
+  //       UsersService.GetUser(this.users.displayUser.username).then(response => {
+  //       this.displayUser = response.data;
+  //   });
+  // }
 }
 </script>
 
