@@ -19,23 +19,29 @@
               </figure>
             </div>
             <div class="media-content has-text-left">
-              <p class="title is-4">(Pet Name)</p>
-              <p class="subtitle is-6">(Breed)</p>
+              <p class="title is-4">{{ displayPet.name }}</p>
+              <p class="subtitle is-6">{{ displayPet.breed }}</p>
             </div>
           </div>
 
           <div class="content">
-            (description)
+            {{ displayPet.description }}
           </div>
         </div>
       </div>
 </template>
 
 <script>
-export default {
-  
 
+export default {
+  name: 'pet-card',
+  props: ['displayPet'],
+  data() {
+    return {
+        }
+      },
 }
+
 </script>
 
 <style>

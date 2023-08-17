@@ -74,6 +74,7 @@
               type="number"
               id="zip"
               v-model="user.address.zip"
+              max="99999"
               required
             />
           </div>
