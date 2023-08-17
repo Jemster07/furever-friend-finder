@@ -164,8 +164,8 @@
         <label for="affectionate">Affectionate</label><br>
         <input type=checkbox id="large" v-model="newpet.tags.IsLarge">
         <label for="large">Large</label><br>
-        <input type=checkbox id="intellegent" v-model="newpet.tags.IsIntelligent">
-        <label for="intellegen">Intellegent</label><br>
+        <input type=checkbox id="intelligent" v-model="newpet.tags.IsIntelligent">
+        <label for="intelligent">Intelligent</label><br>
         <input type=checkbox id="happy" v-model="newpet.tags.IsHappy">
         <label for="happy">Happy</label><br>
         <input type=checkbox id="short" v-model="newpet.tags.IsShortHaired">
