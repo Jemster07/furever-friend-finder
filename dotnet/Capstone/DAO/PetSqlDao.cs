@@ -243,7 +243,7 @@ namespace Capstone.DAO
                         "JOIN environments ON pets.environment_id = environments.environment_id " +
                         "JOIN tags ON pets.tag_id = tags.tag_id " +
                         "JOIN addresses ON pets.address_id = addresses.address_id " +
-                        "WHERE is_adopted = 0;", conn);
+                        "WHERE is_adopted = 1;", conn);
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     while (reader.Read())
