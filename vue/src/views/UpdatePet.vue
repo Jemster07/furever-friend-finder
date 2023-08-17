@@ -200,7 +200,7 @@
       <input type="file" @change="imageUploaded"><br>
       <hr/>
       <button class="button is-success my-4" type="submit">
-        Add Pet
+        Confirm
       </button>
     </form>
     </div>
@@ -209,8 +209,25 @@
 </template>
 
 <script>
+import PetsService from '../services/PetsService';
 export default {
-    name: 'updatepet'
+    name: 'updatepet',
+    props: ['petToChange'],
+    data(){
+      return {
+        newpet: {}
+      }
+    },
+    created(){
+      this.newpet = JSON.parse(JSON.stringify(this.petToChange));
+    },
+    methods: {
+      submitUpdate() {
+        PetsService.UpdatePet(this.newpet).then(response => {
+          console.log(response.data)
+        })
+      }
+    }
 }
 </script>
 
