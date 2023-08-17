@@ -1,4 +1,6 @@
-﻿using Capstone.DAO;
+﻿using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
+using Capstone.DAO;
 using Capstone.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -7,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
+using static System.Net.WebRequestMethods;
 
 namespace Capstone.Controllers
 {
@@ -29,39 +32,70 @@ namespace Capstone.Controllers
         [HttpPost("/photo/save/{petId}")]
         public ActionResult<Photo> SaveUserImage([FromForm] IFormFile formFile, int petId)
         {
-            if (!Directory.Exists(directoryPath))
-            {
-                Directory.CreateDirectory(directoryPath);
-            }
+            string storageConnectionString = "DefaultEndpointsProtocol=https;AccountName=tegroups;AccountKey=ol3YghxavNBd/H/oJcixVxQaM6KRIqcXxg9lOkJXMRVeaarLPdubM+dYwH/ganzQsgms6LIh5hOsTbwjWwuQSA==;EndpointSuffix=core.windows.net";
+            string containerName = "petphotos";
+
+            BlobContainerClient container = new BlobContainerClient(storageConnectionString, containerName);
 
             try
             {
-                if (formFile.Length > 0)
+                string fileNameToSave = $"{petId}_{DateTimeOffset.Now.ToUnixTimeSeconds()}{Path.GetExtension(formFile.FileName)}";
+                BlobClient blob = container.GetBlobClient(fileNameToSave);
+                BlobHttpHeaders blobHttpHeaders = new BlobHttpHeaders();
+                blobHttpHeaders.ContentType = "image/png";
+
+                using (Stream file = formFile.OpenReadStream())
                 {
-                    string filePath = Path.Combine(directoryPath, formFile.FileName);
-
-                    using (FileStream stream = System.IO.File.Create(filePath))
-                    {
-                        formFile.CopyTo(stream);
-                    }
-
-                    NewPhoto newPhoto = new NewPhoto();
-
-                    newPhoto.PetId = petId;
-                    newPhoto.PhotoUrl = filePath;
-                    newPhoto.IsInactive = false;
-
-                    return Ok(photoDao.AddPhotoToDB(newPhoto));
+                    var blobData = blob.Upload(file, blobHttpHeaders);
                 }
-                else
-                {
-                    return UnprocessableEntity("Unable to process uploaded image");
-                }
+                
+                NewPhoto newPhoto = new NewPhoto();
+
+                newPhoto.PetId = petId;
+                newPhoto.PhotoUrl = blob.Uri.AbsoluteUri;
+                newPhoto.IsInactive = false;
+
+                return Ok(photoDao.AddPhotoToDB(newPhoto));
             }
             catch (Exception)
             {
-                return StatusCode(500);
+
+                throw;
             }
+
+            //if (!Directory.Exists(directoryPath))
+            //{
+            //    Directory.CreateDirectory(directoryPath);
+            //}
+
+            //try
+            //{
+            //    if (formFile.Length > 0)
+            //    {
+            //        string filePath = Path.Combine(directoryPath, formFile.FileName);
+
+            //        using (FileStream stream = System.IO.File.Create(filePath))
+            //        {
+            //            formFile.CopyTo(stream);
+            //        }
+
+            //        NewPhoto newPhoto = new NewPhoto();
+
+            //        newPhoto.PetId = petId;
+            //        newPhoto.PhotoUrl = filePath;
+            //        newPhoto.IsInactive = false;
+
+            //        return Ok(photoDao.AddPhotoToDB(newPhoto));
+            //    }
+            //    else
+            //    {
+            //        return UnprocessableEntity("Unable to process uploaded image");
+            //    }
+            //}
+            //catch (Exception)
+            //{
+            //    return StatusCode(500);
+            //}
         }
 
         // Grabs image from file directory and sends it up to the front end
