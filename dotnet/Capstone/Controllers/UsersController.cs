@@ -118,12 +118,12 @@ namespace Capstone.Controllers
         }
 
         //[Authorize(Roles = "admin")]
-        [HttpPut("/application/update/{updatedUser}")]
-        public ActionResult<User> ApproveRejectApp(User updatedUser)
+        [HttpPut("/application/update/{username}")]
+        public ActionResult<User> ApproveRejectApp(User updatedUser,string username)
         {
             try
             {
-                if (updatedUser.ApplicationStatus != "rejected" || updatedUser.ApplicationStatus != "approved")
+                if (!(updatedUser.ApplicationStatus == "rejected" || updatedUser.ApplicationStatus == "approved"))
                 {
                     return BadRequest("Incorrect status type: Select [rejected] or [approved]");
                 }

@@ -9,29 +9,28 @@
               
             </div>
             <div class="media-content has-text-left">
-              <p class="title is-4">{{displayUser.username}}</p>
-              <p class="subtitle is-6">{{displayUser.role}}</p>
-              <p class="subtitle is-6">{{displayUser.email}}</p>
+              <p class="title is-4">{{localUser.username}}</p>
+              <p class="subtitle is-6">{{localUser.role}}</p>
+              <p class="subtitle is-6">{{localUser.email}}</p>
             </div>
           </div>
 
           <div class="content">
-            {{displayUser.address.street}}
+            {{localUser.address.street}}
           </div>
           <div class="content">
-            {{displayUser.address.city}}
+            {{localUser.address.city}}
           </div>
           <div class="content">
-            {{displayUser.address.state}}
+            {{localUser.address.state}}
           </div>
           <div class="content">
-            {{displayUser.address.zip}}
+            {{localUser.address.zip}}
           </div>
 
-          <div>
-            <button class="button is-success my-4" type="submit">Approve</button>
-
-            <button class="button is-success my-4" type="submit">Reject</button>
+          <div v-show="CheckStatus">
+            <button v-on:click="ApproveUser(localUser)" class="button is-success my-4" type="submit">Approve</button>
+            <button v-on:click="RejectUser(localUser)" class="button is-success my-4" type="submit">Reject</button>
           </div>
 
         </div>
@@ -39,17 +38,37 @@
 </template>
 
 <script>
+import UsersService from '../services/UsersService.js';
 
 export default {
-    name: 'user-card',
-    props: ['displayUser'],
-    // computed: {
-    //   DisplayApprovalButtons(){
-    //       if() {
-
-    //       }
-    //   }
-    // }
+  name: 'user-card',
+  props: ['displayUser'],
+  computed: {
+    CheckStatus() {
+      return this.$store.state.user.role == 'admin' && this.displayUser.applicationStatus == 'pending';
+    }
+  },
+  data(){
+    return {
+      localUser: this.displayUser
+    }
+  },
+  methods: {
+    ApproveUser(userIn) {
+      userIn.applicationStatus = 'approved';
+      UsersService.ApproveRejectApp(userIn).then(response => {
+      this.localUser = response.data;
+      this.$store.commit('UPDATE_PENDING',this.localUser);
+    });
+    },
+    RejectUser(userIn) {
+      userIn.applicationStatus = 'rejected';
+      UsersService.ApproveRejectApp(userIn).then(response => {
+      this.localUser = response.data;
+      this.$store.commit('UPDATE_PENDING',this.localUser);
+    });
+    },
+  },
 }
 </script>
 
