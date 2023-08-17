@@ -1,7 +1,6 @@
 <template>
   <div id="main-page">
-
-<nav id="navigator">
+    <nav id="navigator">
       <a>
         <img
           id="banner"
@@ -13,9 +12,7 @@
       <a id="tab-bar">
         <ul id="tabs">
           <li id="tab">
-            <router-link
-              v-bind:to="{ name: 'home' }"
-              style="color: black"
+            <router-link v-bind:to="{ name: 'home' }" style="color: black"
               >HOME</router-link
             >
           </li>
@@ -65,18 +62,22 @@
         </div>
       </div>
     </nav>
-
-  <div >
-
-      <div>
-        <li>
-          <ul id="pets-list">
-          <pet-card v-for='displayPet in pets' v-bind:key="displayPet.name" v-bind:displayPet="displayPet"></pet-card>
-
-
-          </ul>
-        </li>
-                 <!-- <router-link
+    <div>
+      <p class="title has-text-centered">
+        Our Local Friends Available For Adoptions
+      </p>
+    </div>
+    <div>
+      <li>
+        <ul id="pets-list">
+          <pet-card
+            v-for="displayPet in pets"
+            v-bind:key="displayPet.name"
+            v-bind:displayPet="displayPet"
+          ></pet-card>
+        </ul>
+      </li>
+      <!-- <router-link
         v-bind:to="{ name: 'updatepet' }"
         
         v-bind:key="petToChange.id"
@@ -85,42 +86,127 @@
         >Edit Pet</router-link
       >
  -->
-      </div>
+    </div>
+    <div>
+      <p class="title has-text-centered">
+        Search Pet-Finder for Friends To Adopt
+      </p>
+    </div>
+    <div>
+      <form id="searchform" @submit.prevent="search" class="has-text-centered">
+        <div class="form-input-group">
+          <label for="searchtype">How do you want to search? </label>
+          <select for="searchtype" v-model="searchType">
+            <option value="type">Search by pet type</option>
+            <option value="breed">Search by breed</option>
+            <option value="zip">Search by zip-code</option>
+          </select>
+          <input id="type" type="hidden" />
+        </div>
+        <div class="form-input-group" v-show="searchType == 'type'">
+          <label for="pettype">Pet Type </label>
+          <select for="pettype" v-model="petType">
+            <option value="dog">Dog</option>
+            <option value="cat">Cat</option>
+            <option value="rabbit">Rabbit</option>
+            <option value="horse">Horse</option>
+            <option value="bird">Bird</option>
+            <option value="other">Other</option>
+          </select>
+          <input id="pettype" type="hidden" />
+        </div>
+        <div v-show="searchType == 'breed'">
+          <label for="searchbreed">Pet Breed</label>
+          <input id="searchbreed" type="text" v-model="petBreed" />
+        </div>
+        <div v-show="searchType == 'zip'">
+          <label for="searchzip">Zip-Code</label>
+          <input id="searchzip" type="text" v-model="petZip" />
+        </div>
+        <button class="button is-success my-4" type="submit">Search</button>
+        <div v-show="!hasSearchResults">Search Results not Found</div>
+      </form>
+    </div>
 
-  </div>
+    <div id="search-results">
+      <pet-search-card
+        v-for="pet in petSearchResults"
+        :key="pet.id"
+        :displayPet="pet"
+      ></pet-search-card>
+    </div>
   </div>
 </template>
 
 <script>
-import PetCard from '../components/PetCard.vue'
-import PetsService from '../services/PetsService.js'
+import PetCard from "../components/PetCard.vue";
+import PetSearchCard from "../components/PetSearchCard.vue";
+import PetsService from "../services/PetsService.js";
+import PetFinderService from "../services/PetFinderService.js";
 
 export default {
   name: "petdirectory",
-  components: { PetCard },
+  components: { PetCard, PetSearchCard },
   data() {
-    return{
-      pets: []
-    }
+    return {
+      pets: [],
+      searchType: "",
+      petType: "",
+      petBreed: "",
+      petZip: "",
+      petSearchResults: [],
+      hasSearchResults: true,
+    };
   },
   created() {
-      PetsService.GetPetDirectory().then(response => {
-          this.pets = response.data
-      })
-    }
-
+    PetsService.GetPetDirectory().then((response) => {
+      this.pets = response.data;
+    });
+  },
+  methods: {
+    search() {
+      if (this.searchType == "type") {
+        PetFinderService.ListPetFinderAnimals(this.petType)
+          .then((response) => {
+            this.petSearchResults = response.data;
+            this.hasSearchResults = this.petSearchResults.length > 0;
+          })
+          .catch(() => {
+            this.hasSearchResults = false;
+          });
+      }
+      if (this.searchType == "breed") {
+        PetFinderService.ListPetFinderBreeds(this.petBreed)
+          .then((response) => {
+            this.petSearchResults = response.data;
+            this.hasSearchResults = this.petSearchResults.length > 0;
+          })
+          .catch(() => {
+            this.hasSearchResults = false;
+          });
+      }
+      if (this.searchType == "zip") {
+        PetFinderService.ListPetFinderByLocation(this.petZip)
+          .then((response) => {
+            this.petSearchResults = response.data;
+            this.hasSearchResults = this.petSearchResults.length > 0;
+          })
+          .catch(() => {
+            this.hasSearchResults = false;
+          });
+      }
+    },
+  },
 };
-
 </script>
 
 <style scoped>
-
-#footer{
-  height:max-content;
+#footer {
+  height: max-content;
   background-color: lightgreen;
 }
-#pets-list{
-  display:flex;
+#pets-list {
+  display: flex;
   justify-content: space-around;
 }
 #card {
@@ -135,23 +221,22 @@ export default {
   margin-bottom: 4rem;
   margin-top: 3rem;
 }
-  #page-title{
-    margin-left: 2rem;
-  }
-  #main-page{
-    background-color: lightgreen;
-    height:300vh;
-  }
-  #header{
-    display:flex;
-    background-color: white;
-    justify-content: space-between;
-    align-items: center;
-    height: 10vh;
-    border-bottom: 1px solid gray;
-
-  }
-  #navigator {
+#page-title {
+  margin-left: 2rem;
+}
+#main-page {
+  height: max;
+  background-color: lightgreen;
+}
+#header {
+  display: flex;
+  background-color: white;
+  justify-content: space-between;
+  align-items: center;
+  height: 10vh;
+  border-bottom: 1px solid gray;
+}
+#navigator {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -179,6 +264,4 @@ export default {
 #tabs {
   display: flex;
 }
-
-
 </style>
