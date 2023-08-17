@@ -66,11 +66,17 @@
       </div>
     </nav>
 
-  <div id="pets-list">
+  <div >
 
       <div>
-         <pet-card v-for='displayPet in pets' v-bind:key="displayPet.name" v-bind:displayPet="displayPet">
-                 <router-link
+        <li>
+          <ul id="pets-list">
+          <pet-card v-for='displayPet in pets' v-bind:key="displayPet.name" v-bind:displayPet="displayPet"></pet-card>
+
+
+          </ul>
+        </li>
+                 <!-- <router-link
         v-bind:to="{ name: 'updatepet' }"
         
         v-bind:key="petToChange.id"
@@ -78,12 +84,10 @@
         v-show="$store.state.user.applicationStatus == 'approved'"
         >Edit Pet</router-link
       >
-
-         </pet-card>
+ -->
       </div>
 
   </div>
-
   </div>
 </template>
 
@@ -110,6 +114,15 @@ export default {
 </script>
 
 <style scoped>
+
+#footer{
+  height:max-content;
+  background-color: lightgreen;
+}
+#pets-list{
+  display:flex;
+  justify-content: space-around;
+}
 #card {
   display: inline-block;
   padding-top: 1rem;
@@ -117,7 +130,7 @@ export default {
   padding-right: 1vw;
   margin-left: 1vw;
   margin-right: 1vw;
-  width: 22vw;
+  width: 17.8vw;
   height: 60vh;
   margin-bottom: 4rem;
   margin-top: 3rem;
@@ -126,8 +139,8 @@ export default {
     margin-left: 2rem;
   }
   #main-page{
-    height: 300vh;
     background-color: lightgreen;
+    height:300vh;
   }
   #header{
     display:flex;
