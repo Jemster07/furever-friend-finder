@@ -20,13 +20,6 @@
           </li>
           <li id="tab">
             <router-link
-              v-bind:to="{ name: 'searchpet' }"
-              style="color: black"
-              >SEARCH PETS</router-link
-            >
-          </li>
-          <li id="tab">
-            <router-link
               v-bind:to="{ name: 'petdirectory' }"
               style="color: black"
               >VIEW PETS</router-link

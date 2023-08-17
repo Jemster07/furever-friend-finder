@@ -30,6 +30,7 @@
 
           <div>
             <button class="button is-success my-4" type="submit">Approve</button>
+
             <button class="button is-success my-4" type="submit">Reject</button>
           </div>
 
@@ -44,7 +45,9 @@ export default {
     props: ['displayUser'],
     // computed: {
     //   DisplayApprovalButtons(){
+    //       if() {
 
+    //       }
     //   }
     // }
 }
