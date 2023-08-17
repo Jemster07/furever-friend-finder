@@ -1,7 +1,7 @@
 <template>
   <div class="card" id="card">
         <div class="card-image">
-          <figure class="image" style="width:150px">
+          <figure class="image" style="width:200px">
             <img
               :src="displayPet.photos[0].photoUrl"
               :alt="displayPet.name"
