@@ -75,18 +75,29 @@
 
     <div id="friend-list">
       <div>
-         <user-card></user-card>
+         <user-card v-for='displayUser in users' v-bind:key="displayUser.username" v-bind:displayUser="displayUser"></user-card>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import UserCard from '../components/UserCard.vue'
+import UserCard from '../components/UserCard.vue';
+import UsersService from '../services/UsersService.js';
 
 export default {
   name: "frienddirectory",
   components: { UserCard },
+  data() {
+    return {
+      users: []
+    }
+  },
+  created() {
+    UsersService.GetFriendDirectory().then(response => {
+      this.users = response.data;
+    });
+  }
 };
 </script>
 
