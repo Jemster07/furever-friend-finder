@@ -130,6 +130,7 @@ export default {
                 path: "/login",
                 query: { registration: "success" },
               });
+              this.$router.push('/welcomepage');
             }
           })
           .catch((error) => {

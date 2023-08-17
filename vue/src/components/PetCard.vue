@@ -20,7 +20,7 @@
             </div>
             <div class="media-content has-text-left">
               <p class="title is-4">{{ displayPet.name }}</p>
-              <p class="subtitle is-6">{{ displayPet.breed }}</p>
+              <p class="subtitle is-6">{{ displayPet.species }}</p>
             </div>
           </div>
 
@@ -32,6 +32,7 @@
 </template>
 
 <script>
+
 
 export default {
   name: 'pet-card',
