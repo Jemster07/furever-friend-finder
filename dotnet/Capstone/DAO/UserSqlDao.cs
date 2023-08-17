@@ -214,7 +214,8 @@ namespace Capstone.DAO
                 "is_not_active, users.address_id, email, is_adopter, addresses.address_id, " +
                 "street, city, state_abr, zip FROM users JOIN addresses " +
                 "ON users.address_id = addresses.address_id " +
-                "WHERE (user_role = 'friend' OR user_role = 'admin') AND app_status = 'approved';";
+                "WHERE (user_role = 'friend' OR user_role = 'admin') AND app_status = 'approved' " +
+                "AND is_not_active = 0;";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
