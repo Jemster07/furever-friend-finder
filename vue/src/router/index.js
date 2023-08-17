@@ -10,6 +10,7 @@ import AddPet from '../views/AddPet.vue'
 import AdminPage from '../views/AdminPage.vue'
 import PetDirectory from '../views/PetDirectory.vue'
 import PetPage from '../views/PetPage.vue'
+import WelcomePage from '../views/WelcomePage.vue'
 
 import store from '../store/index'
 
@@ -106,6 +107,14 @@ const router = new Router({
       component: PetPage,
       meta: {
         requiresAuth: true
+      }
+    },
+    {
+      path: '/welcomepage',
+      name: 'welcomepage',
+      component: WelcomePage,
+      meta: {
+        requiresAuth: false
       }
     },
   ]
