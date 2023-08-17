@@ -18,13 +18,7 @@
               >HOME</router-link
             >
           </li>
-          <li id="tab">
-            <router-link
-              v-bind:to="{ name: 'searchpet' }"
-              style="color: black"
-              >SEARCH PETS</router-link
-            >
-          </li>
+         
           <li id="tab">
             <router-link
               v-bind:to="{ name: 'petdirectory' }"
@@ -72,7 +66,7 @@
     <p />
     <div class="py-3"></div>
     <div>
-      <h1>Add A Pet</h1>
+        <p class="title">Add A Pet</p>
     </div>
   <div id="wholeform">
     <form id='formbox' @submit.prevent="submitPet" class="has-text-centered">
@@ -123,23 +117,24 @@
         <p>Please enter a short description for your pet.</p>
         <input id="petdesc" type="textarea" v-model="newpet.description" />
       </div>
+        <hr/>
 
       <form id=environments>
         <h1 class="subtitle">Environment</h1>
-        <input type=checkbox id="children" value="children">
+        <input type=checkbox id="children" v-model="newpet.environments.IsChildSafe">
         <label for="children">Is good with children</label><br>
-        <input type=checkbox id="dogs" value="dogs">
+        <input type=checkbox id="dogs" v-model="newpet.environments.IsDogSafe">
         <label for="dogs">Is good with dogs</label><br>
-        <input type=checkbox id="cats" value="cats">
+        <input type=checkbox id="cats" v-model="newpet.environments.IsCatSafe">
         <label for="cats">Is good with cats</label><br>
-        <input type=checkbox id="others" value="others">
+        <input type=checkbox id="others" v-model="newpet.environments.IsOtherAnimalSafe">
         <label for="others">Is good with other animals</label><br>
-        <input type=checkbox id="indoor" value="indoor">
+        <input type=checkbox id="indoor" v-model="newpet.environments.IsIndoorOnly">
         <label for="indoor">Indoor only</label><br>
         <hr/>    
       </form>
        <form id=attributes>
-        <p>Attributes</p>
+        <p class="subtitle">Attributes</p>
         <input type=checkbox id="spayed_neutered" v-model="newpet.attributes.IsSpayedNeutered">
         <label for="spayed_neutered">Has been spayed/Neutered</label><br>
         <input type=checkbox id="house_trained" v-model="newpet.attributes.IsHouseTrained">
@@ -150,53 +145,61 @@
         <label for="special_needs">Has special needs</label><br>
         <input type=checkbox id="shots_current" v-model="newpet.attributes.IsShotsCurrent">
         <label for="shots_current">Current on shots</label><br>
-        <hr/>    
+        <hr/>
       </form>
        <form id=tags>
-        <p>Tags</p>
-        <input type=checkbox id="playful" value="playful">
+        <p class="subtitle">Tags</p>
+        <input type=checkbox id="playful" v-model="newpet.tags.IsPlayful">
         <label for="playful">Playful</label><br>
-        <input type=checkbox id="needs_exercise" value="needs_exercise">
+        <input type=checkbox id="needs_exercise" v-model="newpet.tags.NeedsExercise">
         <label for="needs_exercise">Needs Exercise</label><br>
-        <input type=checkbox id="cute" value="cute">
+        <input type=checkbox id="cute" v-model="newpet.tags.IsCute">
         <label for="cute">Cute</label><br>
-        <input type=checkbox id="affectionate" value="affectionate">
+        <input type=checkbox id="affectionate" v-model="newpet.tags.IsAffectionate">
         <label for="affectionate">Affectionate</label><br>
-        <input type=checkbox id="large" value="large">
+        <input type=checkbox id="large" v-model="newpet.tags.IsLarge">
         <label for="large">Large</label><br>
-        <input type=checkbox id="intellegent" value="intellegent">
+        <input type=checkbox id="intellegent" v-model="newpet.tags.IsIntelligent">
         <label for="intellegen">Intellegent</label><br>
-        <input type=checkbox id="happy" value="happy">
+        <input type=checkbox id="happy" v-model="newpet.tags.IsHappy">
         <label for="happy">Happy</label><br>
-        <input type=checkbox id="short" value="short">
+        <input type=checkbox id="short" v-model="newpet.tags.IsShortHaired">
         <label for="short">Short</label><br>
-        <input type=checkbox id="shedder" value="shedder">
+        <input type=checkbox id="shedder" v-model="newpet.tags.IsShedder">
         <label for="shedder">Shedder</label><br>
-        <input type=checkbox id="shy" value="shy">
+        <input type=checkbox id="shy" v-model="newpet.tags.IsShy">
         <label for="shy">Shy</label><br>
-        <input type=checkbox id="faithful" value="faithful">
+        <input type=checkbox id="faithful" v-model="newpet.tags.IsFaithful">
         <label for="faithful">Faithful</label><br>
-        <input type=checkbox id="leash_trained" value="leash_trained">
+        <input type=checkbox id="leash_trained" v-model="newpet.tags.IsLeashTrained">
         <label for="leash_trained">Leash Trained</label><br>
-        <input type=checkbox id="hypoallergenic" value="hypoallergenic">
+        <input type=checkbox id="hypoallergenic" v-model="newpet.tags.IsHypoallergenic">
         <label for="hypoallergenic">Hypoallergenic</label><br>
+      </form>
+        <hr/>
+       <form id=address>
+        <p class="subtitle">Location of Pet</p>
+        <label for="street">Street</label>
+        <input id="street" type="text" v-model="newpet.address.Street" />
+        <label for="city">City</label>
+        <input id="city" type="text" v-model="newpet.address.City" />
+        <label for="state">State</label>
+        <input id="state" type="text" v-model="newpet.address.State" />
+        <label for="zip">Zip Code</label>
+        <input id="zip" type="text" v-model="newpet.address.Zip" />
       </form>
       <hr/>    
       <p class="has-text-centered py-3">
       Add Picture(s) below.
       </p>
       <input type="file" @change="imageUploaded"><br>
+      <hr/>
       <button class="button is-success my-4" type="submit">
         Add Pet
       </button>
-
     </form>
     </div>
-
-
   </div>
-
-
 </template>
 
 <script>
@@ -226,7 +229,34 @@ export default {
           IsShotsCurrent: false,
 
         },
-
+        environments: {
+          IsChildSafe: false,
+          IsDogSafe: false,
+          IsCatSafe: false,
+          IsOtherAnimalSafe: false,
+          IsIndoorOnly:false,
+        },
+        tags: {
+          IsPlayful: false,
+          NeedsExercise: false,
+          IsCute: false,
+          IsAffectionate: false,
+          IsLarge: false,
+          IsIntelligent: false,
+          IsHappy: false,
+          IsShortHaired: false,
+          IsShedder: false,
+          IsShy: false,
+          IsFaithful: false,
+          IsLeashTrained: false,
+          IsHypoallergenic: false,
+        },
+        address: {
+          Street: "",
+          City: "",
+          State: "",
+          Zip: "",
+        }
         },
         breeds: [],
         newBreed: "",
@@ -284,7 +314,6 @@ export default {
             };
             axios.post(`/photo/save/${pet.petId}`, formData, config);
     },
-
         imageUploaded(event) {
             this.imageFile = event.target.files[0];
         }
@@ -302,7 +331,7 @@ export default {
 }
 #wholeform {
   display:flex;
-  height: 220vh;
+  height: 270vh;
   justify-content: center;
   justify-items: center;
 }
