@@ -169,7 +169,7 @@
         <input type=checkbox id="happy" v-model="newpet.tags.IsHappy">
         <label for="happy">Happy</label><br>
         <input type=checkbox id="short" v-model="newpet.tags.IsShortHaired">
-        <label for="short">Short</label><br>
+        <label for="short">Short Haired</label><br>
         <input type=checkbox id="shedder" v-model="newpet.tags.IsShedder">
         <label for="shedder">Shedder</label><br>
         <input type=checkbox id="shy" v-model="newpet.tags.IsShy">
@@ -195,7 +195,7 @@
       </form>
       <hr/>    
       <p class="has-text-centered py-3">
-      Add Picture(s) below.
+      Add picture below.
       </p>
       <input type="file" @change="imageUploaded"><br>
       <hr/>
