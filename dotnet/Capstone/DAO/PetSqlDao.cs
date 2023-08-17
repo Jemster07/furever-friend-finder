@@ -139,11 +139,80 @@ namespace Capstone.DAO
                     // create new sql command with new sql
                     int attributeID = Convert.ToInt32(userCMD.ExecuteScalar());
 
-                    // do that same as attributes with environment, address, and tags
+
+
                     // then update the pet
                     sql = "update pets set attribute_id = @attID where pet_id = @petID";
                     userCMD = new SqlCommand(sql, conn);
                     userCMD.Parameters.AddWithValue("@attID", attributeID);
+                    userCMD.Parameters.AddWithValue("@petID", newPetId);
+                    userCMD.ExecuteNonQuery();
+
+                    //These are the new connections for environment, address and tags
+
+                    // do that same as attributes with environment, address, and tags
+                    sql = "INSERT into environments (children, dogs, cats, other_animals, indoor_only)" +
+                        " output inserted.environment_id " +
+                        " values(@children, @dogs, @cats, @other, @indoor)";
+                    userCMD = new SqlCommand(sql, conn);
+                    userCMD.Parameters.AddWithValue("@children", pet.Environments.IsChildSafe);
+                    userCMD.Parameters.AddWithValue("@dogs", pet.Environments.IsDogSafe);
+                    userCMD.Parameters.AddWithValue("@cats", pet.Environments.IsCatSafe);
+                    userCMD.Parameters.AddWithValue("@other", pet.Environments.IsOtherAnimalSafe);
+                    userCMD.Parameters.AddWithValue("@indoor", pet.Environments.IsIndoorOnly);
+
+                    int environmentID = Convert.ToInt32(userCMD.ExecuteScalar());
+
+                    sql = "update pets set environment_id = @envID where pet_id = @petID";
+                    userCMD = new SqlCommand(sql, conn);
+                    userCMD.Parameters.AddWithValue("@envID", environmentID);
+                    userCMD.Parameters.AddWithValue("@petID", newPetId);
+                    userCMD.ExecuteNonQuery();
+
+                    sql = "INSERT into tags (playful, needs_exercise, cute, affectionate, large, " +
+                        "intelligent, happy, short_haired, shedder, shy, faithful, leash_trained, hypoallergenic)" +
+                        " output inserted.tag_id " +
+                        " values(@playful, @need_exercise, @cute, @affectionate, @large, @intelligent, @happy, " +
+                        "@short, @shedder, @shy, @faithful, @leash_trained, @hypoallergenic)";
+
+                    userCMD = new SqlCommand(sql, conn);
+                    userCMD.Parameters.AddWithValue("@playful", pet.Tags.IsPlayful);
+                    userCMD.Parameters.AddWithValue("@need_exercise", pet.Tags.NeedsExercise);
+                    userCMD.Parameters.AddWithValue("@cute", pet.Tags.IsCute);
+                    userCMD.Parameters.AddWithValue("@affectionate", pet.Tags.IsAffectionate);
+                    userCMD.Parameters.AddWithValue("@large", pet.Tags.IsLarge);
+                    userCMD.Parameters.AddWithValue("@intelligent", pet.Tags.IsIntelligent);
+                    userCMD.Parameters.AddWithValue("@happy", pet.Tags.IsHappy);
+                    userCMD.Parameters.AddWithValue("@short", pet.Tags.IsShortHaired);
+                    userCMD.Parameters.AddWithValue("@shedder", pet.Tags.IsShedder);
+                    userCMD.Parameters.AddWithValue("@shy", pet.Tags.IsShy);
+                    userCMD.Parameters.AddWithValue("@faithful", pet.Tags.IsFaithful);
+                    userCMD.Parameters.AddWithValue("@leash_trained", pet.Tags.IsLeashTrained);
+                    userCMD.Parameters.AddWithValue("@hypoallergenic", pet.Tags.IsHypoallergenic);
+
+                    int tagID = Convert.ToInt32(userCMD.ExecuteScalar());
+
+                    sql = "update pets set tag_id = @tagID where pet_id = @petID";
+                    userCMD = new SqlCommand(sql, conn);
+                    userCMD.Parameters.AddWithValue("@tagID", tagID);
+                    userCMD.Parameters.AddWithValue("@petID", newPetId);
+                    userCMD.ExecuteNonQuery();
+
+                    sql = "INSERT into addresses (street, city, state_abr, zip)" +
+                        " output inserted.address_id " +
+                        " values(@street, @city, @state, @zip)";
+
+                    userCMD = new SqlCommand(sql, conn);
+                    userCMD.Parameters.AddWithValue("@street", pet.Address.Street);
+                    userCMD.Parameters.AddWithValue("@city", pet.Address.City);
+                    userCMD.Parameters.AddWithValue("@state", pet.Address.State);
+                    userCMD.Parameters.AddWithValue("@zip", pet.Address.Zip);
+
+                    int addressID = Convert.ToInt32(userCMD.ExecuteScalar());
+
+                    sql = "update pets set address_id = @addressID where pet_id = @petID";
+                    userCMD = new SqlCommand(sql, conn);
+                    userCMD.Parameters.AddWithValue("@addressID", addressID);
                     userCMD.Parameters.AddWithValue("@petID", newPetId);
                     userCMD.ExecuteNonQuery();
 
@@ -174,7 +243,7 @@ namespace Capstone.DAO
                         "JOIN environments ON pets.environment_id = environments.environment_id " +
                         "JOIN tags ON pets.tag_id = tags.tag_id " +
                         "JOIN addresses ON pets.address_id = addresses.address_id " +
-                        "WHERE is_adopted = 0;", conn);
+                        "WHERE is_adopted = 1;", conn);
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     while (reader.Read())
