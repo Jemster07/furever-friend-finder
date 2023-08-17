@@ -43,13 +43,16 @@
 export default {
     name: 'user-card',
     props: ['displayUser'],
-    // computed: {
-    //   DisplayApprovalButtons(){
-    //       if() {
+    computed: {
+      // DisplayApprovalButtons(){
+      //     if(displayUser.applicationStatus === 'pending') {
 
-    //       }
-    //   }
-    // }
+      //     }
+      //     else(){
+
+      //     }
+      // }
+    }
 }
 </script>
 
