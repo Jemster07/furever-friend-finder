@@ -68,7 +68,7 @@
 
     <div id="friend-list">
       <div>
-        <button class="button is-success my-4" type="submit">
+        <button class="button is-success my-4" type="submit" v-show="$store.state.user.role == 'admin'">
           <router-link v-bind:to="{ name: 'adminpage' }" style="color: white">Pending Users</router-link>
         </button>
 

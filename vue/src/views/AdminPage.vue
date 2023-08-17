@@ -74,10 +74,9 @@
     </nav>
 
     <div id="pending-list">
-      <div>
-
-        <user-card v-for='displayUser in users' v-bind:key="displayUser.username" 
-        v-bind:displayUser="displayUser">
+      <div >
+        <user-card v-for='displayUser in users' v-bind:key="displayUser.username"
+        v-bind:displayUser="displayUser" v-show="displayUser.applicationStatus=='pending'">
         </user-card>
       </div>
     </div>
@@ -93,13 +92,18 @@ export default {
   components: { UserCard },
   data() {
     return {
-      users: []
     }
   },
   created() {
     UsersService.ListPendingUsers().then(response => {
-      this.users = response.data;
+      this.$store.commit('ADD_PENDING_USERS',response.data);
+      //this.users = response.data;
     });
+  },
+  computed: {
+    users(){
+      return this.$store.state.pendingUsers;
+    }
   }
 }
 </script>

@@ -28,7 +28,8 @@ if(currentToken != null) {
 export default new Vuex.Store({
   state: {
     token: currentToken || '',
-    user: currentUser || {}
+    user: currentUser || {},
+    pendingUsers: []
   },
   mutations: {
     SET_AUTH_TOKEN(state, token) {
@@ -48,6 +49,15 @@ export default new Vuex.Store({
       state.token = '';
       state.user = {};
       axios.defaults.headers.common = {};
+    },
+    ADD_PENDING_USERS(state,userList)
+    {
+      state.pendingUsers = userList;
+    },
+    UPDATE_PENDING(state,updatedUser)
+    {
+      let focusUser = state.pendingUsers.find(u => u.userId = updatedUser.userId);
+      focusUser.applicationStatus = updatedUser.applicationStatus;
     }
   }
 })
