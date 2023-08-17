@@ -104,14 +104,14 @@
       </div>
       <div class="form-input-group">
         <label for="petage">Pet Age</label>
-        <select id="petage">
+        <select id="petage" v-model="newpet.age" >
           <option value=""></option>
           <option value="baby">Baby</option>
           <option value="young">Young</option>
           <option value="adult">Adult</option>
           <option value="senior">Senior</option>
         </select>
-        <input id="petage" type="hidden" v-model="newpet.age" />
+
       </div>
       <div class="form-input-group">
         <p>Please enter a short description for your pet.</p>
@@ -184,9 +184,9 @@
         <label for="city">City</label>
         <input id="city" type="text" v-model="newpet.address.City" />
         <label for="state">State</label>
-        <input id="state" type="text" v-model="newpet.address.State" />
+        <input id="state" type="text" v-model="newpet.address.State" maxlength="2"/>
         <label for="zip">Zip Code</label>
-        <input id="zip" type="text" v-model="newpet.address.Zip" />
+        <input id="zip" type="text" v-model="newpet.address.Zip" maxlength="5"/>
       </form>
       <hr/>    
       <p class="has-text-centered py-3">
@@ -300,7 +300,7 @@ export default {
       PetsService.AddPet(this.newpet)
       .then((response) => {
         console.log(response.data)
-        this.submitPhoto(response.data);
+        this.submitPhoto(response.data)
       })
     },
     submitPhoto(pet) {
@@ -312,7 +312,9 @@ export default {
                     'Content-Type': 'multipart/form-data'
                 }
             };
-            axios.post(`/photo/save/${pet.petId}`, formData, config);
+            axios.post(`/photo/save/${pet.petId}`, formData, config).then(() => {
+                      this.$router.push('/direct/pet');
+            });
     },
         imageUploaded(event) {
             this.imageFile = event.target.files[0];

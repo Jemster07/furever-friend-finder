@@ -170,9 +170,9 @@ namespace Capstone.DAO
                     userCMD.ExecuteNonQuery();
 
                     sql = "INSERT into tags (playful, needs_exercise, cute, affectionate, large, " +
-                        "intellegent, happy, short_haired, shedder, shy, faithful, leash_trained, hypoallergenic)" +
+                        "intelligent, happy, short_haired, shedder, shy, faithful, leash_trained, hypoallergenic)" +
                         " output inserted.tag_id " +
-                        " values(@playful, @need_exercise, @cute, @affectionate, @large, @intellegent, @happy, " +
+                        " values(@playful, @need_exercise, @cute, @affectionate, @large, @intelligent, @happy, " +
                         "@short, @shedder, @shy, @faithful, @leash_trained, @hypoallergenic)";
 
                     userCMD = new SqlCommand(sql, conn);
@@ -181,7 +181,7 @@ namespace Capstone.DAO
                     userCMD.Parameters.AddWithValue("@cute", pet.Tags.IsCute);
                     userCMD.Parameters.AddWithValue("@affectionate", pet.Tags.IsAffectionate);
                     userCMD.Parameters.AddWithValue("@large", pet.Tags.IsLarge);
-                    userCMD.Parameters.AddWithValue("@intellegent", pet.Tags.IsIntelligent);
+                    userCMD.Parameters.AddWithValue("@intelligent", pet.Tags.IsIntelligent);
                     userCMD.Parameters.AddWithValue("@happy", pet.Tags.IsHappy);
                     userCMD.Parameters.AddWithValue("@short", pet.Tags.IsShortHaired);
                     userCMD.Parameters.AddWithValue("@shedder", pet.Tags.IsShedder);
@@ -198,7 +198,7 @@ namespace Capstone.DAO
                     userCMD.Parameters.AddWithValue("@petID", newPetId);
                     userCMD.ExecuteNonQuery();
 
-                    sql = "INSERT into address (street, city, state, zip)" +
+                    sql = "INSERT into addresses (street, city, state_abr, zip)" +
                         " output inserted.address_id " +
                         " values(@street, @city, @state, @zip)";
 
