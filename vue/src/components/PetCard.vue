@@ -1,10 +1,10 @@
 <template>
   <div class="card" id="card">
         <div class="card-image">
-          <figure class="image is-4by3">
+          <figure class="image" style="width:150px">
             <img
-              src="https://bulma.io/images/placeholders/1280x960.png"
-              alt="Placeholder img"
+              :src="displayPet.photos[0].photoUrl"
+              :alt="displayPet.name"
             />
           </figure>
         </div>
@@ -37,9 +37,8 @@ export default {
   name: 'pet-card',
   props: ['displayPet'],
   data() {
-    return {
-        }
-      },
+    return {}
+    },
 }
 
 </script>
