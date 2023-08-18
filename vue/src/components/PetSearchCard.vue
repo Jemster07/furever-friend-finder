@@ -1,7 +1,7 @@
 <template>
   <div class="card" id="card">
         <div class="card-image">
-          <figure class="image is-4by3">
+          <figure class="image" style="width:200px">
             <img
               :src="displayPet.primary_photo_cropped.small"
               alt="Placeholder img"
