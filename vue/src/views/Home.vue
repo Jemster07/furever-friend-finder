@@ -86,6 +86,7 @@
     <pet-search-card v-for="pet in petSearchResults" :key="pet.id" :displayPet="pet"></pet-search-card>
   </div>
 
+
     <footer id="footer">
       (insert copyright info here lol FureverFriendFinder 2023)
     </footer>

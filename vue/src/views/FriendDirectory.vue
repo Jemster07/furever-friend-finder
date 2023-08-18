@@ -66,14 +66,16 @@
       </div>
     </nav>
 
-    <div id="friend-list">
+    <div id="friend-back">
       <div>
         <button class="button is-success my-4" type="submit" v-show="$store.state.user.role == 'admin'">
           <router-link v-bind:to="{ name: 'adminpage' }" style="color: white">Pending Users</router-link>
         </button>
 
+      <div id="friend-list">
         <user-card v-for='displayUser in users' v-bind:key="displayUser.username" 
         v-bind:displayUser="displayUser"></user-card>
+      </div>
       </div>
     </div>
   </div>
@@ -102,18 +104,23 @@ export default {
 <style scoped>
 
 #friend-list{
-  display: grid;
+  margin-left: 8vw;
+  margin-right: 8vw;
+
+}
+
+#friend-back{
 
   width: 90vw;
   margin-left: 5rem;
   margin-right: 5rem;
   margin-top: 3rem;
   margin-bottom: 5rem;
-  height: 80vh;
+  height: 180vh;
   background-color: white;
 }
 #main-page {
-  height: max-content;
+  height: 200vh;
   background-color: lightgreen;
 }
 #page-title {

@@ -1,7 +1,6 @@
 <template>
   <div id="main-page">
-
-<nav id="navigator">
+    <nav id="navigator">
       <a>
         <img
           id="banner"
@@ -13,9 +12,7 @@
       <a id="tab-bar">
         <ul id="tabs">
           <li id="tab">
-            <router-link
-              v-bind:to="{ name: 'home' }"
-              style="color: black"
+            <router-link v-bind:to="{ name: 'home' }" style="color: black"
               >HOME</router-link
             >
           </li>
@@ -40,7 +37,6 @@
           </li>
         </ul>
       </a>
-
 
       <div>
         <div id="buttons">
@@ -67,18 +63,35 @@
       </div>
     </nav>
     <div>
-        <p class="title has-text-centered">Our Local Friends Available For Adoptions</p>
+      <p class="title has-text-centered">
+        Our Local Friends Available For Adoptions
+      </p>
     </div>
-  <div id="pets-list">
-
-      <div>
-         <pet-card v-for='displayPet in pets' v-bind:key="displayPet.name" v-bind:displayPet="displayPet"></pet-card>
-      </div>
     <div>
-        <p class="title has-text-centered">Search Pet-Finder for Friends To Adopt</p>
+      <li id="pets-list">
+          <pet-card
+            v-for="displayPet in pets"
+            v-bind:key="displayPet.name"
+            v-bind:displayPet="displayPet"
+          ></pet-card>
+      </li>
+      <!-- <router-link
+        v-bind:to="{ name: 'updatepet' }"
+        
+        v-bind:key="petToChange.id"
+        v-bind:petToChange="petToChange"
+        v-show="$store.state.user.applicationStatus == 'approved'"
+        >Edit Pet</router-link
+      >
+ -->
     </div>
-  <div>
-      <form id='searchform' @submit.prevent="search" class="has-text-centered">
+    <div>
+      <p class="title has-text-centered">
+        Search Pet-Finder for Friends To Adopt
+      </p>
+    </div>
+    <div>
+      <form id="searchform" @submit.prevent="search" class="has-text-centered">
         <div class="form-input-group">
           <label for="searchtype">How do you want to search? </label>
           <select for="searchtype" v-model="searchType">
@@ -86,107 +99,123 @@
             <option value="breed">Search by breed</option>
             <option value="zip">Search by zip-code</option>
           </select>
-          <input id="type" type="hidden"/>
+          <input id="type" type="hidden" />
         </div>
         <div class="form-input-group" v-show="searchType == 'type'">
-         <label for="pettype">Pet Type </label>
-            <select for="pettype" v-model="petType">
-              <option value="dog">Dog</option>
-              <option value="cat">Cat</option>
-              <option value="rabbit">Rabbit</option>
-              <option value="horse">Horse</option>
-              <option value="bird">Bird</option>
-              <option value="other">Other</option>
-            </select>
-          <input id="pettype" type="hidden"/>
+          <label for="pettype">Pet Type </label>
+          <select for="pettype" v-model="petType">
+            <option value="dog">Dog</option>
+            <option value="cat">Cat</option>
+            <option value="rabbit">Rabbit</option>
+            <option value="horse">Horse</option>
+            <option value="bird">Bird</option>
+            <option value="other">Other</option>
+          </select>
+          <input id="pettype" type="hidden" />
         </div>
         <div v-show="searchType == 'breed'">
-           <label for="searchbreed">Pet Breed</label>
-           <input id="searchbreed" type="text" v-model="petBreed" />
+          <label for="searchbreed">Pet Breed</label>
+          <input id="searchbreed" type="text" v-model="petBreed" />
         </div>
         <div v-show="searchType == 'zip'">
-           <label for="searchzip">Zip-Code</label>
-           <input id="searchzip" type="text" v-model="petZip" />
+          <label for="searchzip">Zip-Code</label>
+          <input id="searchzip" type="text" v-model="petZip" />
         </div>
-         <button class="button is-success my-4" type="submit">
-          Search
-        </button>
+        <button class="button is-success my-4" type="submit">Search</button>
         <div v-show="!hasSearchResults">Search Results not Found</div>
       </form>
-  </div>
+    </div>
 
+    <div id="search-results">
+      <pet-search-card
+        v-for="pet in petSearchResults"
+        :key="pet.id"
+        :displayPet="pet"
+      ></pet-search-card>
+    </div>
   </div>
-
-  <div id="search-results">
-    <pet-search-card v-for="pet in petSearchResults" :key="pet.id" :displayPet="pet"></pet-search-card>
-  </div>
-
-  </div>
-  
 </template>
 
 <script>
-import PetCard from '../components/PetCard.vue'
-import PetSearchCard from '../components/PetSearchCard.vue'
-import PetsService from '../services/PetsService.js'
-import PetFinderService from '../services/PetFinderService.js'
+import PetCard from "../components/PetCard.vue";
+import PetSearchCard from "../components/PetSearchCard.vue";
+import PetsService from "../services/PetsService.js";
+import PetFinderService from "../services/PetFinderService.js";
 
 export default {
   name: "petdirectory",
   components: { PetCard, PetSearchCard },
   data() {
-    return{
+    return {
       pets: [],
       searchType: "",
-      petType: '',
-      petBreed: '',
-      petZip: '',
+      petType: "",
+      petBreed: "",
+      petZip: "",
       petSearchResults: [],
-      hasSearchResults: true
-    }
+      hasSearchResults: true,
+    };
   },
   created() {
-      PetsService.GetPetDirectory().then(response => {
-          this.pets = response.data
-      })
+    PetsService.GetPetDirectory().then((response) => {
+      this.pets = response.data;
+    });
+  },
+  methods: {
+    search() {
+      if (this.searchType == "type") {
+        PetFinderService.ListPetFinderAnimals(this.petType)
+          .then((response) => {
+            this.petSearchResults = response.data;
+            this.hasSearchResults = this.petSearchResults.length > 0;
+          })
+          .catch(() => {
+            this.hasSearchResults = false;
+          });
+      }
+      if (this.searchType == "breed") {
+        PetFinderService.ListPetFinderBreeds(this.petBreed)
+          .then((response) => {
+            this.petSearchResults = response.data;
+            this.hasSearchResults = this.petSearchResults.length > 0;
+          })
+          .catch(() => {
+            this.hasSearchResults = false;
+          });
+      }
+      if (this.searchType == "zip") {
+        PetFinderService.ListPetFinderByLocation(this.petZip)
+          .then((response) => {
+            this.petSearchResults = response.data;
+            this.hasSearchResults = this.petSearchResults.length > 0;
+          })
+          .catch(() => {
+            this.hasSearchResults = false;
+          });
+      }
     },
-  methods:{
-    search()
-    {
-      if(this.searchType == "type"){
-         PetFinderService.ListPetFinderAnimals(this.petType).then(response => {
-           this.petSearchResults = response.data;
-           this.hasSearchResults = this.petSearchResults.length > 0;
-         })
-         .catch(() => {
-           this.hasSearchResults = false;
-         })
-      }
-      if(this.searchType == "breed"){
-        PetFinderService.ListPetFinderBreeds(this.petBreed).then(response => {
-           this.petSearchResults = response.data;
-           this.hasSearchResults = this.petSearchResults.length > 0;
-         })
-         .catch(() => {
-           this.hasSearchResults = false;
-         })
-      }
-      if(this.searchType == "zip"){
-        PetFinderService.ListPetFinderByLocation(this.petZip).then(response => {
-           this.petSearchResults = response.data;
-           this.hasSearchResults = this.petSearchResults.length > 0;
-         })
-         .catch(() => {
-           this.hasSearchResults = false;
-         })
-      }
-    }
-  }
+  },
 };
-
 </script>
 
 <style scoped>
+
+#image{
+  width: 200px;
+  height:200px;
+}
+
+#search-results {
+  display:inline-block;
+  margin-left: 5vw;
+  margin-right: 5vw;
+}
+
+#pets-list {
+  display:inline-block;
+  margin-left: 5vw;
+  margin-right: 5vw;
+}
 #card {
   display: inline-block;
   padding-top: 1rem;
@@ -194,28 +223,27 @@ export default {
   padding-right: 1vw;
   margin-left: 1vw;
   margin-right: 1vw;
-  width: 22vw;
-  height: 60vh;
+  width: 20vw;
+  height: 75vh;
   margin-bottom: 4rem;
   margin-top: 3rem;
 }
-  #page-title{
-    margin-left: 2rem;
-  }
-  #main-page{
-    height: max;
-    background-color: lightgreen;
-  }
-  #header{
-    display:flex;
-    background-color: white;
-    justify-content: space-between;
-    align-items: center;
-    height: 10vh;
-    border-bottom: 1px solid gray;
-
-  }
-  #navigator {
+#page-title {
+  margin-left: 2rem;
+}
+#main-page {
+  height: 1000vh;
+  background-color: lightgreen;
+}
+#header {
+  display: flex;
+  background-color: white;
+  justify-content: space-between;
+  align-items: center;
+  height: 10vh;
+  border-bottom: 1px solid gray;
+}
+#navigator {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -243,6 +271,4 @@ export default {
 #tabs {
   display: flex;
 }
-
-
 </style>
