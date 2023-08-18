@@ -68,14 +68,12 @@
       </p>
     </div>
     <div>
-      <li>
-        <ul id="pets-list">
+      <li id="pets-list">
           <pet-card
             v-for="displayPet in pets"
             v-bind:key="displayPet.name"
             v-bind:displayPet="displayPet"
           ></pet-card>
-        </ul>
       </li>
       <!-- <router-link
         v-bind:to="{ name: 'updatepet' }"
@@ -201,13 +199,22 @@ export default {
 </script>
 
 <style scoped>
-#footer {
-  height: max-content;
-  background-color: lightgreen;
+
+#image{
+  width: 200px;
+  height:200px;
 }
+
+#search-results {
+  display:inline-block;
+  margin-left: 5vw;
+  margin-right: 5vw;
+}
+
 #pets-list {
-  display: flex;
-  justify-content: space-around;
+  display:inline-block;
+  margin-left: 5vw;
+  margin-right: 5vw;
 }
 #card {
   display: inline-block;
@@ -216,8 +223,8 @@ export default {
   padding-right: 1vw;
   margin-left: 1vw;
   margin-right: 1vw;
-  width: 17.8vw;
-  height: 60vh;
+  width: 20vw;
+  height: 75vh;
   margin-bottom: 4rem;
   margin-top: 3rem;
 }
@@ -225,7 +232,7 @@ export default {
   margin-left: 2rem;
 }
 #main-page {
-  height: max;
+  height: 1000vh;
   background-color: lightgreen;
 }
 #header {

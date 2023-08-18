@@ -70,26 +70,7 @@
         <h1 id="welcome-message" class="is-size-1 py-5">Welcome!</h1>
       </div>
     </div>
-
-    <div id="message-box" class="message">
-      <div class="message-header">About Us</div>
-      <div class="message-body is-size-4">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem facilis
-        et reprehenderit vero debitis ex, maxime eligendi veniam quas enim
-        molestias amet quo ad id doloribus tempora laboriosam a non! Lorem ipsum
-        dolor sit amet consectetur adipisicing elit. Molestiae voluptatibus
-        esse, ipsam ratione repellat rerum corporis, odio aut vitae quas nostrum
-        quaerat eligendi! Nobis odit, deserunt maiores hic eveniet optio?Lorem
-        ipsum dolor sit, amet consectetur adipisicing elit. Asperiores nobis
-        iste eum. Dolores qui ullam velit, quam ad dignissimos, eligendi maxime
-        fugit magnam id laudantium! Dignissimos fuga impedit at rem! Lorem
-        ipsum, dolor sit amet consectetur adipisicing elit. Quo sunt eveniet
-        non, minus consequatur laudantium reprehenderit, eligendi est suscipit
-        exercitationem, distinctio tempore quas consectetur cumque animi dolore
-        porro totam nobis?
-      </div>
-    </div>
-
+    
   <div class="has-text-centered is-size-3">
     Have a look at some of our pets!
   </div>
@@ -228,6 +209,26 @@
         </div>
       </div>
     </div>
+
+    <div id="message-box" class="message">
+      <div class="message-header">About Us</div>
+      <div class="message-body is-size-4">
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem facilis
+        et reprehenderit vero debitis ex, maxime eligendi veniam quas enim
+        molestias amet quo ad id doloribus tempora laboriosam a non! Lorem ipsum
+        dolor sit amet consectetur adipisicing elit. Molestiae voluptatibus
+        esse, ipsam ratione repellat rerum corporis, odio aut vitae quas nostrum
+        quaerat eligendi! Nobis odit, deserunt maiores hic eveniet optio?Lorem
+        ipsum dolor sit, amet consectetur adipisicing elit. Asperiores nobis
+        iste eum. Dolores qui ullam velit, quam ad dignissimos, eligendi maxime
+        fugit magnam id laudantium! Dignissimos fuga impedit at rem! Lorem
+        ipsum, dolor sit amet consectetur adipisicing elit. Quo sunt eveniet
+        non, minus consequatur laudantium reprehenderit, eligendi est suscipit
+        exercitationem, distinctio tempore quas consectetur cumque animi dolore
+        porro totam nobis?
+      </div>
+    </div>
+
 
     <footer id="footer">
       (insert copyright info here lol FureverFriendFinder 2023)

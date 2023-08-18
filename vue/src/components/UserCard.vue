@@ -29,8 +29,8 @@
           </div>
 
           <div v-show="CheckStatus">
-            <button v-on:click="ApproveUser(localUser)" class="button is-success my-4" type="submit">Approve</button>
-            <button v-on:click="RejectUser(localUser)" class="button is-success my-4" type="submit">Reject</button>
+            <button v-on:click="ApproveUser(localUser)" class="button is-success my-4 mx-3" type="submit">Approve</button>
+            <button v-on:click="RejectUser(localUser)" class="button is-danger my-4 mx-3" type="submit">Reject</button>
           </div>
 
         </div>
